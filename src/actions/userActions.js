@@ -1,8 +1,6 @@
 import { GET_CURRENT_USER_SUCCESS}  from './actionTypes';
 
 function getUserSucceed(data){
-    console.log(data);
-
     return {type: GET_CURRENT_USER_SUCCESS, user:data };
 }
 
@@ -20,10 +18,9 @@ export function getUser() {
             credentials: 'include'
         })
             .then(response => {
-                console.log('--3');
+
                 if (response.ok) {
-                    response.json().then(data => dispatch(getUserSucceed(data)));
-                    Promise.resolve();
+                    return response.json().then(data => dispatch(getUserSucceed(data)));
                 }
                 else if (response.status === 422) {
                     throw "error!";
@@ -34,8 +31,9 @@ export function getUser() {
                     });
                 }
                 else if (response.status === 404){
-                    Promise.resolve();//user not found
+
                 }
+                //return Promise.resolve();
 
             })
             .catch(e=>{

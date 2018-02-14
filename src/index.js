@@ -12,7 +12,15 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import Echo from "laravel-echo";
 import Pusher from 'pusher-js';
 
-const store = configureStore();
+let store ;
+configureStore()
+    .then(createdStore=>{
+        store = createdStore;
+        ReactDOM.render(
+            <App />,
+            document.getElementById('app')
+        );
+    });
 
 //muiTheme={getMuiTheme(darkBaseTheme)}
 const App = () => (
@@ -21,10 +29,7 @@ const App = () => (
     </MuiThemeProvider>
 );
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('app')
-);
+
 
 
 

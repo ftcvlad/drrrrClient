@@ -11,14 +11,19 @@ export default function configureStore() {
   );
 
     console.log("fetching initial state...");
-    fetchInitialState(store);
+    return fetchInitialState(store);
 
-    return store;
+
 }
 
-function fetchInitialState(store){
-    store.dispatch(getUser());
-        //.catch(()=>console.log("failed fetching user"));
+function fetchInitialState(store){//.catch(()=>console.log("failed fetching user"));??
+    return store.dispatch(getUser())
+        .then(() => {
+            return store;
+        });
+
+
+
 }
 
 // export default function configureStore() {
