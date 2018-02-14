@@ -77,15 +77,14 @@ class NavBar extends React.Component {
     }
 
     logoutClicked(){
-        this.props.userActions.attemptLogout()
-            .then(() => this.props.history.push('/'));
+        //this.props.userActions.attemptLogout()
+            //.then(() => this.props.history.push('/'));
 
     }
 
     render() {
-        console.log("im navbar");
-        console.log(this.props.user);
-        let userLoggedIn = Object.keys(this.props.user).length !== 0;
+
+        let userLoggedIn = false;
         return (
             <Toolbar>
                 <ToolbarGroup firstChild={true}  style={styles.toolGroupStyle}>

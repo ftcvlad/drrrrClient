@@ -1,9 +1,10 @@
-import {connect} from 'react-redux';
+import {connect as reduxConnect} from 'react-redux';
+import fetchConnect from 'react-redux-fetch';
 import {bindActionCreators} from 'redux';
 import * as authActions from '../actions/authActions';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 import {getUser} from "../selectors/userSelector";
 import NavBar from "./NavBar";
@@ -13,6 +14,10 @@ import {RegisterForm, LoginForm} from "./LoginRegisterForm";
 
 
 class MainDashboard extends React.Component {
+
+
+
+
 
     constructor(props) {
         super(props);
@@ -33,11 +38,14 @@ class MainDashboard extends React.Component {
 
   
   login(data){
-      this.props.authActions.attemptLogin(data)
-          .then(()=> this.setState({loginError: ""}))
-          .catch(errorMsg=> {
-              this.setState({loginError: errorMsg});
-          });
+
+      this.props.dispatchUserPost(data);
+
+      // this.props.authActions.attemptLogin(data)
+      //     .then(()=> this.setState({loginError: ""}))
+      //     .catch(errorMsg=> {
+      //         this.setState({loginError: errorMsg});
+      //     });
 
 
   }
@@ -52,9 +60,13 @@ class MainDashboard extends React.Component {
 
   render() {
 	  
-	const {store} = this.context;
 
-    let userLoggedIn = Object.keys(this.props.user).length !== 0;
+
+
+
+     //console.log(this.props.dispatchUserPost);
+      console.log('--9');
+     let userLoggedIn = Object.keys(this.props.user).length !== 0;
     return (
       <div className="">
           <NavBar selectedTab={0}/>
@@ -71,27 +83,37 @@ class MainDashboard extends React.Component {
 }
 
 MainDashboard.propTypes = {
-    authActions: PropTypes.object,
+    dispatchUserPost: PropTypes.func.isRequired,
+    userFetch: PropTypes.object,
     user: PropTypes.object
 };
 
-MainDashboard.contextTypes = {
-    store: PropTypes.object
-};
 
 function mapStateToProps(state) {
-  return {
-    user: getUser(state)
-  };
+    return {
+        user: getUser(state)
+    };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-      authActions: bindActionCreators(authActions, dispatch)
-  };
-}
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MainDashboard);
+
+const MainDashboardWithFetch = fetchConnect([{
+    resource: 'user',
+    method: 'post', // You can omit this, this is the default
+    request: (data)=>({
+        url: 'http://localhost:8080/login',
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(data),
+        mode: 'cors',
+        credentials: 'include'
+    })
+}])(MainDashboard);
+
+export default reduxConnect(
+    mapStateToProps
+)(MainDashboardWithFetch);
+
+
