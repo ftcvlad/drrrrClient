@@ -1,111 +1,53 @@
-import * as types from './actionTypes';
 
-
-
-
-function loginFinished(data){
-  return {type: types.ATTEMPT_LOGIN_SUCCESS, user:data };
-}
-
-function logoutFinished(){
-    return {type: types.ATTEMPT_LOGOUT_SUCCESS, user:{} };
-}
-
-export function attemptLogout() {
-    return dispatch => {
-        return fetch("http://localhost:8080/logout", {
-            method: 'POST',
-            mode: 'cors',
-            credentials: 'include'
-        })
-            .then(response => {
-                if (response.ok) {
-                    dispatch(logoutFinished());
-                    Promise.resolve();
-                }
-                else {
-                    throw "error!";
-                }
-            })
-
-    };
-}
-
-
-export function attemptRegister(data) {
-    return dispatch => {
-        return fetch("http://localhost:8080/register", {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
+export function logout(){
+    return {
+        resource: 'user',
+        method: 'delete',
+        request: (data)=>({
+            url: 'http://localhost:8080/session',
+            headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
+            mode: 'cors',
             credentials: 'include'
         })
-            .then(response => {
-                if (response.ok) {
-                    response.json().then(data => dispatch(loginFinished(data)));
-                    Promise.resolve();
-                }
-                else if (response.status === 422) {
-                    throw "error!";
-                }
-                else if (response.status === 401) {
-                    return response.json().then(data => {
-                        throw data.msg;
-                    });
-                }
+    };
+}
 
-            })
-
+export function register(){
+    return {
+        resource: {name:'user', action: 'registerUser'},
+        method: 'post',
+        request: (data)=>({
+            url: 'http://localhost:8080/users',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(data),
+            mode: 'cors',
+            credentials: 'include'
+        })
     };
 }
 
 
-export function attemptLogin(data) {
-  return dispatch => {
-    return fetch("http://localhost:8080/login", {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data),
-      credentials: 'include'
-    })
-    .then(response => {
-        if (response.ok) {
-            response.json().then(data => dispatch(loginFinished(data)));
-            Promise.resolve();
-        }
-        else if (response.status === 422) {
-            throw "error!";
-        }
-        else if (response.status === 401) {
-            return response.json().then(data => {
-                throw data.msg;
-            });
-        }
-
-    })
-
-  };
+export function login(){
+    return {
+        resource: 'user',
+        method: 'post',
+        request: (data)=>({
+            url: 'http://localhost:8080/session',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(data),
+            mode: 'cors',
+            credentials: 'include'
+        })
+    };
 }
 
 
-// export function fetchStuff() {
-//     return dispatch => {
-//         return fetch("localhost:8080/login", {
-//             method: 'POST',
-//             mode: 'cors',
-//             headers: {
-//                 'Accept': 'application/json'
-//             }
-//         })
-//             .then(response => {console.log(response); return response.json()})
-//             .then(json => dispatch(receiveStuff(json)));
-//     };
-// }

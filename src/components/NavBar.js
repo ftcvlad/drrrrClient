@@ -3,22 +3,18 @@ import React from "react";
 
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {browserHistory} from 'react-router';
-import {Link } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {connect} from "react-redux";
-import * as userActions from "../actions/authActions";
-import {bindActionCreators} from "redux";
+import {connect as reduxConnect, connect} from "react-redux";
+import {logout} from "../actions/authActions";
 import {getUser} from "../selectors/userSelector";
 import AccountBox from 'material-ui/svg-icons/action/account-box';
+import fetchConnect from "react-redux-fetch";
+
 
 const styles = {
     tabsStyle: {
@@ -47,6 +43,7 @@ class NavBar extends React.Component {
         super(props);
         this.state = {
             value: 3,
+            logoutDispatched:false
         };
 
     }
@@ -77,14 +74,26 @@ class NavBar extends React.Component {
     }
 
     logoutClicked(){
-        //this.props.userActions.attemptLogout()
-            //.then(() => this.props.history.push('/'));
+        this.props.dispatchUserDelete();
+
+        this.setState({logoutDispatched: true});
+
+    }
+
+    componentDidUpdate(){
+        let {userFetch} = this.props;
+        if (this.state.logoutDispatched && !userFetch.pending){
+            this.setState({logoutDispatched: false});
+            if (userFetch.fulfilled){
+                this.props.history.push('/');
+            }
+        }
 
     }
 
     render() {
+        let {user, userFetch} = this.props;
 
-        let userLoggedIn = false;
         return (
             <Toolbar>
                 <ToolbarGroup firstChild={true}  style={styles.toolGroupStyle}>
@@ -99,7 +108,7 @@ class NavBar extends React.Component {
                     <ToolbarSeparator />
                 </ToolbarGroup>
 
-                {userLoggedIn &&
+                {user !== null &&
                     <ToolbarGroup>
                         <IconMenu
                             iconButtonElement={<IconButton><AccountBox /></IconButton>}
@@ -121,7 +130,10 @@ class NavBar extends React.Component {
 NavBar.propTypes = {
     history: PropTypes.object,
     selectedTab: PropTypes.number.isRequired,
-    user: PropTypes.object
+    user: PropTypes.object,
+
+    dispatchUserDelete: PropTypes.func.isRequired,
+    userFetch: PropTypes.object
 };
 
 
@@ -132,14 +144,10 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        userActions: bindActionCreators(userActions, dispatch)
-    };
-}
 
-export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(NavBar));
 
+const NavBarWithFetch = fetchConnect([logout()])(NavBar);
+
+export default withRouter(reduxConnect(
+    mapStateToProps
+)(NavBarWithFetch));

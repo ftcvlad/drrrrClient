@@ -64,8 +64,8 @@ class LoginRegisterForm extends React.Component {
 
 
     render() {
-        const {handleSubmit, isLogin } = this.props;
-        let buttonText = isLogin? "Sign in" : "Register";
+        const {handleSubmit, label } = this.props;
+
         return (
             <Paper style={styles.paper} zDepth={2}>
                 <form onSubmit={handleSubmit}>
@@ -78,7 +78,7 @@ class LoginRegisterForm extends React.Component {
 
                     <RaisedButton
                         type="submit"
-                        label={buttonText}
+                        label={label}
                         secondary={true}
                         style={styles.button}
                         icon={<FontIcon className="muidocs-icon-custom-github" />}
@@ -92,7 +92,7 @@ class LoginRegisterForm extends React.Component {
 }
 
 LoginRegisterForm.propTypes = {
-    isLogin: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
     errorMsg: PropTypes.string.isRequired
 };
 

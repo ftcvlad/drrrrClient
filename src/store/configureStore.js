@@ -31,10 +31,15 @@ function fetchInitialState(store){//.catch(()=>console.log("failed fetching user
 
 }
 
-// export default function configureStore() {
-//     return createStore(
-//         rootReducer,
-//         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-//         applyMiddleware(thunk)
-//     );
-// }
+
+
+
+
+const actions = buildActionsFromMappings([{
+    resource: 'todos',
+    request: {
+        url: apiRoutes.getTodos(),
+    },
+}]);
+
+store.dispatch(actions.todosGet());

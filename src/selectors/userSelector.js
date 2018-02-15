@@ -1,9 +1,9 @@
 export const getUser = (state) => {
 
-    if (state.repository && state.repository.user){
+    if (state.repository && state.repository.user && state.repository.user.value){
         return state.repository.user;
     }
 
-    return {};
+    return null;//localized, epta!
 
 };
