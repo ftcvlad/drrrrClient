@@ -13,9 +13,10 @@ export default function configureStore() {
   );
 
     console.log("fetching initial state...");
-    //return fetchInitialState(store);
+    //return fetchInitialState(store);//:(
 
     return Promise.resolve(store);
+
 }
 
 
@@ -31,15 +32,3 @@ function fetchInitialState(store){//.catch(()=>console.log("failed fetching user
 
 }
 
-
-
-
-
-const actions = buildActionsFromMappings([{
-    resource: 'todos',
-    request: {
-        url: apiRoutes.getTodos(),
-    },
-}]);
-
-store.dispatch(actions.todosGet());
