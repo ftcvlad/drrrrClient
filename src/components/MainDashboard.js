@@ -1,5 +1,4 @@
-import {connect as reduxConnect} from 'react-redux';
-import fetchConnect from 'react-redux-fetch';
+import {connect}  from 'react-redux';
 import {login, register} from '../actions/authActions';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,7 +14,8 @@ class MainDashboard extends React.Component {
         super(props);
 
         this.state = {
-            lastAction: "none"
+            loginError:"",
+            registerError:""
         }
     }
 
@@ -25,45 +25,47 @@ class MainDashboard extends React.Component {
 
     }
 
+    clearState(){
+        this.setState({loginError:"", registerError: ""});
+    }
 
     login(data) {
-        this.setState({lastAction: "login"});
-        this.props.dispatchUserPost(data);
+
+        this.clearState();
+        this.props.dispatch(login(data))
+            .catch((errMsg)=>{
+                this.setState({loginError: errMsg});
+            });
 
     }
 
     register(data) {
-        this.setState({lastAction: "register"});
-        this.props.dispatchRegisterUserPost(data);
+        this.clearState();
+        this.props.dispatch(register(data))
+            .catch((errMsg)=>{
+                this.setState({registerError: errMsg});
+            });
 
     }
 
     render() {
-        let {user, userFetch} = this.props;
+        let {user} = this.props;
 
-        // console.log(userFetch);
 
-        let loginError = "";
-        let registerError = "";
-        if (this.state.lastAction === "login" && userFetch.rejected) {
-            loginError = userFetch.reason.cause.msg;
-        }
-        else if (this.state.lastAction === "register" && userFetch.rejected) {
-            registerError = userFetch.reason.cause.msg;
-        }
+        let userLoggedIn = Object.keys(user).length !== 0;
 
         return (
             <div className="">
                 <NavBar selectedTab={0}/>
                 <h1>Checkers main dashboard! to be continued...</h1>
-                {(user === null) &&
+                {!userLoggedIn &&
                 <div>
                     <LoginForm onSubmit={this.login.bind(this)}
                                label={"Sign in"}
-                               errorMsg={loginError}/>
+                               errorMsg={this.state.loginError}/>
                     <RegisterForm onSubmit={this.register.bind(this)}
                                   label={"Register"}
-                                  errorMsg={registerError}/>
+                                  errorMsg={this.state.registerError}/>
                 </div>
                 }
             </div>
@@ -72,11 +74,7 @@ class MainDashboard extends React.Component {
 }
 
 MainDashboard.propTypes = {
-    dispatchUserPost: PropTypes.func.isRequired,
-    userFetch: PropTypes.object,
-    user: PropTypes.object,
-    dispatchRegisterUserPost: PropTypes.func.isRequired
-
+    user: PropTypes.object
 };
 
 
@@ -87,10 +85,8 @@ function mapStateToProps(state) {
 }
 
 
-const MainDashboardWithFetch = fetchConnect([login(), register()])(MainDashboard);
-
-export default reduxConnect(
+export default connect(
     mapStateToProps
-)(MainDashboardWithFetch);
+)(MainDashboard);
 
 

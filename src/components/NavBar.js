@@ -9,11 +9,12 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import {browserHistory} from 'react-router';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {connect as reduxConnect, connect} from "react-redux";
-import {logout} from "../actions/authActions";
+
+import  {connect} from "react-redux";
+import {logout, register} from "../actions/authActions";
 import {getUser} from "../selectors/userSelector";
 import AccountBox from 'material-ui/svg-icons/action/account-box';
-import fetchConnect from "react-redux-fetch";
+
 
 
 const styles = {
@@ -42,14 +43,8 @@ class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 3,
-            logoutDispatched:false
+            value: 3
         };
-
-    }
-
-
-    componentWillMount() {
 
     }
 
@@ -74,31 +69,22 @@ class NavBar extends React.Component {
     }
 
     logoutClicked(){
-        this.props.dispatchUserDelete();
-
-        this.setState({logoutDispatched: true});
-
+        this.props.dispatch(logout())
+            .then(() => {
+                this.props.history.push('/')
+            });
     }
 
-    componentDidUpdate(){
-        let {userFetch} = this.props;
-        if (this.state.logoutDispatched && !userFetch.pending){
-            this.setState({logoutDispatched: false});
-            if (userFetch.fulfilled){
-                this.props.history.push('/');
-            }
-        }
 
-    }
 
     render() {
-        let {user, userFetch} = this.props;
-
+        let {user} = this.props;
+        let userLoggedIn = Object.keys(user).length !== 0;
         return (
             <Toolbar>
                 <ToolbarGroup firstChild={true}  style={styles.toolGroupStyle}>
                     <Tabs initialSelectedIndex={this.props.selectedTab} style={styles.tabsStyle}  onChange={this.handleTabChange.bind(this)}>
-                        <Tab value={0} label="Home" style={styles.tabStyle} buttonStyle={styles.buttonStyle}></Tab>
+                        <Tab value={0} label="Home" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
                         <Tab value={1} label="Tables" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
                         <Tab value={2} label="Etudes" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
 
@@ -108,7 +94,7 @@ class NavBar extends React.Component {
                     <ToolbarSeparator />
                 </ToolbarGroup>
 
-                {user !== null &&
+                {userLoggedIn &&
                     <ToolbarGroup>
                         <IconMenu
                             iconButtonElement={<IconButton><AccountBox /></IconButton>}
@@ -132,8 +118,6 @@ NavBar.propTypes = {
     selectedTab: PropTypes.number.isRequired,
     user: PropTypes.object,
 
-    dispatchUserDelete: PropTypes.func.isRequired,
-    userFetch: PropTypes.object
 };
 
 
@@ -146,8 +130,7 @@ function mapStateToProps(state) {
 
 
 
-const NavBarWithFetch = fetchConnect([logout()])(NavBar);
 
-export default withRouter(reduxConnect(
+export default withRouter(connect(
     mapStateToProps
-)(NavBarWithFetch));
+)(NavBar));

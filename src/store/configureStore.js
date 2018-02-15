@@ -2,7 +2,7 @@ import {createStore, applyMiddleware} from 'redux';
 import rootReducer from '../reducers/rootReducer';
 import thunk from 'redux-thunk';
 import {getUser} from '../actions/userActions';
-import {middleware as fetchMiddleware} from 'react-redux-fetch';
+import fetchMiddleware from '../middleware/fetchMiddleware';
 
 export default function configureStore() {
   let store = createStore(
@@ -12,13 +12,8 @@ export default function configureStore() {
 
   );
 
-    console.log("fetching initial state...");
-    //return fetchInitialState(store);//:(
-
-    return Promise.resolve(store);
-
+    return fetchInitialState(store);
 }
-
 
 
 
@@ -27,8 +22,5 @@ function fetchInitialState(store){//.catch(()=>console.log("failed fetching user
         .then(() => {
             return store;
         });
-
-
-
 }
 

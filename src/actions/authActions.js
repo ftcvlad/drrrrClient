@@ -1,25 +1,43 @@
 
+import {ATTEMPT_LOGIN_SUCCESS, ATTEMPT_LOGOUT_SUCCESS, ATTEMPT_REGISTER_SUCCESS} from "./actionTypes";
+
+
+function loginSucceed(data){
+    return {type: ATTEMPT_LOGIN_SUCCESS, user:data };
+}
+
+function registerSucceed(data){
+    return {type: ATTEMPT_REGISTER_SUCCESS, user:data };
+}
+
+function logoutSucceed(){
+    return {type: ATTEMPT_LOGOUT_SUCCESS, user:{} };
+}
+
+
 export function logout(){
     return {
-        resource: 'user',
-        method: 'delete',
-        request: (data)=>({
+        type: "API_CALL",
+        successActionCreator: logoutSucceed,
+        request: {
             url: 'http://localhost:8080/session',
+            method: 'delete',
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             mode: 'cors',
             credentials: 'include'
-        })
+        }
     };
 }
 
-export function register(){
+export function register(data){
     return {
-        resource: {name:'user', action: 'registerUser'},
-        method: 'post',
-        request: (data)=>({
+        type:"API_CALL",
+        successActionCreator: registerSucceed,
+        request: {
+            method: 'post',
             url: 'http://localhost:8080/users',
             headers:{
                 'Accept': 'application/json',
@@ -28,16 +46,17 @@ export function register(){
             body:JSON.stringify(data),
             mode: 'cors',
             credentials: 'include'
-        })
+        }
     };
 }
 
 
-export function login(){
+export function login(data){
     return {
-        resource: 'user',
-        method: 'post',
-        request: (data)=>({
+        type:"API_CALL",
+        successActionCreator: loginSucceed,
+        request: {
+            method: 'post',
             url: 'http://localhost:8080/session',
             headers:{
                 'Accept': 'application/json',
@@ -46,7 +65,7 @@ export function login(){
             body:JSON.stringify(data),
             mode: 'cors',
             credentials: 'include'
-        })
+        }
     };
 }
 

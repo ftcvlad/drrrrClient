@@ -1,11 +1,12 @@
 import {combineReducers} from 'redux';
-import userReducer from './userReducer';
 import { reducer as formReducer } from 'redux-form';
-import {reducer as fetchReducer} from 'react-redux-fetch';
+import userReducer from './userReducer.js';
+
 
 const rootReducer = combineReducers({
-    repository: fetchReducer,
-    form: formReducer
+    form: formReducer,
+    user: userReducer
+
 });
 
 export default rootReducer;
