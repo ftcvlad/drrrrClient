@@ -2,7 +2,7 @@ import React from "react";
 import NavBar from "./NavBar";
 
 let conn;
-class Play64Room extends React.Component {
+class Play64Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
@@ -21,6 +21,10 @@ class Play64Room extends React.Component {
 
 
     }
+
+    componentDidMount(){
+        console.log('HERE ESTABLISH CONNECTION');
+    }
     handleChange(e) {
         this.setState({name: e.target.value});
         //conn.send('Hello World!');
@@ -38,4 +42,4 @@ class Play64Room extends React.Component {
     }
 }
 
-export default Play64Room;
+export default Play64Dashboard;
