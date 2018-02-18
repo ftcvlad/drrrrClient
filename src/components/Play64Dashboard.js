@@ -10,6 +10,7 @@ import {getCurrentGame} from '../selectors/gameSelector';
 import PropTypes from 'prop-types';
 
 
+import {roomCategories} from "../functions/WebSocketStuff";
 
 class Play64Dashboard extends React.Component {
 
@@ -32,16 +33,15 @@ class Play64Dashboard extends React.Component {
     }
 
     componentDidMount(){
-        console.log('COMPONENT MOUNT');
+
         if (!window.socketConnection){
-            setupWebSocketConnection('gameRoom',
+            setupWebSocketConnection(roomCategories.GAME_ROOM,
                 this.redirectUnauthorised.bind(this),
                 this.redirectNotInGame.bind(this),
                 this.props.dispatch);
         }
         else{
-            //attach connection to proper group
-            joinRoom('gameRoom');
+            joinRoom(roomCategories.GAME_ROOM);
         }
 
 

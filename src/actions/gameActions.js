@@ -1,6 +1,7 @@
 import * as types from "./actionTypes";
+import {CREATE_GAME_SUCCEED} from "./actionTypes";
 
-function createGameSucceed(data){
+export function createGameSucceed(data){
     return {type: types.CREATE_GAME_SUCCEED, game: data };
 }
 
@@ -48,3 +49,4 @@ export function removeAllGames(){
 export function updateGameList(games){
     return {type: types.UPDATE_GAME_LIST, games: games };
 }
+

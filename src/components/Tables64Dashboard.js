@@ -11,9 +11,11 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import {login} from "../actions/authActions";
 import {connect} from "react-redux";
-import {getUser} from "../selectors/userSelector";
+import {getAllGames} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 import {createGame} from"../actions/gameActions";
+import {joinRoom, broadcastGameCreated, roomCategories, setupWebSocketConnection} from "../functions/WebSocketStuff";
+import PropTypes from 'prop-types';
 
 class Tables64Dashboard extends React.Component {
 
@@ -26,35 +28,87 @@ class Tables64Dashboard extends React.Component {
     handleCreateGame(e) {
         let data = {};
         this.props.dispatch(createGame(data))
-            .then(()=> this.props.history.push('/play64'))
+            .then(()=> {
+                broadcastGameCreated();
+                this.props.history.push('/play64');
+            })
             .catch((errMsg)=>{
                 console.log(errMsg);
             });
     }
 
+
+    redirectUnauthorised(){
+        this.props.history.push('/');
+    }
+
+    componentDidMount(){
+
+        if (!window.socketConnection){
+            setupWebSocketConnection(roomCategories.TABLE_64_ROOM,
+                this.redirectUnauthorised.bind(this),
+                null,
+                this.props.dispatch);
+        }
+        else{
+            joinRoom(roomCategories.TABLE_64_ROOM);
+        }
+
+
+    }
+
+    playClicked(gameId){
+        console.log('play '+ gameId);
+    }
+
+    watchClicked(gameId){
+        console.log('watch ' +gameId);
+
+    }
+
+    createParticipantPlayerList(game){
+        return (
+            <div>
+                {game.players.map(function(playerId, index){
+                    return <li key={index}>{playerId}</li>;
+                })}
+            </div>
+        );
+    }
+
     render() {
+        let {games} = this.props;
+
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={1}/>
                 <Table>
-                    <TableHeader>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>ID</TableHeaderColumn>
-                            <TableHeaderColumn>Name</TableHeaderColumn>
-                            <TableHeaderColumn>Status</TableHeaderColumn>
+                            <TableHeaderColumn>Play</TableHeaderColumn>
+                            <TableHeaderColumn>Watch</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        <TableRow>
-                            <TableRowColumn>1</TableRowColumn>
-                            <TableRowColumn>John Smith</TableRowColumn>
-                            <TableRowColumn>Employed</TableRowColumn>
-                        </TableRow>
-                        <TableRow>
-                            <TableRowColumn>2</TableRowColumn>
-                            <TableRowColumn>Randal White</TableRowColumn>
-                            <TableRowColumn>Unemployed</TableRowColumn>
-                        </TableRow>
+
+
+                    <TableBody displayRowCheckbox={false}>
+
+                        {games.map((game, index) => (
+                            <TableRow key={game.gameId}>
+                                <TableRowColumn >{this.createParticipantPlayerList(game)}</TableRowColumn>
+                                <TableRowColumn>
+                                    <RaisedButton label="Play" onClick={this.playClicked.bind(this, game.gameId)} />
+                                </TableRowColumn>
+                                <TableRowColumn>
+                                    <RaisedButton label="Watch" onClick={this.watchClicked.bind(this, game.gameId)} />
+                                </TableRowColumn>
+                            </TableRow>
+                        ))}
+
+
+
+
 
                     </TableBody>
                 </Table>
@@ -66,10 +120,15 @@ class Tables64Dashboard extends React.Component {
     }
 }
 
+Tables64Dashboard.propTypes={
+    games: PropTypes.array.isRequired
+};
+
+
 
 function mapStateToProps(state) {
     return {
-
+        games:getAllGames(state)
     };
 }
 
