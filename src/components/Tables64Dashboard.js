@@ -28,7 +28,7 @@ class Tables64Dashboard extends React.Component {
         this.props.dispatch(createGame(data))
             .then(()=> this.props.history.push('/play64'))
             .catch((errMsg)=>{
-
+                console.log(errMsg);
             });
     }
 

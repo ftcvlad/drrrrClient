@@ -32,6 +32,11 @@ const customFetchMiddleware = store => next => action => {
                         throw data.msg;
                     });
                 }
+                else if (response.status === 403) {//authorised, but doesn't have permission for access
+                    return response.json().then(data => {
+                        throw data.msg;
+                    });
+                }
                 else if (response.status === 404){//not found
 
                 }

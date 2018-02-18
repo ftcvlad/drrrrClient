@@ -1,20 +1,30 @@
 import initialState from './initialState';
-import {CREATE_GAME_SUCCEED} from '../actions/actionTypes';
+import {CREATE_GAME_SUCCEED, REMOVE_ALL_GAMES_SUCCEED, UPDATE_GAME_LIST} from '../actions/actionTypes';
 
 export default function gamesReducer(state = initialState.games, action) {
     //state is array? o_o -- user is a namespace, but the state for this reducer is []!
-    console.log(action);
-    console.log(state);
-    console.log(state.slice());
+
+    let newState;
     switch (action.type) {
 
         case CREATE_GAME_SUCCEED:
-            let newState = state.slice();
+            newState = state.slice();
             newState.push(action.game);
+            return newState;
+        case REMOVE_ALL_GAMES_SUCCEED:
+            return [];
+        case UPDATE_GAME_LIST:
+            newState = state.concat(action.games);
+            //remove duplicates
+            newState = newState.filter((elem, index, self) =>
+                index === self.findIndex((el) => (
+                    el.gameId === elem.gameId
+                ))
+            );
             return newState;
 
 
         default:
             return state;
     }
-}////fdsfgfgdfgdfg
+}

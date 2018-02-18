@@ -1,45 +1,85 @@
 import React from "react";
 import NavBar from "./NavBar";
 
-let conn;
+import {setupWebSocketConnection, joinRoom} from '../functions/WebSocketStuff';
+import RaisedButton from 'material-ui/RaisedButton';
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import {createGame, removeAllGames} from "../actions/gameActions";
+import {getCurrentGame} from '../selectors/gameSelector';
+import PropTypes from 'prop-types';
+
+
+
 class Play64Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {name: 'Medium'};
 
 
-        // conn = new WebSocket('ws://localhost:8090');
-        // conn.onopen = function(e) {
-        //     console.log("Connection established!");
-        // };
-        //
-        // conn.onmessage = function(e) {
-        //     console.log(e.data);
-        // };
 
 
+
+
+    }
+
+    redirectUnauthorised(){
+        this.props.history.push('/');
+    }
+
+    redirectNotInGame(){
+        this.props.history.push('/tables64');
     }
 
     componentDidMount(){
-        console.log('HERE ESTABLISH CONNECTION');
+        console.log('COMPONENT MOUNT');
+        if (!window.socketConnection){
+            setupWebSocketConnection('gameRoom',
+                this.redirectUnauthorised.bind(this),
+                this.redirectNotInGame.bind(this),
+                this.props.dispatch);
+        }
+        else{
+            //attach connection to proper group
+            joinRoom('gameRoom');
+        }
+
+
     }
-    handleChange(e) {
-        this.setState({name: e.target.value});
-        //conn.send('Hello World!');
+    clearAllGamesCache() {///!!! for development
+
+        this.props.dispatch(removeAllGames())//cfgfcghxdfh dfnhfdgbdfghdf
+            .catch((errMsg)=>{
+                console.log(errMsg);
+            });
 
     }
     render() {
+        console.log(this.props.game);
+        let {game} = this.props;
+
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
-                <h1>Welcome</h1>
-                <p>Hello {this.state.name}</p>
-                <input onChange={this.handleChange} defaultValue={this.state.name}/>
+
+                {game!==null && <p>current game present</p>}
+                <RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
         );
     }
 }
+Play64Dashboard.propTypes={
+    game: PropTypes.object
+};
 
-export default Play64Dashboard;
+
+function mapStateToProps(state) {
+    return {
+        game: getCurrentGame(state)
+    };
+}
+
+
+export default withRouter(connect(
+    mapStateToProps
+)(Play64Dashboard));
