@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 import {createGame, removeAllGames} from "../actions/gameActions";
 import {getCurrentGame} from '../selectors/gameSelector';
 import PropTypes from 'prop-types';
-
+import Board64 from './Board64';
 
 import {roomCategories} from "../functions/WebSocketStuff";
 
@@ -63,6 +63,7 @@ class Play64Dashboard extends React.Component {
                 <NavBar selectedTab={3}/>
 
                 {game!==null && <p>current game present</p>}
+                <Board64 game={game}/>
                 <RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
         );
