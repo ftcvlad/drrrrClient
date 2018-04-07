@@ -13,8 +13,8 @@ import {login} from "../actions/authActions";
 import {connect} from "react-redux";
 import {getAllGames} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
-import {createGame} from"../actions/gameActions";
-import {joinRoom, broadcastGameCreated, roomCategories, setupWebSocketConnection} from "../functions/WebSocketStuff";
+import {createGame, playGame} from"../actions/gameActions";
+import {joinRoom, broadcastGameCreated, broadcastPlayerJoined, roomCategories, setupWebSocketConnection} from "../functions/WebSocketStuff";
 import PropTypes from 'prop-types';
 
 class Tables64Dashboard extends React.Component {
@@ -26,7 +26,7 @@ class Tables64Dashboard extends React.Component {
 
     }
     handleCreateGame(e) {
-        let data = {};
+        let data = {};//TODO
         this.props.dispatch(createGame(data))
             .then(()=> {
                 broadcastGameCreated();
@@ -58,7 +58,19 @@ class Tables64Dashboard extends React.Component {
     }
 
     playClicked(gameId){
-        console.log('play '+ gameId);
+
+        let data = {gameId};
+        this.props.dispatch(playGame(data))
+            .then(()=> {
+                broadcastPlayerJoined(gameId);
+                this.props.history.push('/play64');
+                console.log('SUCC');
+            })
+            .catch((errMsg)=>{
+                console.log(errMsg);
+            });
+
+
     }
 
     watchClicked(gameId){

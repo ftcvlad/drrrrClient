@@ -48,7 +48,7 @@ class Play64Dashboard extends React.Component {
     }
     clearAllGamesCache() {///!!! for development
 
-        this.props.dispatch(removeAllGames())//cfgfcghxdfh dfnhfdgbdfghdf
+        this.props.dispatch(removeAllGames())
             .catch((errMsg)=>{
                 console.log(errMsg);
             });
@@ -62,9 +62,9 @@ class Play64Dashboard extends React.Component {
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
 
-                {game!==null && <p>current game present</p>}
-                <Board64 game={game}/>
-                <RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
+                {game !== null && <Board64 game={game}/>  }
+                {game === null && <p>no game!</p>}
+                < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
         );
     }

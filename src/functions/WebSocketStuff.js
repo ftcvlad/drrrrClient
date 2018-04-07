@@ -1,10 +1,11 @@
-import {updateGameList, createGameSucceed} from '../actions/gameActions';
+import {updateGameList, createGameSucceed, playGameSucceed} from '../actions/gameActions';
 
 export const messageTypes = {
      JOIN_ROOM: "joinRoom",
      JOINED_ROOM :"joinedRoom",
      ERROR : "error",
-     BROADCAST_GAME_CREATED: 'broadcastGameCreated'
+     BROADCAST_GAME_CREATED: 'broadcastGameCreated',
+     BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined'
 };
 
 export const roomCategories={
@@ -45,6 +46,9 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
         else if (data.servMessType === messageTypes.BROADCAST_GAME_CREATED){
             dispatch(createGameSucceed(data.data));
         }
+        else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED){
+            dispatch(playGameSucceed(data.data));
+        }
 
 
 
@@ -65,3 +69,9 @@ export function joinRoom(room){
 export function broadcastGameCreated(){
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.BROADCAST_GAME_CREATED}));
 }
+
+export function broadcastPlayerJoined(gameId){
+    console.log('broadcast player joined sent!'+gameId);
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.BROADCAST_PLAYER_JOINED, gameId: gameId}));
+}
+

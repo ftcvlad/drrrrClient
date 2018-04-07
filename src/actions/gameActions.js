@@ -1,8 +1,12 @@
 import * as types from "./actionTypes";
-import {CREATE_GAME_SUCCEED} from "./actionTypes";
+import {CREATE_GAME_SUCCEED, PLAY_GAME_SUCCEED} from "./actionTypes";
 
 export function createGameSucceed(data){
     return {type: types.CREATE_GAME_SUCCEED, game: data };
+}
+
+export function playGameSucceed(data){
+    return {type: types.PLAY_GAME_SUCCEED, game: data };
 }
 
 
@@ -23,6 +27,25 @@ export function createGame(options){
         }
     };
 }
+
+export function playGame(data){
+    return {
+        type:"API_CALL",
+        successActionCreator: playGameSucceed,
+        request: {
+            method: 'put',
+            url: 'http://localhost:8080/games/'+data.gameId+'/play',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+            mode: 'cors',
+            credentials: 'include'
+        }
+    };
+}
+
 
 
 function removeAllGamesSucceed(){

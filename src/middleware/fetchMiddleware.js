@@ -29,12 +29,13 @@ const customFetchMiddleware = store => next => action => {
                 }
                 else if (response.status === 401) {//validation error or unauthorised
                     return response.json().then(data => {
-                        throw data.msg;
+                        throw data.message;
                     });
                 }
                 else if (response.status === 403) {//authorised, but doesn't have permission for access
                     return response.json().then(data => {
-                        throw data.msg;
+                        console.log(data);
+                        throw data.message;
                     });
                 }
                 else if (response.status === 404){//not found
