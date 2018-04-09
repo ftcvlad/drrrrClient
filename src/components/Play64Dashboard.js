@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {createGame, removeAllGames} from "../actions/gameActions";
 import {getCurrentGame} from '../selectors/gameSelector';
+import {getUser} from '../selectors/userSelector';
 import PropTypes from 'prop-types';
 import Board64 from './Board64';
 
@@ -56,13 +57,13 @@ class Play64Dashboard extends React.Component {
     }
     render() {
         console.log(this.props.game);
-        let {game} = this.props;
+        let {game, user} = this.props;
 
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
 
-                {game !== null && <Board64 game={game}/>  }
+                {game !== null && <Board64 game={game} userId={user.id}/>  }
                 {game === null && <p>no game!</p>}
                 < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
@@ -70,13 +71,15 @@ class Play64Dashboard extends React.Component {
     }
 }
 Play64Dashboard.propTypes={
-    game: PropTypes.object
+    game: PropTypes.object,
+    user: PropTypes.object.isRequired
 };
 
 
 function mapStateToProps(state) {
     return {
-        game: getCurrentGame(state)
+        game: getCurrentGame(state),
+        user: getUser(state)
     };
 }
 

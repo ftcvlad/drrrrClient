@@ -5,7 +5,8 @@ export const messageTypes = {
      JOINED_ROOM :"joinedRoom",
      ERROR : "error",
      BROADCAST_GAME_CREATED: 'broadcastGameCreated',
-     BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined'
+     BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined',
+     USER_MOVE: 'userMove'
 };
 
 export const roomCategories={
@@ -75,3 +76,6 @@ export function broadcastPlayerJoined(gameId){
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.BROADCAST_PLAYER_JOINED, gameId: gameId}));
 }
 
+export function userMove(moveInfo){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo}));
+}
