@@ -53,8 +53,6 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
             dispatch(playGameSucceed(data.data));
         }
         else if (data.servMessType === messageTypes.USER_PICKED){
-            console.log('picked!');
-            console.log(data.data);
             dispatch(userPickSucceed(data.data));
         }
 
@@ -88,5 +86,6 @@ export function userPick(moveInfo, gameId){
 
 
 export function userMove(moveInfo, gameId){
+    console.log(moveInfo);
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo, gameId}));
 }
