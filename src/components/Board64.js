@@ -2,7 +2,7 @@ import React from "react";
 import styles from './Css/Board64.css';
 
 import PropTypes from 'prop-types';
-import {userMove} from '../functions/WebSocketStuff';//TODO turn websocket stuff into another middleware and actions
+import {userPick, userMove} from '../functions/WebSocketStuff';//TODO turn websocket stuff into another middleware and actions
 const wm = require('./images/wm.png');
 const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
@@ -28,30 +28,41 @@ class Board64 extends React.Component {
 
         if (userId === game.players[game.currentPlayer]){
 
-            console.log(r+ " "+ c);
-            //reverse move info
-            if (game.currentPlayer === 1){
+
+
+            let moveInfo = {r,c};
+            if (game.currentPlayer === 1){ //reverse move info
                 let dimendion = game.boardState.length;
-                userMove({r:dimendion-1-r, c: dimendion-1-c});
+                moveInfo = {r:dimendion-1-r, c: dimendion-1-c};
+            }
+
+
+            if (game.selectChecker){
+                userPick(moveInfo, game.gameId);
             }
             else{
-                userMove({r,c});
+                userMove(moveInfo, game.gameId);
             }
         }
     }
 
-    addCheckerImage(checkerType){
+    addCheckerImage(checkerType, r, c, pickedChecker){
+        let imgClass = '';
+        if (pickedChecker.length === 2 && pickedChecker[0] === r && pickedChecker[1] === c){
+            imgClass = styles.pickedChecker;
+        }
+
         if (checkerType === 1){
-            return <img src={wm} />
+            return <img src={wm} className={imgClass}/>
         }
         else if (checkerType === 2){
-            return <img src={wk} />
+            return <img src={wk} className={imgClass} />
         }
         else if (checkerType === -1){
-            return <img src={bm} />
+            return <img src={bm} className={imgClass}/>
         }
         else if (checkerType === -2){
-            return <img src={bk} />
+            return <img src={bk} className={imgClass} />
         }
 
     }
@@ -77,6 +88,16 @@ class Board64 extends React.Component {
             boardState = game.boardState;
         }
 
+        //reverse picked checker for 2nd player
+        let pickedChecker = [];
+        if (game.pickedChecker.length === 2 && userId === game.players[1]){
+            pickedChecker.push(gridDimension-1-game.pickedChecker[0]);
+            pickedChecker.push(gridDimension-1-game.pickedChecker[1]);
+        }
+        else{
+            pickedChecker = game.pickedChecker;
+        }
+
 
         let i=0;
         let counter=1;
@@ -89,9 +110,13 @@ class Board64 extends React.Component {
                 if (counter % 2 !== 0) {
                     nextRowTds.push(<td key={c}><div id={i} onClick={(function (r, c) {
                         return function () {
-                            callback(r, c, game, userId);
+                            callback(r, c, game, userId);//dsdsf
                         }
-                    })(r, c)}>{this.addCheckerImage(boardState[r][c])}</div></td>);
+                    })(r, c)}>{
+
+
+                        this.addCheckerImage(boardState[r][c], r, c, pickedChecker)
+                    }</div></td>);
                 }
                 else{
                     nextRowTds.push(<td key={c}></td>);
@@ -103,6 +128,8 @@ class Board64 extends React.Component {
             allRows.push(<tr key={r} >{nextRowTds}</tr>);
             nextRowTds=[];
         }
+
+
         return <tbody>{allRows}</tbody>;
     }
 

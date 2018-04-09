@@ -69,7 +69,10 @@ export function removeAllGames(){
     };
 }
 
-export function updateGameList(games){
-    return {type: types.UPDATE_GAME_LIST, games: games };
+export function recreateGameList(games){
+    return {type: types.RECREATE_GAME_LIST, games: games };
 }
 
+export function userPickSucceed(game){
+    return {type: types.USER_PICK_SUCCEED, game: game };
+}

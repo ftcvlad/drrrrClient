@@ -41,13 +41,16 @@ class Tables64Dashboard extends React.Component {
     redirectUnauthorised(){
         this.props.history.push('/');
     }
+    redirectNotInGame(){
+        this.props.history.push('/tables64');
+    }
 
     componentDidMount(){
 
         if (!window.socketConnection){
             setupWebSocketConnection(roomCategories.TABLE_64_ROOM,
                 this.redirectUnauthorised.bind(this),
-                null,
+                this.redirectNotInGame.bind(this),
                 this.props.dispatch);
         }
         else{

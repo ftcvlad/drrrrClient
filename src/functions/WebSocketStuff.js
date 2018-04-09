@@ -1,4 +1,4 @@
-import {updateGameList, createGameSucceed, playGameSucceed} from '../actions/gameActions';
+import {recreateGameList, createGameSucceed, playGameSucceed, userPickSucceed} from '../actions/gameActions';
 
 export const messageTypes = {
      JOIN_ROOM: "joinRoom",
@@ -6,7 +6,9 @@ export const messageTypes = {
      ERROR : "error",
      BROADCAST_GAME_CREATED: 'broadcastGameCreated',
      BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined',
-     USER_MOVE: 'userMove'
+     USER_MOVE: 'userMove',
+     USER_PICK: 'userPick',
+     USER_PICKED: 'userPicked'
 };
 
 export const roomCategories={
@@ -42,13 +44,18 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
             }
         }
         else if (data.servMessType === messageTypes.JOINED_ROOM){
-            dispatch(updateGameList(data.data));
+            dispatch(recreateGameList(data.data));
         }
         else if (data.servMessType === messageTypes.BROADCAST_GAME_CREATED){
             dispatch(createGameSucceed(data.data));
         }
         else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED){
             dispatch(playGameSucceed(data.data));
+        }
+        else if (data.servMessType === messageTypes.USER_PICKED){
+            console.log('picked!');
+            console.log(data.data);
+            dispatch(userPickSucceed(data.data));
         }
 
 
@@ -72,10 +79,14 @@ export function broadcastGameCreated(){
 }
 
 export function broadcastPlayerJoined(gameId){
-    console.log('broadcast player joined sent!'+gameId);
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.BROADCAST_PLAYER_JOINED, gameId: gameId}));
 }
 
-export function userMove(moveInfo){
-    window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo}));
+export function userPick(moveInfo, gameId){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_PICK, moveInfo:moveInfo, gameId}));
+}
+
+
+export function userMove(moveInfo, gameId){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo, gameId}));
 }
