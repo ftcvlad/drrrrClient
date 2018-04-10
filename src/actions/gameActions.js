@@ -76,3 +76,7 @@ export function recreateGameList(games){
 export function userPickSucceed(game){
     return {type: types.USER_PICK_SUCCEED, game: game };
 }
+
+export function userMoveSucceed(game){
+    return {type: types.USER_MOVE_SUCCEED, game: game };
+}

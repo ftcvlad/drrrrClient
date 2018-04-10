@@ -7,6 +7,7 @@ const wm = require('./images/wm.png');
 const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
 const bk = require('./images/bk.png');
+const lastTurn = require("./images/lastTurn.png");
 
 class Board64 extends React.Component {
 
@@ -25,6 +26,8 @@ class Board64 extends React.Component {
         //
         // }
 
+        // public $itemsToDelete = [];
+        // public $lastTurns = [];
 
         if (userId === game.players[game.currentPlayer]){
 
@@ -36,12 +39,11 @@ class Board64 extends React.Component {
                 moveInfo = {r:dimendion-1-r, c: dimendion-1-c};
             }
 
-
             if (game.selectChecker){
                 userPick(moveInfo, game.gameId);
             }
             else{
-                userMove(moveInfo, game.gameId);
+                 userMove(moveInfo, game.gameId);
             }
         }
     }
@@ -98,6 +100,15 @@ class Board64 extends React.Component {
             pickedChecker = game.pickedChecker;
         }
 
+        //reverse last turns for 2nd player
+        let lastTurns = [];
+        if (userId === game.players[1]){
+            console.log(game.lastTurns);
+            for (let i=0;i<game.lastTurns.length;i++){
+                //game.lastTurns[i]
+            }
+
+        }
 
         let i=0;
         let counter=1;
@@ -108,13 +119,11 @@ class Board64 extends React.Component {
             for (let c = 0; c < cols; ++c) {
                 counter++;
                 if (counter % 2 !== 0) {
-                    nextRowTds.push(<td key={c}><div id={i} onClick={(function (r, c) {
+                    nextRowTds.push(<td key={c} id={i} onClick={(function (r, c) {
                         return function () {
                             callback(r, c, game, userId);//dsdsf
                         }
-                    })(r, c)}>{
-
-
+                    })(r, c)}><div>{
                         this.addCheckerImage(boardState[r][c], r, c, pickedChecker)
                     }</div></td>);
                 }

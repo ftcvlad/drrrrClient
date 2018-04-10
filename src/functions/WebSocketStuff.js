@@ -1,4 +1,4 @@
-import {recreateGameList, createGameSucceed, playGameSucceed, userPickSucceed} from '../actions/gameActions';
+import {recreateGameList, createGameSucceed, playGameSucceed, userPickSucceed, userMoveSucceed} from '../actions/gameActions';
 
 export const messageTypes = {
      JOIN_ROOM: "joinRoom",
@@ -7,6 +7,7 @@ export const messageTypes = {
      BROADCAST_GAME_CREATED: 'broadcastGameCreated',
      BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined',
      USER_MOVE: 'userMove',
+     USER_MOVED: 'userMoved',
      USER_PICK: 'userPick',
      USER_PICKED: 'userPicked'
 };
@@ -55,9 +56,10 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
         else if (data.servMessType === messageTypes.USER_PICKED){
             dispatch(userPickSucceed(data.data));
         }
-
-
-
+        else if (data.servMessType === messageTypes.USER_MOVED){
+            dispatch(userMoveSucceed(data.data));
+        }
+        
     };
 
     conn.onclose = function(e){
@@ -86,6 +88,5 @@ export function userPick(moveInfo, gameId){
 
 
 export function userMove(moveInfo, gameId){
-    console.log(moveInfo);
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo, gameId}));
 }
