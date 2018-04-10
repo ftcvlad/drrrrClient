@@ -59,7 +59,7 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
         else if (data.servMessType === messageTypes.USER_MOVED){
             dispatch(userMoveSucceed(data.data));
         }
-        
+
     };
 
     conn.onclose = function(e){
@@ -88,5 +88,6 @@ export function userPick(moveInfo, gameId){
 
 
 export function userMove(moveInfo, gameId){
+    console.log("user move msg sent!");
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo, gameId}));
 }

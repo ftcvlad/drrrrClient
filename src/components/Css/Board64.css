@@ -67,8 +67,12 @@
     display: table;/*otherwise div height==0 in mozilla o_o*/
 }
 
-.pickedChecker{
+.pickedChecker {
     border-color: #FFEB3B;
     border-width: 3px;
     border-style: solid;
+}
+
+.killedItem{
+    opacity: 0.5;
 }

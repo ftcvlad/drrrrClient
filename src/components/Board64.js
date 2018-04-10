@@ -7,7 +7,7 @@ const wm = require('./images/wm.png');
 const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
 const bk = require('./images/bk.png');
-const lastTurn = require("./images/lastTurn.png");
+const lastTurnImg = require("./images/lastTurn.png");
 
 class Board64 extends React.Component {
 
@@ -43,31 +43,65 @@ class Board64 extends React.Component {
                 userPick(moveInfo, game.gameId);
             }
             else{
-                 userMove(moveInfo, game.gameId);
+                for (let i=0; i<game.possibleGoChoices.length;i++){//don't make unneeded requests, but this is ensured on server
+                    if (game.possibleGoChoices[i].row === moveInfo.r && game.possibleGoChoices[i].col === moveInfo.c){
+                        userMove(moveInfo, game.gameId);
+                        return;
+                    }
+                }
             }
         }
     }
 
-    addCheckerImage(checkerType, r, c, pickedChecker){
+    addCheckerImage(checkerType, r, c, pickedChecker, itemsToDelete){
+
+
         let imgClass = '';
         if (pickedChecker.length === 2 && pickedChecker[0] === r && pickedChecker[1] === c){
             imgClass = styles.pickedChecker;
         }
 
+        let killedItem = "";
+        if (itemsToDelete.length>0){
+            for (let i=0; i<itemsToDelete.length; i++){
+                if (itemsToDelete[i].row === r && itemsToDelete[i].col === c){
+                    killedItem = styles.killedItem;
+                    checkerType = itemsToDelete[i].type;//replace 66 with killed type
+                    break;
+                }
+            }
+        }
+
+
+        const classes = `${imgClass} ${killedItem}`;
+
+
+
         if (checkerType === 1){
-            return <img src={wm} className={imgClass}/>
+            return <img src={wm} className={classes} />
         }
         else if (checkerType === 2){
-            return <img src={wk} className={imgClass} />
+            return <img src={wk} className={classes} />
         }
         else if (checkerType === -1){
-            return <img src={bm} className={imgClass}/>
+            return <img src={bm} className={classes}/>
         }
         else if (checkerType === -2){
-            return <img src={bk} className={imgClass} />
+            return <img src={bk} className={classes} />
         }
 
     }
+
+    addLastTurnImages(lastTurns, r, c){
+
+        for (let i=0;i<lastTurns.length; i++){
+            if (lastTurns[i].row === r && lastTurns[i].col === c){
+                return <img src={lastTurnImg} />
+            }
+        }
+
+    }
+
 
     createBoard(rows, cols, callback, game, userId){//TODO recreated after every state update. Improve?
 
@@ -103,12 +137,27 @@ class Board64 extends React.Component {
         //reverse last turns for 2nd player
         let lastTurns = [];
         if (userId === game.players[1]){
-            console.log(game.lastTurns);
             for (let i=0;i<game.lastTurns.length;i++){
-                //game.lastTurns[i]
+                lastTurns.push({"row":gridDimension - 1 - game.lastTurns[i].row, "col":gridDimension-1-game.lastTurns[i].col});
             }
-
         }
+        else {
+            lastTurns = game.lastTurns;
+        }
+
+        //reverse itemsToDelete for 2nd player
+        let itemsToDelete = [];
+        if (userId === game.players[1]){
+            for (let i=0;i<game.itemsToDelete.length;i++){
+                itemsToDelete.push({"row":gridDimension - 1 - game.itemsToDelete[i].row,
+                    "col":gridDimension-1-game.itemsToDelete[i].col,
+                    "type":game.itemsToDelete[i].type});
+            }
+        }
+        else {
+            itemsToDelete = game.itemsToDelete;
+        }
+
 
         let i=0;
         let counter=1;
@@ -123,9 +172,9 @@ class Board64 extends React.Component {
                         return function () {
                             callback(r, c, game, userId);//dsdsf
                         }
-                    })(r, c)}><div>{
-                        this.addCheckerImage(boardState[r][c], r, c, pickedChecker)
-                    }</div></td>);
+                    })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, itemsToDelete)}
+                                    {this.addLastTurnImages(lastTurns, r, c)}
+                                    </div></td>);
                 }
                 else{
                     nextRowTds.push(<td key={c}></td>);
