@@ -53,7 +53,7 @@ class Board64 extends React.Component {
         }
     }
 
-    addCheckerImage(checkerType, r, c, pickedChecker, itemsToDelete){
+    addCheckerImage(checkerType, r, c, pickedChecker, killedPieces){
 
 
         let imgClass = '';
@@ -62,11 +62,11 @@ class Board64 extends React.Component {
         }
 
         let killedItem = "";
-        if (itemsToDelete.length>0){
-            for (let i=0; i<itemsToDelete.length; i++){
-                if (itemsToDelete[i].row === r && itemsToDelete[i].col === c){
+        if (killedPieces.length>0){
+            for (let i=0; i<killedPieces.length; i++){
+                if (killedPieces[i].row === r && killedPieces[i].col === c){
                     killedItem = styles.killedItem;
-                    checkerType = itemsToDelete[i].type;//replace 66 with killed type
+                    checkerType = killedPieces[i].type;//replace 66 with killed type
                     break;
                 }
             }
@@ -134,28 +134,34 @@ class Board64 extends React.Component {
             pickedChecker = game.pickedChecker;
         }
 
-        //reverse last turns for 2nd player
-        let lastTurns = [];
-        if (userId === game.players[1]){
-            for (let i=0;i<game.lastTurns.length;i++){
-                lastTurns.push({"row":gridDimension - 1 - game.lastTurns[i].row, "col":gridDimension-1-game.lastTurns[i].col});
+        //previous positions 
+        let prevPositions = [];
+        if (game.moves.length>0){
+            let lastMove = game.moves[game.moves.length-1];
+            prevPositions = lastMove["moveInfo"].map(o => o.prev);
+            if (userId === game.players[1]){//reverse killedPieces for 2nd player
+                for (let i=0;i<prevPositions.length;i++){
+                    prevPositions[i].row = gridDimension - 1 - prevPositions[i].row;
+                    prevPositions[i].col = gridDimension - 1 - prevPositions[i].col;
+                }
             }
-        }
-        else {
-            lastTurns = game.lastTurns;
+
         }
 
-        //reverse itemsToDelete for 2nd player
-        let itemsToDelete = [];
-        if (userId === game.players[1]){
-            for (let i=0;i<game.itemsToDelete.length;i++){
-                itemsToDelete.push({"row":gridDimension - 1 - game.itemsToDelete[i].row,
-                    "col":gridDimension-1-game.itemsToDelete[i].col,
-                    "type":game.itemsToDelete[i].type});
+
+        //killed pieces
+        let killedPieces = [];
+        if (game.moves.length>0){
+            let lastMove = game.moves[game.moves.length-1];
+            if (lastMove.finished === false){
+                killedPieces = lastMove["moveInfo"].map(o => o.killed);
+                if (userId === game.players[1]){//reverse killedPieces for 2nd player
+                    for (let i=0;i<killedPieces.length;i++){
+                        killedPieces[i].row = gridDimension - 1 - killedPieces[i].row;
+                        killedPieces[i].col = gridDimension - 1 - killedPieces[i].col;
+                    }
+                }
             }
-        }
-        else {
-            itemsToDelete = game.itemsToDelete;
         }
 
 
@@ -172,8 +178,8 @@ class Board64 extends React.Component {
                         return function () {
                             callback(r, c, game, userId);//dsdsf
                         }
-                    })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, itemsToDelete)}
-                                    {this.addLastTurnImages(lastTurns, r, c)}
+                    })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, killedPieces)}
+                                    {this.addLastTurnImages(prevPositions, r, c)}
                                     </div></td>);
                 }
                 else{
