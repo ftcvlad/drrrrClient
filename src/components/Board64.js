@@ -8,6 +8,7 @@ const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
 const bk = require('./images/bk.png');
 const lastTurnImg = require("./images/lastTurn.png");
+import MovesPanel from './MovesPanel';
 
 class Board64 extends React.Component {
 
@@ -134,7 +135,7 @@ class Board64 extends React.Component {
             pickedChecker = game.pickedChecker;
         }
 
-        //previous positions 
+        //previous positions
         let prevPositions = [];
         if (game.moves.length>0){
             let lastMove = game.moves[game.moves.length-1];
@@ -205,14 +206,17 @@ class Board64 extends React.Component {
         let {game, userId} = this.props;
 
         return (
+            <div style={{display:"flex"}}>
+                <MovesPanel moves={game.moves} userId={userId}/>
+                <div className={styles.board}>
+                    {!game.isGameGoing && <div className={styles.boardOverlay}></div>}
+                    <table >
+                        {this.createBoard(8,8,this.cellClicked, game, userId)}
+                    </table>
 
-        <div className={styles.board}>
-            {!game.isGameGoing && <div className={styles.boardOverlay}></div>}
-            <table >
-                {this.createBoard(8,8,this.cellClicked, game, userId)}
-            </table>
-
-        </div>);
+                </div>
+            </div>
+        );
     }
 
 
