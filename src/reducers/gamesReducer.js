@@ -1,5 +1,5 @@
 import initialState from './initialState';
-import {CREATE_GAME_SUCCEED, PLAY_GAME_SUCCEED, REMOVE_ALL_GAMES_SUCCEED, USER_PICK_SUCCEED,RECREATE_GAME_LIST,USER_MOVE_SUCCEED } from '../actions/actionTypes';
+import {CREATE_GAME_SUCCEED, PLAY_GAME_SUCCEED, REMOVE_ALL_GAMES_SUCCEED, USER_PICK_SUCCEED,RECREATE_GAME_LIST,USER_MOVE_SUCCEED, RECEIVE_CHAT_MESSAGE  } from '../actions/actionTypes';
 
 export default function gamesReducer(state = initialState.games, action) {
     //state is array? o_o -- user is a namespace, but the state for this reducer is []!
@@ -20,6 +20,15 @@ export default function gamesReducer(state = initialState.games, action) {
             return newState;
         case REMOVE_ALL_GAMES_SUCCEED:
             return [];
+        case RECEIVE_CHAT_MESSAGE://TODO make smaller reducers to get specific part of state (e.g. chatMesages)
+            newState = state.slice();
+            newState.find(function(game, index) {
+                if (game.gameId === action.gameId) {
+                    game.chatMessages.push(action.msg);
+                }
+            });
+            return newState;
+
         case RECREATE_GAME_LIST:
             console.log(action);
             return action.games;

@@ -11,7 +11,7 @@ import AvPause from 'material-ui/svg-icons/av/pause';
 import AvPlay from 'material-ui/svg-icons/av/play-arrow';
 
 import IconButton from 'material-ui/IconButton';
-import ActionHome from 'material-ui/svg-icons/action/home';
+
 
 
 const colLetters = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -138,10 +138,6 @@ class MovesPanel extends React.Component {
         this.props.currentMoveChanged(currentMove);
     }
 
-    onScrollUpdate(values){
-        console.log(values);
-
-    }
 
 //sdfsdfdsf
     render(){
@@ -181,7 +177,6 @@ class MovesPanel extends React.Component {
 
             <div style={styles.movesHeader}>Moves</div>
             <Scrollbars style={styles.scrollbarsStyle}
-                        onUpdate={this.onScrollUpdate}
                         hideTracksWhenNotNeeded={false}
                         ref="scrollbars"
                         renderThumbVertical={props => < div {...props} style={styles.verticalThumb}/>}>

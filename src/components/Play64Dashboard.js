@@ -13,6 +13,7 @@ import Board64 from './Board64';
 
 
 import {roomCategories} from "../functions/WebSocketStuff";
+import ChatPanel from "./ChatPanel";
 
 class Play64Dashboard extends React.Component {
 
@@ -57,14 +58,19 @@ class Play64Dashboard extends React.Component {
 
     }
     render() {
+        console.log("+++");
         console.log(this.props.game);
         let {game, user} = this.props;
 
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
+                <div style={{display:"flex"}}>
+                    {game !== null && <Board64 game={game} userId={user.id}/>  }
+                    {game !== null && <ChatPanel gameId={game.gameId}
+                                                chatMessages={game.chatMessages}/>}
+                </div>
 
-                {game !== null && <Board64 game={game} userId={user.id}/>  }
                 {game === null && <p>no game!</p>}
                 < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>

@@ -1,4 +1,5 @@
 import {recreateGameList, createGameSucceed, playGameSucceed, userPickSucceed, userMoveSucceed} from '../actions/gameActions';
+import {receiveChatMessage} from '../actions/chatActions';
 
 export const messageTypes = {
      JOIN_ROOM: "joinRoom",
@@ -9,7 +10,8 @@ export const messageTypes = {
      USER_MOVE: 'userMove',
      USER_MOVED: 'userMoved',
      USER_PICK: 'userPick',
-     USER_PICKED: 'userPicked'
+     USER_PICKED: 'userPicked',
+     SEND_CHAT_MESSAGE: 'sendChatMessage'
 };
 
 export const roomCategories={
@@ -59,6 +61,9 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
         else if (data.servMessType === messageTypes.USER_MOVED){
             dispatch(userMoveSucceed(data.data));
         }
+        else if (data.servMessType === messageTypes.SEND_CHAT_MESSAGE){
+            dispatch(receiveChatMessage(data.data, data.gameId));
+        }
 
     };
 
@@ -88,6 +93,10 @@ export function userPick(moveInfo, gameId){
 
 
 export function userMove(moveInfo, gameId){
-    console.log("user move msg sent!");
+
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo, gameId}));
+}
+
+export function sendMessage(msgObj, gameId){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.SEND_CHAT_MESSAGE, msgObj:msgObj, gameId}));
 }
