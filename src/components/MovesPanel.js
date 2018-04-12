@@ -30,7 +30,8 @@ const styles = {
     selectedListItemStyle:{
         display:"flex",
         color:"white",
-        backgroundColor:"red"
+        backgroundColor:"#ff0000",
+        opacity:0.4
     },
     listStyle:{
         backgroundColor: "#42454c",
@@ -84,10 +85,41 @@ class MovesPanel extends React.Component {
 
     constructor(props) {
         super(props);
-
+        this.state = {playing: false};
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
     }
 
+    startTimer() {
+        if (this.timer === 0) {
+            this.timer = setInterval(this.playbackNextClicked.bind(this), 1300);
+        }
+    }
 
+    stopTimer(){
+        if (this.timer !== 0){
+            clearInterval(this.timer);
+            this.timer = 0;
+        }
+    }
+
+    playbackPrevClicked(){
+        this.props.currentMoveChanged(Math.max(this.props.currentMove-1, 0));
+    }
+
+    playbackNextClicked(){
+        if ((this.props.currentMove+1 ===  this.props.moves.length-1) && (this.state.playing === true)){
+            this.setState({playing:false});
+            this.stopTimer();
+        }
+        this.props.currentMoveChanged(Math.min(this.props.currentMove+1, this.props.moves.length-1));
+    }
+
+    playbackPlayPauseClicked(){
+        let newPlaying = !this.state.playing;
+        newPlaying === true ? this.startTimer() : this.stopTimer();
+        this.setState({playing: newPlaying});
+    }
 
 //sdfsdfdsf
     render(){
@@ -110,10 +142,15 @@ class MovesPanel extends React.Component {
                                      rightIcon={<AvStop color={moveColor} />}
                                      innerDivStyle={idStyle}
                                      primaryText={startStr+"-"+endStr}
-                                     onClick={()=>this.props.moveRowClicked(i)}/>);
+                                     onClick={()=>this.props.currentMoveChanged(i)}/>);
             listItems.push(<Divider key={"div"+i}/>)
         }
 
+        let prevDisabled = currentMove === 0 || this.state.playing;
+        let nextDisabled = currentMove === moves.length-1 || this.state.playing;
+        let playPauseDisabled = currentMove === moves.length-1;
+
+        let playPauseButton = this.state.playing ? <AvPause /> : <AvPlay /> ;
         return  <List style={styles.listStyle}>
 
             <div style={styles.movesHeader}>Moves</div>
@@ -131,23 +168,24 @@ class MovesPanel extends React.Component {
                 <IconButton iconStyle={styles.smallIcon}
                             hoveredStyle={styles.iconHovered}
                             style={styles.smallButton}
-                            onClick={}>
+                            disabled={prevDisabled}
+                            onClick={this.playbackPrevClicked.bind(this)}>
 
                     <AvStepPrevious />
                 </IconButton>
+
                 <IconButton iconStyle={styles.smallIcon}
                             hoveredStyle={styles.iconHovered}
-                            style={styles.smallButton}>
-                    <AvPlay />
+                            style={styles.smallButton}
+                            disabled={playPauseDisabled}
+                            onClick={this.playbackPlayPauseClicked.bind(this)}>
+                    {playPauseButton}
                 </IconButton>
                 <IconButton iconStyle={styles.smallIcon}
                             hoveredStyle={styles.iconHovered}
-                            style={styles.smallButton}>
-                    <AvPause />
-                </IconButton>
-                <IconButton iconStyle={styles.smallIcon}
-                            hoveredStyle={styles.iconHovered}
-                            style={styles.smallButton}>
+                            style={styles.smallButton}
+                            disabled={nextDisabled}
+                            onClick={this.playbackNextClicked.bind(this)}>
                     <AvStepNext />
                 </IconButton>
 
@@ -167,8 +205,9 @@ class MovesPanel extends React.Component {
 MovesPanel.propTypes={
     moves: PropTypes.array.isRequired,
     userId: PropTypes.number.isRequired,
-    moveRowClicked: PropTypes.func.isRequired,
+    currentMoveChanged: PropTypes.func.isRequired,
     replaying:PropTypes.bool.isRequired,
+    currentMove: PropTypes.number.isRequired
 
 };
 

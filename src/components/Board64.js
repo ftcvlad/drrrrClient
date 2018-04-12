@@ -18,7 +18,9 @@ class Board64 extends React.Component {
         this.state = {currentMove: props.game.moves.length-1, replaying: false};
     }
 
-    moveRowClicked(moveNum){
+
+
+    currentMoveChanged(moveNum){
         if (moveNum === this.props.game.moves.length-1){
             this.setState({currentMove:moveNum, replaying:false});
         }
@@ -242,7 +244,7 @@ class Board64 extends React.Component {
                             userId={userId}
                             currentMove={currentMove}
                             replaying={this.state.replaying}
-                            moveRowClicked={this.moveRowClicked.bind(this)}/>
+                            currentMoveChanged={this.currentMoveChanged.bind(this)}/>
                 <div className={styles.board}>
                     {!game.isGameGoing && <div className={styles.boardOverlay}></div>}
                     {this.state.replaying && <div className={styles.replayingOverlay}></div>}
