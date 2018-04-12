@@ -5,7 +5,13 @@ import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import { Scrollbars } from 'react-custom-scrollbars';
 import AvStop from 'material-ui/svg-icons/av/stop';
+import AvStepPrevious from 'material-ui/svg-icons/av/skip-previous';
+import AvStepNext from 'material-ui/svg-icons/av/skip-next';
+import AvPause from 'material-ui/svg-icons/av/pause';
+import AvPlay from 'material-ui/svg-icons/av/play-arrow';
 
+import IconButton from 'material-ui/IconButton';
+import ActionHome from 'material-ui/svg-icons/action/home';
 
 
 const colLetters = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -38,8 +44,9 @@ const styles = {
         lineHeight: "48px"
     },
     scrollbarsStyle:{
-        height: 440,
-        width:170
+        height: 399,
+        width:170,
+        backgroundColor: "#4f525a"
     },
     listItemsContainer:{
         marginRight:"15px"
@@ -47,6 +54,29 @@ const styles = {
     verticalThumb:{
         width:"20px",
         backgroundColor:"#9c1818"
+    },
+    smallIcon:{
+        width: 25,
+        height: 25,
+        color:"#9c1818"
+    },
+    smallButton:{
+        width: 25,
+        height: 25,
+        padding: 0,
+        margin: "0 3px 0 3px"
+    },
+    playbackHolder:{
+
+        backgroundColor: "#ffffff",
+        margin: "10 0 10 0",
+        padding: 2,
+        display: "flex",
+        justifyContent: "space-evenly"
+    },
+    iconHovered:{
+        backgroundColor:"#b7b5b5"
+
     }
 };
 
@@ -97,6 +127,34 @@ class MovesPanel extends React.Component {
 
 
             </Scrollbars>
+            <div style={styles.playbackHolder}>
+                <IconButton iconStyle={styles.smallIcon}
+                            hoveredStyle={styles.iconHovered}
+                            style={styles.smallButton}
+                            onClick={}>
+
+                    <AvStepPrevious />
+                </IconButton>
+                <IconButton iconStyle={styles.smallIcon}
+                            hoveredStyle={styles.iconHovered}
+                            style={styles.smallButton}>
+                    <AvPlay />
+                </IconButton>
+                <IconButton iconStyle={styles.smallIcon}
+                            hoveredStyle={styles.iconHovered}
+                            style={styles.smallButton}>
+                    <AvPause />
+                </IconButton>
+                <IconButton iconStyle={styles.smallIcon}
+                            hoveredStyle={styles.iconHovered}
+                            style={styles.smallButton}>
+                    <AvStepNext />
+                </IconButton>
+
+
+
+
+            </div>
 
         </List>;
 

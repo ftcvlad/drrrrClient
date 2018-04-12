@@ -27,7 +27,7 @@ class Board64 extends React.Component {
         }
     }
 
-    cellClicked(r,c, game, userId){
+    cellClicked(r,c, game, userId, replaying){
 
 
         // if (!animationRunning) {
@@ -38,10 +38,10 @@ class Board64 extends React.Component {
         // }
 
 
-        if (userId === game.players[game.currentPlayer]){
+        if (userId === game.players[game.currentPlayer] && replaying === false){
 
 
-
+            console.log("cell clicked");
             let moveInfo = {r,c};
             if (game.currentPlayer === 1){ //reverse move info
                 let dimendion = game.boardState.length;
@@ -112,14 +112,12 @@ class Board64 extends React.Component {
     }
 
 
-    createBoard(rows, cols, callback, game, userId, currentMove){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, callback, game, userId, currentMove, replaying){//TODO recreated after every state update. Improve?
 
         let gridDimension = game.boardState.length;
 
         //return board to the state after currently selected move.
-        let boardStateWithHistory = game.boardState.map(function(arr) {
-            return arr.slice();
-        });
+        let boardStateWithHistory = game.boardState.map(arr => arr.slice());
 
         for (let i=game.moves.length-1; i>currentMove; i--){
             const moveInfo = game.moves[i].moveInfo;
@@ -207,7 +205,7 @@ class Board64 extends React.Component {
                 if (counter % 2 !== 0) {
                     nextRowTds.push(<td key={c} id={i} onClick={(function (r, c) {
                         return function () {
-                            callback(r, c, game, userId);//dsdsf
+                            callback(r, c, game, userId, replaying);//dsdsf
                         }
                     })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, killedPieces)}
                                     {this.addLastTurnImages(prevPositions, r, c)}
@@ -247,8 +245,9 @@ class Board64 extends React.Component {
                             moveRowClicked={this.moveRowClicked.bind(this)}/>
                 <div className={styles.board}>
                     {!game.isGameGoing && <div className={styles.boardOverlay}></div>}
+                    {this.state.replaying && <div className={styles.replayingOverlay}></div>}
                     <table >
-                        {this.createBoard(8,8,this.cellClicked, game, userId, currentMove)}
+                        {this.createBoard(8,8,this.cellClicked, game, userId, currentMove, this.state.replaying)}
                     </table>
 
                 </div>
