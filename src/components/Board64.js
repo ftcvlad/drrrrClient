@@ -14,8 +14,18 @@ class Board64 extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {currentMove: props.game.moves.length-1, replaying: false};
     }
 
+    moveRowClicked(moveNum){
+        if (moveNum === this.props.game.moves.length-1){
+            this.setState({currentMove:moveNum, replaying:false});
+        }
+        else{
+            this.setState({currentMove:moveNum, replaying:true});
+        }
+    }
 
     cellClicked(r,c, game, userId){
 
@@ -27,8 +37,6 @@ class Board64 extends React.Component {
         //
         // }
 
-        // public $itemsToDelete = [];
-        // public $lastTurns = [];
 
         if (userId === game.players[game.currentPlayer]){
 
@@ -104,9 +112,31 @@ class Board64 extends React.Component {
     }
 
 
-    createBoard(rows, cols, callback, game, userId){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, callback, game, userId, currentMove){//TODO recreated after every state update. Improve?
 
         let gridDimension = game.boardState.length;
+
+        //return board to the state after currently selected move.
+        let boardStateWithHistory = game.boardState.map(function(arr) {
+            return arr.slice();
+        });
+
+        for (let i=game.moves.length-1; i>currentMove; i--){
+            const moveInfo = game.moves[i].moveInfo;
+            for (let j=moveInfo.length-1; j>=0; j--){
+                let type = boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col];
+                boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col] = 0;
+                boardStateWithHistory[moveInfo[j].prev.row][moveInfo[j].prev.col] = type;
+                if (moveInfo[j].killed){
+                    boardStateWithHistory[moveInfo[j].killed.row][moveInfo[j].killed.col] = moveInfo[j].killed.type;
+                }
+            }
+        }
+
+
+
+
+
 
 
         //reverse board for 2nd player
@@ -117,12 +147,12 @@ class Board64 extends React.Component {
             }
             for (let i =0; i<gridDimension; i++){
                 for (let j=0; j<gridDimension; j++){
-                    boardState[gridDimension-1-i][gridDimension-1-j] = game.boardState[i][j];
+                    boardState[gridDimension-1-i][gridDimension-1-j] = boardStateWithHistory[i][j];
                 }
             }
         }
         else{
-            boardState = game.boardState;
+            boardState = boardStateWithHistory;
         }
 
         //reverse picked checker for 2nd player
@@ -138,7 +168,7 @@ class Board64 extends React.Component {
         //previous positions
         let prevPositions = [];
         if (game.moves.length>0){
-            let lastMove = game.moves[game.moves.length-1];
+            let lastMove = game.moves[currentMove];
             prevPositions = lastMove["moveInfo"].map(o => o.prev);
             if (userId === game.players[1]){//reverse killedPieces for 2nd player
                 for (let i=0;i<prevPositions.length;i++){
@@ -201,17 +231,24 @@ class Board64 extends React.Component {
 
 
 
+
     render(){
 
         let {game, userId} = this.props;
 
+        let currentMove = this.state.replaying === true ? this.state.currentMove : game.moves.length-1;
+
         return (
             <div style={{display:"flex"}}>
-                <MovesPanel moves={game.moves} userId={userId}/>
+                <MovesPanel moves={game.moves}
+                            userId={userId}
+                            currentMove={currentMove}
+                            replaying={this.state.replaying}
+                            moveRowClicked={this.moveRowClicked.bind(this)}/>
                 <div className={styles.board}>
                     {!game.isGameGoing && <div className={styles.boardOverlay}></div>}
                     <table >
-                        {this.createBoard(8,8,this.cellClicked, game, userId)}
+                        {this.createBoard(8,8,this.cellClicked, game, userId, currentMove)}
                     </table>
 
                 </div>

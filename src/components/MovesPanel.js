@@ -21,6 +21,11 @@ const styles = {
         display:"flex",
         color:"white"
     },
+    selectedListItemStyle:{
+        display:"flex",
+        color:"white",
+        backgroundColor:"red"
+    },
     listStyle:{
         backgroundColor: "#42454c",
         padding: "0 18px 0 18px"
@@ -53,13 +58,11 @@ class MovesPanel extends React.Component {
     }
 
 
-    moveRowClicked(i){
-        console.log(i);
-    }
 
+//sdfsdfdsf
     render(){
 
-        let {moves, userId} = this.props;
+        let {moves, userId, currentMove} = this.props;
         let listItems = [];
         for (let i=moves.length-1; i>=0; i--){
             let player = moves[i].player;
@@ -70,12 +73,14 @@ class MovesPanel extends React.Component {
             let endStr = colLetters[end.col]+rowNumbers[end.row];
 
             let moveColor = player === 0 ? "white":"red";
+            let idStyle = i === currentMove ? styles.selectedListItemStyle : styles.listItemStyle;
+
             listItems.push(<ListItem key={"li"+i}
                                      children={<div key={"child"+i} style={styles.moveNumberStyle}>{i+1}</div>}
                                      rightIcon={<AvStop color={moveColor} />}
-                                     innerDivStyle={styles.listItemStyle}
+                                     innerDivStyle={idStyle}
                                      primaryText={startStr+"-"+endStr}
-                                     onClick={this.moveRowClicked.bind(this, i)}/>);
+                                     onClick={()=>this.props.moveRowClicked(i)}/>);
             listItems.push(<Divider key={"div"+i}/>)
         }
 
@@ -103,7 +108,10 @@ class MovesPanel extends React.Component {
 
 MovesPanel.propTypes={
     moves: PropTypes.array.isRequired,
-    userId: PropTypes.number.isRequired
+    userId: PropTypes.number.isRequired,
+    moveRowClicked: PropTypes.func.isRequired,
+    replaying:PropTypes.bool.isRequired,
+
 };
 
 
