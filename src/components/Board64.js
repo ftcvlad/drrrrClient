@@ -236,7 +236,11 @@ class Board64 extends React.Component {
 
         let {game, userId} = this.props;
 
-        let currentMove = this.state.replaying === true ? this.state.currentMove : game.moves.length-1;
+        let currentMove = -1;
+        if (game.moves.length>0){
+            currentMove = this.state.replaying === true ? this.state.currentMove : game.moves.length-1;
+        }
+
 
         return (
             <div style={{display:"flex"}}>

@@ -19,24 +19,26 @@ const rowNumbers = [8, 7, 6, 5, 4, 3, 2, 1];
 
 const styles = {
     moveNumberStyle:{
-        paddingRight: "6px",
+        paddingRight: "2px",
         marginRight:"10px",
-        borderRight: "1px solid black"
+        borderRight: "1px solid black",//sadasd
+        minWidth: "27px"
     },
     listItemStyle:{
         display:"flex",
-        color:"white"
+        color:"white",
+        padding: "16px 56px 16px 9px"
+
     },
     selectedListItemStyle:{
-        display:"flex",
-        color:"white",
-        backgroundColor:"#ff0000",
-        opacity:0.4
+        backgroundColor:"#ff000066"
+    },
+    selectedFirstListItemStyle:{
+        backgroundColor: "#4caf5066"
     },
     listStyle:{
         backgroundColor: "#42454c",
         padding: "0 18px 0 18px"
-
     },
     movesHeader:{
         color: "white",
@@ -92,7 +94,7 @@ class MovesPanel extends React.Component {
 
     startTimer() {
         if (this.timer === 0) {
-            this.timer = setInterval(this.playbackNextClicked.bind(this), 1300);
+            this.timer = setInterval(this.playbackNextClicked.bind(this), 1000);
         }
     }
 
@@ -104,7 +106,9 @@ class MovesPanel extends React.Component {
     }
 
     playbackPrevClicked(){
-        this.props.currentMoveChanged(Math.max(this.props.currentMove-1, 0));
+        const currentMove = Math.max(this.props.currentMove-1, 0);
+        this.moveScrollbar(currentMove);
+        this.props.currentMoveChanged(currentMove);
     }
 
     playbackNextClicked(){
@@ -112,13 +116,31 @@ class MovesPanel extends React.Component {
             this.setState({playing:false});
             this.stopTimer();
         }
-        this.props.currentMoveChanged(Math.min(this.props.currentMove+1, this.props.moves.length-1));
+        const currentMove = Math.min(this.props.currentMove+1, this.props.moves.length-1);
+        this.moveScrollbar(currentMove);
+        this.props.currentMoveChanged(currentMove);
     }
 
     playbackPlayPauseClicked(){
         let newPlaying = !this.state.playing;
         newPlaying === true ? this.startTimer() : this.stopTimer();
         this.setState({playing: newPlaying});
+    }
+
+    moveScrollbar(currentMove){
+        const { scrollbars } = this.refs;
+        const scrollDistance = (scrollbars.getScrollHeight()-scrollbars.getClientHeight()) * (1-currentMove/(this.props.moves.length-1));
+        scrollbars.scrollTop(scrollDistance);
+    }
+
+    listItemClicked(currentMove){
+        this.moveScrollbar(currentMove);
+        this.props.currentMoveChanged(currentMove);
+    }
+
+    onScrollUpdate(values){
+        console.log(values);
+
     }
 
 //sdfsdfdsf
@@ -135,26 +157,33 @@ class MovesPanel extends React.Component {
             let endStr = colLetters[end.col]+rowNumbers[end.row];
 
             let moveColor = player === 0 ? "white":"red";
-            let idStyle = i === currentMove ? styles.selectedListItemStyle : styles.listItemStyle;
+            let listItemStyle = {};
+            if (i === currentMove){
+                listItemStyle = currentMove === moves.length-1 ? styles.selectedFirstListItemStyle : styles.selectedListItemStyle;
+            }
+
 
             listItems.push(<ListItem key={"li"+i}
                                      children={<div key={"child"+i} style={styles.moveNumberStyle}>{i+1}</div>}
                                      rightIcon={<AvStop color={moveColor} />}
-                                     innerDivStyle={idStyle}
+                                     innerDivStyle={Object.assign(listItemStyle, styles.listItemStyle )}
                                      primaryText={startStr+"-"+endStr}
-                                     onClick={()=>this.props.currentMoveChanged(i)}/>);
+                                     onClick={()=>this.listItemClicked(i)}/>);
             listItems.push(<Divider key={"div"+i}/>)
         }
 
-        let prevDisabled = currentMove === 0 || this.state.playing;
-        let nextDisabled = currentMove === moves.length-1 || this.state.playing;
-        let playPauseDisabled = currentMove === moves.length-1;
+        let prevDisabled = currentMove <= 0 || this.state.playing;
+        let nextDisabled = currentMove<0 || currentMove === moves.length-1 || this.state.playing;
+        let playPauseDisabled = currentMove<0 || currentMove === moves.length-1;//s/dfsdsdfdsf
 
         let playPauseButton = this.state.playing ? <AvPause /> : <AvPlay /> ;
         return  <List style={styles.listStyle}>
 
             <div style={styles.movesHeader}>Moves</div>
             <Scrollbars style={styles.scrollbarsStyle}
+                        onUpdate={this.onScrollUpdate}
+                        hideTracksWhenNotNeeded={false}
+                        ref="scrollbars"
                         renderThumbVertical={props => < div {...props} style={styles.verticalThumb}/>}>
 
 
