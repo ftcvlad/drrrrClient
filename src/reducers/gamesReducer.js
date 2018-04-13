@@ -20,11 +20,15 @@ export default function gamesReducer(state = initialState.games, action) {
             return newState;
         case REMOVE_ALL_GAMES_SUCCEED:
             return [];
-        case RECEIVE_CHAT_MESSAGE://TODO make smaller reducers to get specific part of state (e.g. chatMesages)
+        //TODO make smaller reducers to get specific part of state (e.g. chatMesages)
+        //TODO split game into table:{game, chatMessages}. Then separate reducer for game and ChatMessages
+        case RECEIVE_CHAT_MESSAGE:
             newState = state.slice();
             newState.find(function(game, index) {
                 if (game.gameId === action.gameId) {
-                    game.chatMessages.push(action.msg);
+                    let updatedChatMessages =  game.chatMessages.slice();
+                    updatedChatMessages.push(action.msg);
+                    game.chatMessages =updatedChatMessages;
                 }
             });
             return newState;

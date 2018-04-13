@@ -58,8 +58,7 @@ class Play64Dashboard extends React.Component {
 
     }
     render() {
-        console.log("+++");
-        console.log(this.props.game);
+
         let {game, user} = this.props;
 
         return (
@@ -67,8 +66,7 @@ class Play64Dashboard extends React.Component {
                 <NavBar selectedTab={3}/>
                 <div style={{display:"flex"}}>
                     {game !== null && <Board64 game={game} userId={user.id}/>  }
-                    {game !== null && <ChatPanel gameId={game.gameId}
-                                                chatMessages={game.chatMessages}/>}
+                    {game !== null && <ChatPanel gameId={game.gameId}/>}
                 </div>
 
                 {game === null && <p>no game!</p>}
