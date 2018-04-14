@@ -3,14 +3,11 @@ import {receiveChatMessage} from '../actions/chatActions';
 
 export const messageTypes = {
      JOIN_ROOM: "joinRoom",
-     JOINED_ROOM :"joinedRoom",
      ERROR : "error",
      BROADCAST_GAME_CREATED: 'broadcastGameCreated',
      BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined',
      USER_MOVE: 'userMove',
-     USER_MOVED: 'userMoved',
      USER_PICK: 'userPick',
-     USER_PICKED: 'userPicked',
      SEND_CHAT_MESSAGE: 'sendChatMessage'
 };
 
@@ -46,7 +43,7 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
                 redirectUnauthorised();
             }
         }
-        else if (data.servMessType === messageTypes.JOINED_ROOM){
+        else if (data.servMessType === messageTypes.JOIN_ROOM){
             dispatch(recreateGameList(data.data));
         }
         else if (data.servMessType === messageTypes.BROADCAST_GAME_CREATED){
@@ -55,14 +52,14 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
         else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED){
             dispatch(playGameSucceed(data.data));
         }
-        else if (data.servMessType === messageTypes.USER_PICKED){
+        else if (data.servMessType === messageTypes.USER_PICK){
             dispatch(userPickSucceed(data.data));
         }
-        else if (data.servMessType === messageTypes.USER_MOVED){
+        else if (data.servMessType === messageTypes.USER_MOVE){
             dispatch(userMoveSucceed(data.data));
         }
         else if (data.servMessType === messageTypes.SEND_CHAT_MESSAGE){
-            dispatch(receiveChatMessage(data.data, data.gameId));
+            dispatch(receiveChatMessage(data.data));
         }
 
     };
