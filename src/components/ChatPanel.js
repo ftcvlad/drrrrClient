@@ -1,6 +1,6 @@
 import React from "react";
 import TextField from 'material-ui/TextField';
-import {List, ListItem} from 'material-ui/List';
+import {ListItem} from 'material-ui/List';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import InsertEmoji from 'material-ui/svg-icons/editor/insert-emoticon';
 import IconButton from 'material-ui/IconButton';
@@ -16,11 +16,12 @@ import { Scrollbars } from 'react-custom-scrollbars';
 const styles={
     containerDiv:{
         width:250,
-        height:300,
+        height:250,
         backgroundColor:"#42454c",
         display:"flex",
         flexDirection:"column",
-        padding:5
+        padding:5,
+        margin: "0 5px 5px 5px"
 
     },
     typeMessageBox:{
@@ -32,7 +33,7 @@ const styles={
     },
     scrollbarsStyle:{
 
-        backgroundColor: "#4f525a"
+        //backgroundColor: "#213d34"
     },
     listItemsContainer:{
 
@@ -65,6 +66,19 @@ const styles={
     },
     iconHovered:{
         backgroundColor:"#b7b5b5"
+    },
+    header:{
+        textAlign: "left",
+        color: "#d0ab44",
+        fontFamily: "monospace",
+        borderBottom: "1px solid white",
+        paddingLeft:5
+    },
+    wrapper:{
+        backgroundColor: "#4f525a",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column"
     }
 };
 
@@ -83,6 +97,7 @@ class ChatPanel extends React.Component {
                 msg
             };
             this.setState({messageToSend:""});
+
             sendMessage(msgObj, this.props.gameId);
         }
 
@@ -94,10 +109,15 @@ class ChatPanel extends React.Component {
     addEmoji(){
 
     }
-
+    componentDidUpdate(){
+        let {scrollbars} = this.refs;
+        scrollbars.scrollToBottom();
+    }
+    //asdasasd
     render(){
 
         let {chatMessages} = this.props;
+
         let listItems = [];
 
         //chatMessage == {senderId, msgText, sender}
@@ -113,8 +133,8 @@ class ChatPanel extends React.Component {
         return <div style={styles.containerDiv}>
 
 
-
-
+            <div style={styles.wrapper}>
+                    <div style={styles.header}>Chat</div>
                     <Scrollbars style={styles.scrollbarsStyle}
                                 hideTracksWhenNotNeeded={false}
                                 ref="scrollbars"
@@ -123,7 +143,7 @@ class ChatPanel extends React.Component {
                             {listItems}
 
                     </Scrollbars>
-
+            </div>
 
                     <div style={styles.typeMessageBox}>
 

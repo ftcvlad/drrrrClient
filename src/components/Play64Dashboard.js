@@ -14,6 +14,7 @@ import Board64 from './Board64';
 
 import {roomCategories} from "../functions/WebSocketStuff";
 import ChatPanel from "./ChatPanel";
+import ParticipantList from "./ParticipantPanel";
 
 class Play64Dashboard extends React.Component {
 
@@ -66,7 +67,14 @@ class Play64Dashboard extends React.Component {
                 <NavBar selectedTab={3}/>
                 <div style={{display:"flex"}}>
                     {game !== null && <Board64 game={game} userId={user.id}/>  }
-                    {game !== null && <ChatPanel gameId={game.gameId}/>}
+                    {game !== null &&
+                    <div style={{display:"flex", flexDirection:"column"}}>
+                        <ParticipantList players={game.players} watchers={game.watchers}/>
+                        <ChatPanel gameId={game.gameId}/>
+                    </div>
+
+
+                    }
                 </div>
 
                 {game === null && <p>no game!</p>}

@@ -9,11 +9,10 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
-import {login} from "../actions/authActions";
 import {connect} from "react-redux";
 import {getAllGames} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
-import {createGame, playGame} from"../actions/gameActions";
+import {createGame, playGame, watchGame} from"../actions/gameActions";
 import {joinRoom, broadcastGameCreated, broadcastPlayerJoined, roomCategories, setupWebSocketConnection} from "../functions/WebSocketStuff";
 import PropTypes from 'prop-types';
 
@@ -67,7 +66,6 @@ class Tables64Dashboard extends React.Component {
             .then(()=> {
                 broadcastPlayerJoined(gameId);
                 this.props.history.push('/play64');
-                console.log('SUCC');
             })
             .catch((errMsg)=>{
                 console.log(errMsg);
@@ -79,13 +77,22 @@ class Tables64Dashboard extends React.Component {
     watchClicked(gameId){
         console.log('watch ' +gameId);
 
+        this.props.dispatch(watchGame({gameId}))
+            .then(()=> {
+                broadcastPlayerJoined(gameId);
+                this.props.history.push('/play64');
+                console.log('SUCC');
+            })
+            .catch((errMsg)=>{
+                console.log(errMsg);
+            });
     }
 
     createParticipantPlayerList(game){
         return (
             <div>
-                {game.players.map(function(playerId, index){
-                    return <li key={index}>{playerId}</li>;
+                {game.players.map(function(player, index){
+                    return <li key={index}>{player.id}</li>;
                 })}
             </div>
         );

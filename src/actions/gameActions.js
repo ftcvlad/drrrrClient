@@ -9,6 +9,9 @@ export function playGameSucceed(data){
     return {type: types.PLAY_GAME_SUCCEED, game: data };
 }
 
+export function watchGameSucceed(data){
+    return {type: types.WATCH_GAME_SUCCEED, game: data };
+}
 
 export function createGame(options){
     return {
@@ -35,6 +38,24 @@ export function playGame(data){
         request: {
             method: 'put',
             url: 'http://localhost:8080/games/'+data.gameId+'/play',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+            mode: 'cors',
+            credentials: 'include'
+        }
+    };
+}
+
+export function watchGame(data){
+    return {
+        type:"API_CALL",
+        successActionCreator: watchGameSucceed,
+        request: {
+            method: 'put',
+            url: 'http://localhost:8080/games/'+data.gameId+'/watch',
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

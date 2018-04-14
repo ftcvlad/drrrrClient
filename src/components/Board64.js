@@ -40,7 +40,7 @@ class Board64 extends React.Component {
         // }
 
 
-        if (userId === game.players[game.currentPlayer] && replaying === false){
+        if (userId === game.players[game.currentPlayer]["id"] && replaying === false){
 
 
             console.log("cell clicked");
@@ -124,7 +124,7 @@ class Board64 extends React.Component {
         for (let i=game.moves.length-1; i>currentMove; i--){
             const moveInfo = game.moves[i].moveInfo;
             for (let j=moveInfo.length-1; j>=0; j--){
-                let type = boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col];
+                let type = moveInfo[j].prevType;
                 boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col] = 0;
                 boardStateWithHistory[moveInfo[j].prev.row][moveInfo[j].prev.col] = type;
                 if (moveInfo[j].killed){
@@ -141,7 +141,7 @@ class Board64 extends React.Component {
 
         //reverse board for 2nd player
         let boardState = [];
-        if (userId === game.players[1]){
+        if (game.players.length>1 && userId === game.players[1]["id"]){
             for(i = 0; i < gridDimension; i++) {
                 boardState.push(new Array(gridDimension));
             }
@@ -157,7 +157,7 @@ class Board64 extends React.Component {
 
         //reverse picked checker for 2nd player
         let pickedChecker = [];
-        if (game.pickedChecker.length === 2 && userId === game.players[1]){
+        if (game.players.length>1 && game.pickedChecker.length === 2 && userId === game.players[1]["id"]){
             pickedChecker.push(gridDimension-1-game.pickedChecker[0]);
             pickedChecker.push(gridDimension-1-game.pickedChecker[1]);
         }
@@ -170,7 +170,7 @@ class Board64 extends React.Component {
         if (game.moves.length>0){
             let lastMove = game.moves[currentMove];
             prevPositions = lastMove["moveInfo"].map(o => o.prev);
-            if (userId === game.players[1]){//reverse killedPieces for 2nd player
+            if (game.players.length>1 && userId === game.players[1]["id"]){//reverse killedPieces for 2nd player
                 for (let i=0;i<prevPositions.length;i++){
                     prevPositions[i].row = gridDimension - 1 - prevPositions[i].row;
                     prevPositions[i].col = gridDimension - 1 - prevPositions[i].col;
@@ -186,7 +186,7 @@ class Board64 extends React.Component {
             let lastMove = game.moves[game.moves.length-1];
             if (lastMove.finished === false){
                 killedPieces = lastMove["moveInfo"].map(o => o.killed);
-                if (userId === game.players[1]){//reverse killedPieces for 2nd player
+                if (game.players.length>1 && userId === game.players[1]["id"]){//reverse killedPieces for 2nd player
                     for (let i=0;i<killedPieces.length;i++){
                         killedPieces[i].row = gridDimension - 1 - killedPieces[i].row;
                         killedPieces[i].col = gridDimension - 1 - killedPieces[i].col;

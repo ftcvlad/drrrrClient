@@ -7,8 +7,12 @@ export const getAllGames= (state) => {return state.games};
 export const getCurrentGame = createSelector(
     [ getUser, getAllGames ],
     (user, allGames) => {
+        let playerIds = [];
+        let watcherIds = [];
         for (let i=0; i<allGames.length; i++) {
-            if (allGames[i].players.indexOf(user.id)>-1 || allGames[i].watchers.indexOf(user.id)>-1){
+            playerIds = allGames[i].players.map(p=>p.id);
+            watcherIds = allGames[i].watchers.map(w=>w.id);
+            if (playerIds.indexOf(user.id)>-1 || watcherIds.indexOf(user.id)>-1){
                 return allGames[i];
             }
         }
@@ -23,8 +27,12 @@ export const getCurrentGame = createSelector(
 export const getChatMessages = createSelector(
     [ getUser, getAllGames ],
     (user, allGames) => {
+        let playerIds = [];
+        let watcherIds = [];
         for (let i=0; i<allGames.length; i++) {
-            if (allGames[i].players.indexOf(user.id)>-1 || allGames[i].watchers.indexOf(user.id)>-1){
+            playerIds = allGames[i].players.map(p=>p.id);
+            watcherIds = allGames[i].watchers.map(w=>w.id);
+            if (playerIds.indexOf(user.id)>-1 || watcherIds.indexOf(user.id)>-1){
                 return allGames[i].chatMessages;
             }
         }
