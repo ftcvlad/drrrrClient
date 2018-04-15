@@ -233,7 +233,7 @@ class Board64 extends React.Component {
 
 
     render(){
-
+        console.log("board64");
         let {game, userId} = this.props;
 
         let currentMove = -1;

@@ -115,7 +115,7 @@ class ChatPanel extends React.Component {
     }
     //asdasasd
     render(){
-
+console.log("CHAT PANEL");
         let {chatMessages} = this.props;
 
         let listItems = [];

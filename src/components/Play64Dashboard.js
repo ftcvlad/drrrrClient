@@ -1,11 +1,11 @@
 import React from "react";
 import NavBar from "./NavBar";
 
-import {setupWebSocketConnection, joinRoom} from '../functions/WebSocketStuff';
+import {setupWebSocketConnection, joinRoomPlay} from '../functions/WebSocketStuff';
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {createGame, removeAllGames} from "../actions/gameActions";
+import {removeAllGames} from "../actions/gameActions";
 import {getCurrentGame} from '../selectors/gameSelector';
 import {getUser} from '../selectors/userSelector';
 import PropTypes from 'prop-types';
@@ -45,7 +45,7 @@ class Play64Dashboard extends React.Component {
                 this.props.dispatch);
         }
         else{
-            joinRoom(roomCategories.GAME_ROOM);
+            joinRoomPlay();
         }
 
 

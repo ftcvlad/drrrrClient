@@ -1,11 +1,20 @@
-import {recreateGameList, createGameSucceed, playGameSucceed, userPickSucceed, userMoveSucceed} from '../actions/gameActions';
+import {joinRoomPlaySuccess,
+        broadcastGameCreatedSuccess,
+        joinRoomTablesSuccess,
+        table_BroadcastPlayerJoinedSuccess,
+        tables_BroadcastPlayerJoinedSuccess,
+        userPickSucceed,
+        userMoveSucceed} from '../actions/gameActions';
 import {receiveChatMessage} from '../actions/chatActions';
 
 export const messageTypes = {
-     JOIN_ROOM: "joinRoom",
+     JOIN_ROOM_TABLES: "joinRoomTables",
+     JOIN_ROOM_PLAY: "joinRoomPlay",
      ERROR : "error",
      BROADCAST_GAME_CREATED: 'broadcastGameCreated',
      BROADCAST_PLAYER_JOINED: 'broadcastPlayerJoined',
+     BROADCAST_PLAYER_JOINED_TO_TABLE: 'broadcastPlayerJoinedToTable',
+     BROADCAST_PLAYER_JOINED_TO_TABLES: 'broadcastPlayerJoinedToTables',
      USER_MOVE: 'userMove',
      USER_PICK: 'userPick',
      SEND_CHAT_MESSAGE: 'sendChatMessage'
@@ -23,7 +32,13 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
         console.log("Connection established!");
        // conn.send(JSON.stringify({type: 'joinRoom', room:initialRoom}));
         window.socketConnection = conn;
-        joinRoom(initialRoom);//!!! what if con.close() was fired?
+        if (initialRoom === roomCategories.GAME_ROOM){
+            joinRoomPlay();//!!! what if con.close() was fired?
+        }
+        else if (initialRoom === roomCategories.TABLE_64_ROOM){
+            joinRoomTables(roomCategories.TABLE_64_ROOM);
+        }
+
 
     };
 
@@ -43,14 +58,20 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
                 redirectUnauthorised();
             }
         }
-        else if (data.servMessType === messageTypes.JOIN_ROOM){
-            dispatch(recreateGameList(data.data));
+        else if (data.servMessType === messageTypes.JOIN_ROOM_PLAY){
+            dispatch(joinRoomPlaySuccess(data.data));
+        }
+        else if (data.servMessType === messageTypes.JOIN_ROOM_TABLES){
+            dispatch(joinRoomTablesSuccess(data.data));
         }
         else if (data.servMessType === messageTypes.BROADCAST_GAME_CREATED){
-            dispatch(createGameSucceed(data.data));
+            dispatch(broadcastGameCreatedSuccess(data.data));
         }
-        else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED){
-            dispatch(playGameSucceed(data.data));
+        else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED_TO_TABLE){
+            dispatch(table_BroadcastPlayerJoinedSuccess(data.data));
+        }
+        else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED_TO_TABLES){
+            dispatch(tables_BroadcastPlayerJoinedSuccess(data.data));
         }
         else if (data.servMessType === messageTypes.USER_PICK){
             dispatch(userPickSucceed(data.data));
@@ -72,8 +93,13 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
 
 }
 
-export function joinRoom(room){
-    window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM, roomCategory:room}));
+
+export function joinRoomPlay(){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM_PLAY}));
+}
+
+export function joinRoomTables(roomCategory){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM_TABLES, roomCategory: roomCategory}));
 }
 
 export function broadcastGameCreated(){

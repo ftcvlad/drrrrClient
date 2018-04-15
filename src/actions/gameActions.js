@@ -1,22 +1,9 @@
 import * as types from "./actionTypes";
-import {CREATE_GAME_SUCCEED, PLAY_GAME_SUCCEED} from "./actionTypes";
-
-export function createGameSucceed(data){
-    return {type: types.CREATE_GAME_SUCCEED, game: data };
-}
-
-export function playGameSucceed(data){
-    return {type: types.PLAY_GAME_SUCCEED, game: data };
-}
-
-export function watchGameSucceed(data){
-    return {type: types.WATCH_GAME_SUCCEED, game: data };
-}
 
 export function createGame(options){
     return {
         type:"API_CALL",
-        successActionCreator: createGameSucceed,
+        successActionCreator: createGameSuccess,//state is also updated when joined room, but this is half sec faster
         request: {
             method: 'post',
             url: 'http://localhost:8080/games',
@@ -34,7 +21,7 @@ export function createGame(options){
 export function playGame(data){
     return {
         type:"API_CALL",
-        successActionCreator: playGameSucceed,
+        successActionCreator: joinGameSucceed,//state is also updated when joined room, but this is half sec faster
         request: {
             method: 'put',
             url: 'http://localhost:8080/games/'+data.gameId+'/play',
@@ -52,7 +39,7 @@ export function playGame(data){
 export function watchGame(data){
     return {
         type:"API_CALL",
-        successActionCreator: watchGameSucceed,
+        successActionCreator: joinGameSucceed,//state is also updated when joined room, but this is half sec faster
         request: {
             method: 'put',
             url: 'http://localhost:8080/games/'+data.gameId+'/watch',
@@ -69,9 +56,7 @@ export function watchGame(data){
 
 
 
-function removeAllGamesSucceed(){
-    return {type: types.REMOVE_ALL_GAMES_SUCCEED, game: {} };
-}
+
 
 export function removeAllGames(){
     return {
@@ -90,14 +75,48 @@ export function removeAllGames(){
     };
 }
 
-export function recreateGameList(games){
-    return {type: types.RECREATE_GAME_LIST, games: games };
+
+//---- proper :/
+
+//join room
+export function joinRoomPlaySuccess(currentGame){
+    return {type: types.JOIN_ROOM_PLAY_SUCCEED, currentGame: currentGame };
+}
+export function joinRoomTablesSuccess(gameList){
+    return {type: types.JOIN_ROOM_TABLES_SUCCEED, gameList: gameList };
 }
 
-export function userPickSucceed(game){
-    return {type: types.USER_PICK_SUCCEED, game: game };
+//create
+export function createGameSuccess(currentGame){
+    return {type: types.CREATE_GAME_SUCCEED, currentGame:currentGame };
+}
+export function broadcastGameCreatedSuccess(gameInfo){
+    return {type: types.BROADCAST_CREATE_GAME_SUCCEED, gameInfo:gameInfo };
 }
 
-export function userMoveSucceed(game){
-    return {type: types.USER_MOVE_SUCCEED, game: game };
+//play and watch
+export function joinGameSucceed(currentGame){
+    return {type: types.JOIN_GAME_SUCCEED, currentGame: currentGame };
+}
+
+export function tables_BroadcastPlayerJoinedSuccess(gameInfo){
+    return {type: types.tables_BROADCAST_PLAYER_JOINED_SUCCEED, gameInfo: gameInfo };
+}
+
+export function table_BroadcastPlayerJoinedSuccess(currentGame){
+    return {type: types.table_BROADCAST_PLAYER_JOINED_SUCCEED, currentGame: currentGame };
+}
+
+//remove all games
+function removeAllGamesSucceed(){
+    return {type: types.REMOVE_ALL_GAMES_SUCCEED, game: {} };
+}
+//sdfdsfgf/as/asdasdassd
+//moves
+export function userPickSucceed(currentGame){
+    return {type: types.USER_PICK_SUCCEED, currentGame: currentGame };
+}
+
+export function userMoveSucceed(currentGame){
+    return {type: types.USER_MOVE_SUCCEED, currentGame: currentGame };
 }

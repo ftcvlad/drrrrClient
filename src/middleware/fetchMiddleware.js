@@ -19,13 +19,15 @@ const customFetchMiddleware = store => next => action => {
         return fetch(action.request.url,requestObj )
             .then(response => {
                 if (response.ok) {
-                    if (response.status === 204){//no content
-                        store.dispatch(action.successActionCreator());
-                    }
-                    else{
-                        return response.json().then(data => store.dispatch(action.successActionCreator(data)));
-                    }
 
+                    if (action.successActionCreator){
+                        if (response.status === 204){//no content
+                            store.dispatch(action.successActionCreator());
+                        }
+                        else{
+                            return response.json().then(data => store.dispatch(action.successActionCreator(data)));
+                        }
+                    }
                 }
                 else if (response.status === 401) {//validation error or unauthorised
                     return response.json().then(data => {

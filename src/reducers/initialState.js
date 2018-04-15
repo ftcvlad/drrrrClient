@@ -1,4 +1,5 @@
 export default {
     user:{},
-    games: []
+    gameList: [],
+    currentGame: null
 };
