@@ -11,13 +11,7 @@ export default function currentGameReducer(state = initialState.currentGame, act
 
         //TODO make smaller reducers to get specific part of state (e.g. chatMesages)
         //TODO split game into table:{game, chatMessages}. Then separate reducer for game and ChatMessages
-        case types.RECEIVE_CHAT_MESSAGE:
-            newState = Object.assign({}, state);
-            let updatedArr = state.chatMessages.slice();
-            updatedArr.push(action.msg);
-            newState.chatMessages = updatedArr;
 
-            return newState;
 
 
 

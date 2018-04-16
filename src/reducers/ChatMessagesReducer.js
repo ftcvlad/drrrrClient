@@ -1,7 +1,7 @@
 import initialState from './initialState';
 import * as types from '../actions/actionTypes';
 
-export default function gameInfoReducer(state = initialState.currentGame.chatMessages, action) {
+export default function chatMessagesReducer(state = initialState.currentGame.chatMessages, action) {
 
     let newState;
     switch (action.type) {
@@ -10,6 +10,10 @@ export default function gameInfoReducer(state = initialState.currentGame.chatMes
             return action.currentGame.chatMessages.slice();
         case types.REMOVE_ALL_GAMES_SUCCEED:
             return [];
+        case types.RECEIVE_CHAT_MESSAGE:
+            newState = state.slice();
+            newState.push(action.msg);
+            return newState;
 
         default:
             return state;

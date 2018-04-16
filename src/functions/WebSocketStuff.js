@@ -121,7 +121,6 @@ export function userPick(moveInfo, gameId){
 
 
 export function userMove(moveInfo, gameId){
-
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.USER_MOVE, moveInfo:moveInfo, gameId}));
 }
 

@@ -120,9 +120,11 @@ class Board64 extends React.Component {
 
         let gridDimension = gameState.boardState.length;
         //return board to the state after currently selected move.
+
         let boardStateWithHistory = gameState.boardState.map(arr => arr.slice());
 
         for (let i=gameState.moves.length-1; i>currentMove; i--){
+
             const moveInfo = gameState.moves[i].moveInfo;
             for (let j=moveInfo.length-1; j>=0; j--){
                 let type = moveInfo[j].prevType;
@@ -133,12 +135,6 @@ class Board64 extends React.Component {
                 }
             }
          }
-
-
-
-
-
-
 
         //reverse board for 2nd player
         let boardState = [];
@@ -166,11 +162,11 @@ class Board64 extends React.Component {
             pickedChecker = gameState.pickedChecker;
         }
 
-        //previous positions
+        // //previous positions
         let prevPositions = [];
         if (gameState.moves.length>0){
             let lastMove = gameState.moves[currentMove];
-            prevPositions = lastMove["moveInfo"].map(o => o.prev);
+            prevPositions = lastMove["moveInfo"].map(o => Object.assign({},o.prev));//bug to be remembered † map(o => o.prev);
             if (gameInfo.players.length>1 && userId === gameInfo.players[1]["id"]){//reverse killedPieces for 2nd player
                 for (let i=0;i<prevPositions.length;i++){
                     prevPositions[i].row = gridDimension - 1 - prevPositions[i].row;

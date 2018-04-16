@@ -111,7 +111,7 @@ export function table_BroadcastPlayerJoinedSuccess(currentGame){
 function removeAllGamesSucceed(){
     return {type: types.REMOVE_ALL_GAMES_SUCCEED, game: {} };
 }
-//sdfdsfgf/as/asdasdassd
+
 //moves
 export function userPickSucceed(gameState){
     return {type: types.USER_PICK_SUCCEED, gameState: gameState };
