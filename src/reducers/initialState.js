@@ -1,5 +1,9 @@
 export default {
     user:{},
     gameList: [],
-    currentGame: null
+    currentGame: {
+        gameInfo: {},
+        gameState: {},
+        chatMessages: []
+    }
 };

@@ -105,7 +105,7 @@ export function tables_BroadcastPlayerJoinedSuccess(gameInfo){
 
 export function table_BroadcastPlayerJoinedSuccess(currentGame){
     return {type: types.table_BROADCAST_PLAYER_JOINED_SUCCEED, currentGame: currentGame };
-}
+}//sdfdsf
 
 //remove all games
 function removeAllGamesSucceed(){
@@ -113,10 +113,10 @@ function removeAllGamesSucceed(){
 }
 //sdfdsfgf/as/asdasdassd
 //moves
-export function userPickSucceed(currentGame){
-    return {type: types.USER_PICK_SUCCEED, currentGame: currentGame };
+export function userPickSucceed(gameState){
+    return {type: types.USER_PICK_SUCCEED, gameState: gameState };
 }
 
-export function userMoveSucceed(currentGame){
-    return {type: types.USER_MOVE_SUCCEED, currentGame: currentGame };
+export function userMoveSucceed(gameState){
+    return {type: types.USER_MOVE_SUCCEED, gameState: gameState };
 }

@@ -12,7 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {getAllGameInfo} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
-import {createGame, playGame, watchGame} from"../actions/gameActions";
+import {createGame, playGame, removeAllGames, watchGame} from "../actions/gameActions";
 import {joinRoomTables, broadcastGameCreated, broadcastPlayerJoined, roomCategories, setupWebSocketConnection} from "../functions/WebSocketStuff";
 import PropTypes from 'prop-types';
 
@@ -82,6 +82,14 @@ class Tables64Dashboard extends React.Component {
                 console.log(errMsg);
             });
     }
+    clearAllGamesCache() {///!!! for development
+
+        this.props.dispatch(removeAllGames())
+            .catch((errMsg)=>{
+                console.log(errMsg);
+            });
+
+    }
 
     createParticipantPlayerList(gameInfo){
         return (
@@ -131,7 +139,7 @@ class Tables64Dashboard extends React.Component {
                 </Table>
 
                 <RaisedButton label="Create game" onClick={this.handleCreateGame.bind(this)} />
-
+                < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
         );
     }

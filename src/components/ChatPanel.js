@@ -183,15 +183,17 @@ ChatPanel.propTypes={
 
 };
 
-function mapStateToProps(state) {
-    return {
-        chatMessages:getChatMessages(state)
-    };
-}
+// function mapStateToProps(state) {
+//     return {
+//         chatMessages:getChatMessages(state)
+//     };
+// }
 
 
-export default withRouter(connect(
-    mapStateToProps
-)(ChatPanel));
+export default  ChatPanel;
+
+// export default withRouter(connect(
+//     mapStateToProps
+// )(ChatPanel));
 
 

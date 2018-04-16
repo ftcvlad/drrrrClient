@@ -93,14 +93,19 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
 
 }
 
+export function joinRoomTables(roomCategory){
+    window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM_TABLES, roomCategory: roomCategory}));
+}
+
+
+
+
+
 
 export function joinRoomPlay(){
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM_PLAY}));
 }
 
-export function joinRoomTables(roomCategory){
-    window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM_TABLES, roomCategory: roomCategory}));
-}
 
 export function broadcastGameCreated(){
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.BROADCAST_GAME_CREATED}));

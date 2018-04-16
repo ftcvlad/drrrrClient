@@ -3,14 +3,22 @@ import {getUser} from './userSelector';
 
 
 export const getAllGameInfo = (state) => { return state.gameList;};
-export const getCurrentGame = (state) => {return state.currentGame};
 
-export const getChatMessages = (state) => {
-    if (state.currentGame === null){
-        return [];
-    }
-    return state.currentGame.chatMessages;
-};
+
+
+export const getCurrentGameInfo = (state) => {return state.currentGame.gameInfo};
+export const getCurrentGameState = (state) => {return state.currentGame.gameState};
+export const getCurrentGameChatMessages = (state) => {return state.currentGame.chatMessages};
+
+
+
+
+// export const getChatMessages = (state) => {
+//     if (state.currentGame === null){
+//         return [];
+//     }
+//     return state.currentGame.chatMessages;
+// };
 
 // export const getChatMessages = createSelector(
 //     [ getUser, getAllGameInfo ],

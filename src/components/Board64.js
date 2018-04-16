@@ -15,13 +15,13 @@ class Board64 extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {currentMove: props.game.moves.length-1, replaying: false};
+        this.state = {currentMove: props.gameState.moves.length-1, replaying: false};
     }
 
 
 
     currentMoveChanged(moveNum){
-        if (moveNum === this.props.game.moves.length-1){
+        if (moveNum === this.props.gameState.moves.length-1){
             this.setState({currentMove:moveNum, replaying:false});
         }
         else{
@@ -29,7 +29,7 @@ class Board64 extends React.Component {
         }
     }
 
-    cellClicked(r,c, game, userId, replaying){
+    cellClicked(r,c, gameState, userId, replaying, gameInfo){
 
 
         // if (!animationRunning) {
@@ -40,23 +40,24 @@ class Board64 extends React.Component {
         // }
 
 
-        if (userId === game.players[game.currentPlayer]["id"] && replaying === false){
+        if (userId === gameInfo.players[gameState.currentPlayer]["id"] && replaying === false){
 
 
             console.log("cell clicked");
             let moveInfo = {r,c};
-            if (game.currentPlayer === 1){ //reverse move info
-                let dimendion = game.boardState.length;
+            if (gameState.currentPlayer === 1){ //reverse move info
+                let dimendion = gameState.boardState.length;
                 moveInfo = {r:dimendion-1-r, c: dimendion-1-c};
             }
 
-            if (game.selectChecker){
-                userPick(moveInfo, game.gameId);
+            if (gameState.selectChecker){
+                userPick(moveInfo, gameInfo.gameId);
             }
             else{
-                for (let i=0; i<game.possibleGoChoices.length;i++){//don't make unneeded requests, but this is ensured on server
-                    if (game.possibleGoChoices[i].row === moveInfo.r && game.possibleGoChoices[i].col === moveInfo.c){
-                        userMove(moveInfo, game.gameId);
+                for (let i=0; i<gameState.possibleGoChoices.length;i++){//don't make unneeded requests, but this is ensured on server
+                    if (gameState.possibleGoChoices[i].row === moveInfo.r && gameState.possibleGoChoices[i].col === moveInfo.c){
+                        console.log(moveInfo);
+                        userMove(moveInfo, gameInfo.gameId);
                         return;
                     }
                 }
@@ -114,15 +115,15 @@ class Board64 extends React.Component {
     }
 
 
-    createBoard(rows, cols, callback, game, userId, currentMove, replaying){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, callback, gameState, userId, currentMove, replaying, gameInfo){//TODO recreated after every state update. Improve?
 
-        let gridDimension = game.boardState.length;
 
+        let gridDimension = gameState.boardState.length;
         //return board to the state after currently selected move.
-        let boardStateWithHistory = game.boardState.map(arr => arr.slice());
+        let boardStateWithHistory = gameState.boardState.map(arr => arr.slice());
 
-        for (let i=game.moves.length-1; i>currentMove; i--){
-            const moveInfo = game.moves[i].moveInfo;
+        for (let i=gameState.moves.length-1; i>currentMove; i--){
+            const moveInfo = gameState.moves[i].moveInfo;
             for (let j=moveInfo.length-1; j>=0; j--){
                 let type = moveInfo[j].prevType;
                 boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col] = 0;
@@ -131,7 +132,7 @@ class Board64 extends React.Component {
                     boardStateWithHistory[moveInfo[j].killed.row][moveInfo[j].killed.col] = moveInfo[j].killed.type;
                 }
             }
-        }
+         }
 
 
 
@@ -141,7 +142,7 @@ class Board64 extends React.Component {
 
         //reverse board for 2nd player
         let boardState = [];
-        if (game.players.length>1 && userId === game.players[1]["id"]){
+        if (gameInfo.players.length>1 && userId === gameInfo.players[1]["id"]){
             for(i = 0; i < gridDimension; i++) {
                 boardState.push(new Array(gridDimension));
             }
@@ -157,20 +158,20 @@ class Board64 extends React.Component {
 
         //reverse picked checker for 2nd player
         let pickedChecker = [];
-        if (game.players.length>1 && game.pickedChecker.length === 2 && userId === game.players[1]["id"]){
-            pickedChecker.push(gridDimension-1-game.pickedChecker[0]);
-            pickedChecker.push(gridDimension-1-game.pickedChecker[1]);
+        if (gameInfo.players.length>1 && gameState.pickedChecker.length === 2 && userId === gameInfo.players[1]["id"]){
+            pickedChecker.push(gridDimension-1-gameState.pickedChecker[0]);
+            pickedChecker.push(gridDimension-1-gameState.pickedChecker[1]);
         }
         else{
-            pickedChecker = game.pickedChecker;
+            pickedChecker = gameState.pickedChecker;
         }
 
         //previous positions
         let prevPositions = [];
-        if (game.moves.length>0){
-            let lastMove = game.moves[currentMove];
+        if (gameState.moves.length>0){
+            let lastMove = gameState.moves[currentMove];
             prevPositions = lastMove["moveInfo"].map(o => o.prev);
-            if (game.players.length>1 && userId === game.players[1]["id"]){//reverse killedPieces for 2nd player
+            if (gameInfo.players.length>1 && userId === gameInfo.players[1]["id"]){//reverse killedPieces for 2nd player
                 for (let i=0;i<prevPositions.length;i++){
                     prevPositions[i].row = gridDimension - 1 - prevPositions[i].row;
                     prevPositions[i].col = gridDimension - 1 - prevPositions[i].col;
@@ -182,11 +183,11 @@ class Board64 extends React.Component {
 
         //killed pieces
         let killedPieces = [];
-        if (game.moves.length>0){
-            let lastMove = game.moves[game.moves.length-1];
+        if (gameState.moves.length>0){
+            let lastMove = gameState.moves[gameState.moves.length-1];
             if (lastMove.finished === false){
                 killedPieces = lastMove["moveInfo"].map(o => o.killed);
-                if (game.players.length>1 && userId === game.players[1]["id"]){//reverse killedPieces for 2nd player
+                if (gameInfo.players.length>1 && userId === gameInfo.players[1]["id"]){//reverse killedPieces for 2nd player
                     for (let i=0;i<killedPieces.length;i++){
                         killedPieces[i].row = gridDimension - 1 - killedPieces[i].row;
                         killedPieces[i].col = gridDimension - 1 - killedPieces[i].col;
@@ -207,7 +208,7 @@ class Board64 extends React.Component {
                 if (counter % 2 !== 0) {
                     nextRowTds.push(<td key={c} id={i} onClick={(function (r, c) {
                         return function () {
-                            callback(r, c, game, userId, replaying);//dsdsf
+                            callback(r, c, gameState, userId, replaying, gameInfo);//dsdsf
                         }
                     })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, killedPieces)}
                                     {this.addLastTurnImages(prevPositions, r, c)}
@@ -234,26 +235,26 @@ class Board64 extends React.Component {
 
     render(){
         console.log("board64");
-        let {game, userId} = this.props;
+        let {gameState, userId, gameInfo} = this.props;
 
         let currentMove = -1;
-        if (game.moves.length>0){
-            currentMove = this.state.replaying === true ? this.state.currentMove : game.moves.length-1;
+        if (gameState.moves.length>0){
+            currentMove = this.state.replaying === true ? this.state.currentMove : gameState.moves.length-1;
         }
 
 
         return (
             <div style={{display:"flex"}}>
-                <MovesPanel moves={game.moves}
+                <MovesPanel moves={gameState.moves}
                             userId={userId}
                             currentMove={currentMove}
                             replaying={this.state.replaying}
                             currentMoveChanged={this.currentMoveChanged.bind(this)}/>
                 <div className={styles.board}>
-                    {!game.isGameGoing && <div className={styles.boardOverlay}></div>}
-                    {this.state.replaying && <div className={styles.replayingOverlay}></div>}
+                    {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
+                    {this.state.replaying && <div className={styles.replayingOverlay}/>}
                     <table >
-                        {this.createBoard(8,8,this.cellClicked, game, userId, currentMove, this.state.replaying)}
+                        {this.createBoard(8,8,this.cellClicked, gameState, userId, currentMove, this.state.replaying, gameInfo)}
                     </table>
 
                 </div>
@@ -266,7 +267,8 @@ class Board64 extends React.Component {
 }
 
 Board64.propTypes = {
-    game: PropTypes.object.isRequired,
+    gameState: PropTypes.object.isRequired,
+    gameInfo: PropTypes.object.isRequired,
     userId: PropTypes.number.isRequired
 };
 
