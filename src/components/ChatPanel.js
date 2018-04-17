@@ -6,7 +6,7 @@ import InsertEmoji from 'material-ui/svg-icons/editor/insert-emoticon';
 import IconButton from 'material-ui/IconButton';
 import PropTypes from 'prop-types';
 
-import {sendMessage} from "../functions/WebSocketStuff";
+import {wsSendChatMessageSend} from "../actions/WsClientActions";
 import {
     getChatMessages, getCurrentGameChatMessages, getCurrentGameInfo,
     getCurrentGameState
@@ -102,7 +102,8 @@ class ChatPanel extends React.Component {
             };
             this.setState({messageToSend:""});
 
-            sendMessage(msgObj, this.props.gameId);
+            this.props.dispatch(wsSendChatMessageSend(msgObj, this.props.gameId));//TODO if fails, can display error, keep message in TextField
+
         }
 
     }

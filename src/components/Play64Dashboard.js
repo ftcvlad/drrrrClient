@@ -1,11 +1,10 @@
 import React from "react";
 import NavBar from "./NavBar";
 
-import {setupWebSocketConnection, joinRoomPlay} from '../functions/WebSocketStuff';
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {removeAllGames} from "../actions/gameActions";
+import {removeAllGames} from "../actions/removeActions";
 import {getCurrentGameId} from '../selectors/gameSelector';
 
 
@@ -15,18 +14,15 @@ import PropTypes from 'prop-types';
 import Board64 from './Board64';
 
 
-import {roomCategories} from "../functions/WebSocketStuff";
+
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
+import {wsConnect, wsSendJoinRoomPlay } from "../actions/WsClientActions";
 
 class Play64Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
-
-
-
-
 
 
     }
@@ -42,13 +38,13 @@ class Play64Dashboard extends React.Component {
     componentDidMount(){
 
         if (!window.socketConnection){
-            setupWebSocketConnection(roomCategories.GAME_ROOM,
-                this.redirectUnauthorised.bind(this),
-                this.redirectNotInGame.bind(this),
-                this.props.dispatch);
+            this.props.dispatch(wsConnect())
+                .then(()=>{
+                    this.props.dispatch(wsSendJoinRoomPlay());
+                });
         }
         else{
-            joinRoomPlay();
+            this.props.dispatch(wsSendJoinRoomPlay());
         }
 
 

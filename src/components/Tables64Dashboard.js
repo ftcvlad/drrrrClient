@@ -12,15 +12,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {getAllGameInfo} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
-import {createGame, playGame, removeAllGames, watchGame} from "../actions/gameActions";
-import {
-    joinRoomTables, broadcastGameCreated, broadcastPlayerJoined, roomCategories, setupWebSocketConnection,
-    messageTypes
-} from "../functions/WebSocketStuff";
+
+import {roomCategories} from '../actions/roomCategories';
 import PropTypes from 'prop-types';
 
-import {wsConnect} from '../actions/wsActions';
-import {wsSendJoinRoomTables} from "../actions/WsActions";
+import {wsConnect, wsSendCreateGame, wsSendJoinRoomTables, wsSendPlayGame,wsSendWatchGame} from '../actions/WsClientActions';
+
 class Tables64Dashboard extends React.Component {
 
     constructor(props) {
@@ -28,9 +25,8 @@ class Tables64Dashboard extends React.Component {
     }
     handleCreateGame(e) {
         let data = {};//TODO
-        this.props.dispatch(createGame(data))
+        this.props.dispatch(wsSendCreateGame(data))
             .then(()=> {
-                broadcastGameCreated();
                 this.props.history.push('/play64');
             })
             .catch((errMsg)=>{
@@ -39,31 +35,16 @@ class Tables64Dashboard extends React.Component {
     }
 
 
-    redirectUnauthorised(){
-        this.props.history.push('/');
-    }
-    redirectNotInGame(){
-        this.props.history.push('/tables64');
-    }
-
     componentDidMount(){
 
         if (!window.socketConnection){
 
             this.props.dispatch(wsConnect())
                 .then(()=>{
-
                     this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
 
-
-
                 });
-
-
-            // setupWebSocketConnection(roomCategories.TABLE_64_ROOM,
-            //     this.redirectUnauthorised.bind(this),
-            //     this.redirectNotInGame.bind(this),
-            //     this.props.dispatch);
+                //.catch((e)=>zzzzz);//TODO for this/any fail display frame, or update local state
         }
         else{
             this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
@@ -73,25 +54,19 @@ class Tables64Dashboard extends React.Component {
     }
 
     playClicked(gameId){
-
-        let data = {gameId};
-        this.props.dispatch(playGame(data))
+        this.props.dispatch(wsSendPlayGame(gameId))
             .then(()=> {
-                broadcastPlayerJoined(gameId);
                 this.props.history.push('/play64');
             })
             .catch((errMsg)=>{
                 console.log(errMsg);
             });
-
-
     }
 
     watchClicked(gameId){
 
-        this.props.dispatch(watchGame({gameId}))
+        this.props.dispatch(wsSendWatchGame(gameId))
             .then(()=> {
-                broadcastPlayerJoined(gameId);
                 this.props.history.push('/play64');
             })
             .catch((errMsg)=>{

@@ -2,7 +2,6 @@ import React from "react";
 import styles from './Css/Board64.css';
 
 import PropTypes from 'prop-types';
-import {userPick, userMove, messageTypes, sendWsMessage} from '../functions/WebSocketStuff';//TODO turn websocket stuff into another middleware and actions
 const wm = require('./images/wm.png');
 const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
@@ -13,6 +12,8 @@ import {getUser} from "../selectors/userSelector";
 import {connect} from "react-redux";
 import {getCurrentGameInfo, getCurrentGameState} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
+
+import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
 
 class Board64 extends React.Component {
 
@@ -33,8 +34,7 @@ class Board64 extends React.Component {
         }
     }
 
-    cellClicked(r,c, gameState, userId, replaying, gameInfo){
-
+    cellClicked(dispatch, replaying, r,c, gameState, userId, gameInfo){
 
         // if (!animationRunning) {
         //     if (gameGoing){
@@ -55,19 +55,14 @@ class Board64 extends React.Component {
             }
 
             if (gameState.selectChecker){
-                userPick(moveInfo, gameInfo.gameId);
-                // sendWsMessage(JSON.stringify({msgType: messageTypes.USER_PICK, moveInfo:moveInfo, gameId: gameInfo.gameId}))
-                //     .then((data)=>{
-                //         console.log("HURRAYYY!");
-                //         console.log(data);
-                //
-                //     });
+               dispatch(wsSendUserPick(moveInfo, gameInfo.gameId));
+
             }
             else{
                 for (let i=0; i<gameState.possibleGoChoices.length;i++){//don't make unneeded requests, but this is ensured on server
                     if (gameState.possibleGoChoices[i].row === moveInfo.r && gameState.possibleGoChoices[i].col === moveInfo.c){
                         console.log(moveInfo);
-                        userMove(moveInfo, gameInfo.gameId);
+                        dispatch(wsSendUserMove(moveInfo, gameInfo.gameId));
                         return;
                     }
                 }
@@ -125,7 +120,7 @@ class Board64 extends React.Component {
     }
 
 
-    createBoard(rows, cols, callback, gameState, userId, currentMove, replaying, gameInfo){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, callback, gameState, userId, currentMove, gameInfo){//TODO recreated after every state update. Improve?
 
 
         let gridDimension = gameState.boardState.length;
@@ -214,7 +209,7 @@ class Board64 extends React.Component {
                 if (counter % 2 !== 0) {
                     nextRowTds.push(<td key={c} id={i} onClick={(function (r, c) {
                         return function () {
-                            callback(r, c, gameState, userId, replaying, gameInfo);//dsdsf
+                            callback(r, c, gameState, userId, gameInfo);//dsdsf
                         }
                     })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, killedPieces)}
                                     {this.addLastTurnImages(prevPositions, r, c)}
@@ -241,7 +236,7 @@ class Board64 extends React.Component {
 
     render(){
         console.log("board64");
-        let {gameState, userId, gameInfo} = this.props;
+        let {gameState, userId, gameInfo} = this.props;//asdasd
 
         let currentMove = -1;
         if (gameState.moves.length>0){
@@ -260,8 +255,11 @@ class Board64 extends React.Component {
                     {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
                     {this.state.replaying && <div className={styles.replayingOverlay}/>}
                     <table >
-                        {this.createBoard(8,8,this.cellClicked, gameState, userId, currentMove, this.state.replaying, gameInfo)}
+                        {this.createBoard(8,8,this.cellClicked.bind(this, this.props.dispatch, this.state.replaying),
+                            gameState, userId, currentMove, gameInfo)}
                     </table>
+
+
 
                 </div>
             </div>

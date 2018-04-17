@@ -32,6 +32,7 @@
     "redux-form": "^7.2.3",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
-    "url-loader": "^1.0.1"
+    "url-loader": "^1.0.1",
+    "websocket-as-promised": "^0.6.0"
   }
 }
