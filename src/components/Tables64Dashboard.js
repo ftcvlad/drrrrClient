@@ -13,9 +13,14 @@ import {connect} from "react-redux";
 import {getAllGameInfo} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 import {createGame, playGame, removeAllGames, watchGame} from "../actions/gameActions";
-import {joinRoomTables, broadcastGameCreated, broadcastPlayerJoined, roomCategories, setupWebSocketConnection} from "../functions/WebSocketStuff";
+import {
+    joinRoomTables, broadcastGameCreated, broadcastPlayerJoined, roomCategories, setupWebSocketConnection,
+    messageTypes
+} from "../functions/WebSocketStuff";
 import PropTypes from 'prop-types';
 
+import {wsConnect} from '../actions/wsActions';
+import {wsSendJoinRoomTables} from "../actions/WsActions";
 class Tables64Dashboard extends React.Component {
 
     constructor(props) {
@@ -44,13 +49,24 @@ class Tables64Dashboard extends React.Component {
     componentDidMount(){
 
         if (!window.socketConnection){
-            setupWebSocketConnection(roomCategories.TABLE_64_ROOM,
-                this.redirectUnauthorised.bind(this),
-                this.redirectNotInGame.bind(this),
-                this.props.dispatch);
+
+            this.props.dispatch(wsConnect())
+                .then(()=>{
+
+                    this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
+
+
+
+                });
+
+
+            // setupWebSocketConnection(roomCategories.TABLE_64_ROOM,
+            //     this.redirectUnauthorised.bind(this),
+            //     this.redirectNotInGame.bind(this),
+            //     this.props.dispatch);
         }
         else{
-            joinRoomTables(roomCategories.TABLE_64_ROOM);
+            this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
         }
 
 

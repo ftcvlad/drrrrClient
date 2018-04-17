@@ -7,13 +7,11 @@ import configureStore from './store/configureStore';
 import Root from './components/Root';
 //import './styles/styles.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import Echo from "laravel-echo";
-import Pusher from 'pusher-js';
+import SocketClient from './functions/SocketClient';
 
+const socketClient = new SocketClient();
 let store ;
-configureStore()
+configureStore(socketClient)
     .then(createdStore=>{
         store = createdStore;
         ReactDOM.render(

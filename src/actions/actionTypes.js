@@ -31,3 +31,10 @@ export const USER_MOVE_SUCCEED = 'USER_MOVE_SUCCEED';
 
 //chat
 export const RECEIVE_CHAT_MESSAGE = 'RECEIVE_CHAT_MESSAGE';
+
+
+//WS
+
+export const SEND = 'redux/message/SEND';
+export const SEND_SUCCESS = 'redux/message/SEND_SUCCESS';
+export const SEND_FAIL = 'redux/message/SEND_FAIL';

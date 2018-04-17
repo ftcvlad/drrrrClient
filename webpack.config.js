@@ -9,10 +9,10 @@ module.exports = {
   module: {
 	rules: [
 		{ 
-			test: /\.jsx?$/, 
-			loader: 'babel-loader', //transpiles jsx, ES6 into javascript
-			exclude: /node_modules/ 
-		},
+			test: /\.jsx?$/,
+            loader: 'babel-loader', //transpiles jsx, ES6 into javascript
+            exclude: /node_modules/
+        },
         {
             test: /\.css$/,
             loader: 'style-loader' //injects css
