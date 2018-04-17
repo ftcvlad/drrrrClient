@@ -2,13 +2,17 @@ import React from "react";
 import styles from './Css/Board64.css';
 
 import PropTypes from 'prop-types';
-import {userPick, userMove} from '../functions/WebSocketStuff';//TODO turn websocket stuff into another middleware and actions
+import {userPick, userMove, messageTypes, sendWsMessage} from '../functions/WebSocketStuff';//TODO turn websocket stuff into another middleware and actions
 const wm = require('./images/wm.png');
 const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
 const bk = require('./images/bk.png');
 const lastTurnImg = require("./images/lastTurn.png");
 import MovesPanel from './MovesPanel';
+import {getUser} from "../selectors/userSelector";
+import {connect} from "react-redux";
+import {getCurrentGameInfo, getCurrentGameState} from "../selectors/gameSelector";
+import {withRouter} from "react-router-dom";
 
 class Board64 extends React.Component {
 
@@ -52,6 +56,12 @@ class Board64 extends React.Component {
 
             if (gameState.selectChecker){
                 userPick(moveInfo, gameInfo.gameId);
+                // sendWsMessage(JSON.stringify({msgType: messageTypes.USER_PICK, moveInfo:moveInfo, gameId: gameInfo.gameId}))
+                //     .then((data)=>{
+                //         console.log("HURRAYYY!");
+                //         console.log(data);
+                //
+                //     });
             }
             else{
                 for (let i=0; i<gameState.possibleGoChoices.length;i++){//don't make unneeded requests, but this is ensured on server
@@ -264,13 +274,21 @@ class Board64 extends React.Component {
 
 Board64.propTypes = {
     gameState: PropTypes.object.isRequired,
-    gameInfo: PropTypes.object.isRequired,
-    userId: PropTypes.number.isRequired
+    gameInfo: PropTypes.object.isRequired
 };
 
-export default Board64;
+
+function mapStateToProps(state) {
+    return {
+        gameState: getCurrentGameState(state),
+        gameInfo: getCurrentGameInfo(state)
+    };
+}
 
 
+export default withRouter(connect(
+    mapStateToProps
+)(Board64));
 
 
 

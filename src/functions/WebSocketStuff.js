@@ -93,13 +93,28 @@ export function setupWebSocketConnection(initialRoom, redirectUnauthorised, redi
 
 }
 
+
+// export function sendWsMessage(objToSend) {
+//     return new Promise(function(resolve, reject) {
+//
+//         window.socketConnection.send(objToSend);
+//
+//
+//         window.socketConnection.onmessage = function(e) {
+//             resolve(e.data);
+//         };
+//         // window.socketConnection.onerror = function(err) {
+//         //     reject(err);
+//         // };
+//
+//     });
+// }
+
+
+
 export function joinRoomTables(roomCategory){
     window.socketConnection.send(JSON.stringify({msgType: messageTypes.JOIN_ROOM_TABLES, roomCategory: roomCategory}));
 }
-
-
-
-
 
 
 export function joinRoomPlay(){

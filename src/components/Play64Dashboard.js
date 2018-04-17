@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {removeAllGames} from "../actions/gameActions";
-import {getCurrentGameInfo, getCurrentGameState, getCurrentGameChatMessages} from '../selectors/gameSelector';
+import {getCurrentGameId} from '../selectors/gameSelector';
 
 
 
@@ -63,24 +63,22 @@ class Play64Dashboard extends React.Component {
     }
     render() {
 
-        let {gameInfo, gameState, chatMessages, user} = this.props;
-        let gameId = gameInfo.gameId;
+        let {gameId, user} = this.props;
 
         let gameLoaded = gameId ? true : false;
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
-                <div style={{display:"flex"}}>
-                    {gameLoaded && <Board64 gameState={gameState} gameInfo={gameInfo} userId={user.id}/>  }
-                    {gameLoaded &&
-                    <div style={{display:"flex", flexDirection:"column"}}>
-                        <ParticipantList players={gameInfo.players} watchers={gameInfo.watchers}/>
-                        <ChatPanel gameId={gameId} chatMessages={chatMessages}/>
-                    </div>
+                {gameLoaded && <div style={{display:"flex"}}>
+                                    <Board64 userId={user.id}/>
+
+                                    <div style={{display:"flex", flexDirection:"column"}}>
+                                        <ParticipantList/>
+                                        <ChatPanel gameId={gameId} />
+                                    </div>
+                                </div>}
 
 
-                    }
-                </div>
 
                 {!gameLoaded && <p>no game!</p>}
                 < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
@@ -89,18 +87,14 @@ class Play64Dashboard extends React.Component {
     }
 }
 Play64Dashboard.propTypes={
-    gameInfo: PropTypes.object.isRequired,
-    gameState: PropTypes.object.isRequired,
-    chatMessages: PropTypes.array.isRequired,
+    gameId: PropTypes.string,
     user: PropTypes.object.isRequired
 };
 
 
 function mapStateToProps(state) {
     return {
-        gameInfo: getCurrentGameInfo(state),
-        gameState: getCurrentGameState(state),
-        chatMessages: getCurrentGameChatMessages(state),
+        gameId: getCurrentGameId(state),
         user: getUser(state)
     };
 }

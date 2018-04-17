@@ -7,11 +7,15 @@ import IconButton from 'material-ui/IconButton';
 import PropTypes from 'prop-types';
 
 import {sendMessage} from "../functions/WebSocketStuff";
-import {getChatMessages} from "../selectors/gameSelector";
+import {
+    getChatMessages, getCurrentGameChatMessages, getCurrentGameInfo,
+    getCurrentGameState
+} from "../selectors/gameSelector";
 
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import { Scrollbars } from 'react-custom-scrollbars';
+import {getUser} from "../selectors/userSelector";
 
 const styles={
     containerDiv:{
@@ -113,7 +117,7 @@ class ChatPanel extends React.Component {
         let {scrollbars} = this.refs;
         scrollbars.scrollToBottom();
     }
-    //asdasasd
+
     render(){
 console.log("CHAT PANEL");
         let {chatMessages} = this.props;
@@ -183,17 +187,17 @@ ChatPanel.propTypes={
 
 };
 
-// function mapStateToProps(state) {
-//     return {
-//         chatMessages:getChatMessages(state)
-//     };
-// }
+function mapStateToProps(state) {
+    return {
+        chatMessages: getCurrentGameChatMessages(state),
+    };
+}
 
 
-export default  ChatPanel;
 
-// export default withRouter(connect(
-//     mapStateToProps
-// )(ChatPanel));
+export default withRouter(connect(
+    mapStateToProps
+)(ChatPanel));
+
 
 

@@ -7,6 +7,9 @@ import MessageUser from 'material-ui/svg-icons/communication/email';
 //import Flag from "react-flags";
 import Flag from 'react-world-flags'
 import IconButton from 'material-ui/IconButton';
+import {connect} from "react-redux";
+import {getCurrentGameInfo, getCurrentGameState} from "../selectors/gameSelector";
+import {withRouter} from "react-router-dom";
 
 
 const styles={
@@ -127,16 +130,12 @@ class ParticipantPanel extends React.Component {
     }
 
     render() {
+        console.log("participantPanel");
+        let {gameInfo} = this.props;
 
-        let {players, watchers} = this.props;
 
-        //REMOVE
-        watchers = watchers.slice();
-        for (let i = 0; i < 5; i++) {
-            watchers.push({"id": i, "username": ("watcher " + i)});
-        }
-        let playerList = this.generateList(players);
-        let watcherList = this.generateList(watchers);
+        let playerList = this.generateList(gameInfo.players);
+        let watcherList = this.generateList(gameInfo.watchers);
 
 
 
@@ -168,11 +167,19 @@ class ParticipantPanel extends React.Component {
 }
 
 ParticipantPanel.propTypes={
-
-    players: PropTypes.array.isRequired,
-    watchers: PropTypes.array.isRequired
-
-
+    gameInfo: PropTypes.object.isRequired,
 };
 
-export default ParticipantPanel;
+
+
+function mapStateToProps(state) {
+    return {
+        gameInfo: getCurrentGameInfo(state)
+    };
+}
+
+
+export default withRouter(connect(
+    mapStateToProps
+)(ParticipantPanel));
+
