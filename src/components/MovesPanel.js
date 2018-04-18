@@ -76,8 +76,7 @@ const styles = {
         margin: "10 0 10 0",
         padding: 2,
         display: "flex",
-        //justifyContent: "space-between",//fallback for Edge (and other?)
-        justifyContent: "space-evenly"
+        justifyContent: "space-around"
     },
     iconHovered:{
         backgroundColor:"#b7b5b5"
