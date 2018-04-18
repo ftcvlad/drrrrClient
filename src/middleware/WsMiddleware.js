@@ -25,7 +25,7 @@ export default function socketMiddleware(socket) {
             .then((result) => {
 
                 //next({ result, type: SEND_SUCCESS });//generic success
-                console.log(result);
+
                 if (result){
 
                     if (result.status === 200 || result.status === 204){

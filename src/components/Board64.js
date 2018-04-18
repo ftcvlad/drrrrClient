@@ -34,7 +34,7 @@ class Board64 extends React.Component {
         }
     }
 
-    cellClicked(dispatch, replaying, r,c, gameState, userId, gameInfo){
+    cellClicked(dispatch, r,c, gameState, userId, gameInfo, replaying){
 
         // if (!animationRunning) {
         //     if (gameGoing){
@@ -61,7 +61,6 @@ class Board64 extends React.Component {
             else{
                 for (let i=0; i<gameState.possibleGoChoices.length;i++){//don't make unneeded requests, but this is ensured on server
                     if (gameState.possibleGoChoices[i].row === moveInfo.r && gameState.possibleGoChoices[i].col === moveInfo.c){
-                        console.log(moveInfo);
                         dispatch(wsSendUserMove(moveInfo, gameInfo.gameId));
                         return;
                     }
@@ -120,7 +119,7 @@ class Board64 extends React.Component {
     }
 
 
-    createBoard(rows, cols, callback, gameState, userId, currentMove, gameInfo){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, callback, gameState, userId, currentMove, gameInfo, replaying){//TODO recreated after every state update. Improve?
 
 
         let gridDimension = gameState.boardState.length;
@@ -159,13 +158,16 @@ class Board64 extends React.Component {
 
         //reverse picked checker for 2nd player
         let pickedChecker = [];
-        if (gameInfo.players.length>1 && gameState.pickedChecker.length === 2 && userId === gameInfo.players[1]["id"]){
-            pickedChecker.push(gridDimension-1-gameState.pickedChecker[0]);
-            pickedChecker.push(gridDimension-1-gameState.pickedChecker[1]);
+        if (userId === gameInfo.players[gameState.currentPlayer]["id"] && replaying === false){
+            if (gameInfo.players.length>1 && gameState.pickedChecker.length === 2 && userId === gameInfo.players[1]["id"]){
+                pickedChecker.push(gridDimension-1-gameState.pickedChecker[0]);
+                pickedChecker.push(gridDimension-1-gameState.pickedChecker[1]);
+            }
+            else{
+                pickedChecker = gameState.pickedChecker;
+            }
         }
-        else{
-            pickedChecker = gameState.pickedChecker;
-        }
+
 
         // //previous positions
         let prevPositions = [];
@@ -209,7 +211,7 @@ class Board64 extends React.Component {
                 if (counter % 2 !== 0) {
                     nextRowTds.push(<td key={c} id={i} onClick={(function (r, c) {
                         return function () {
-                            callback(r, c, gameState, userId, gameInfo);//dsdsf
+                            callback(r, c, gameState, userId, gameInfo, replaying);//dsdsf
                         }
                     })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, killedPieces)}
                                     {this.addLastTurnImages(prevPositions, r, c)}
@@ -255,8 +257,8 @@ class Board64 extends React.Component {
                     {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
                     {this.state.replaying && <div className={styles.replayingOverlay}/>}
                     <table >
-                        {this.createBoard(8,8,this.cellClicked.bind(this, this.props.dispatch, this.state.replaying),
-                            gameState, userId, currentMove, gameInfo)}
+                        {this.createBoard(8,8,this.cellClicked.bind(this, this.props.dispatch),
+                            gameState, userId, currentMove, gameInfo, this.state.replaying)}
                     </table>
 
 
