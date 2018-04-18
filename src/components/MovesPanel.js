@@ -31,10 +31,11 @@ const styles = {
 
     },
     selectedListItemStyle:{
-        backgroundColor:"#ff000066"
+        backgroundColor:"#953136"
+
     },
     selectedFirstListItemStyle:{
-        backgroundColor: "#4caf5066"
+        backgroundColor:"#4d7756"
     },
     listStyle:{
         backgroundColor: "#42454c",
@@ -75,6 +76,7 @@ const styles = {
         margin: "10 0 10 0",
         padding: 2,
         display: "flex",
+        //justifyContent: "space-between",//fallback for Edge (and other?)
         justifyContent: "space-evenly"
     },
     iconHovered:{
