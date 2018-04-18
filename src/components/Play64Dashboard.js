@@ -18,13 +18,34 @@ import Board64 from './Board64';
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
 import {wsConnect, wsSendJoinRoomPlay } from "../actions/WsClientActions";
+import Dialog from 'material-ui/Dialog';
 
+const gameActionTypes = {
+    surrender: "surrender",
+    draw: "draw",
+    exit: "exit"
+};
+
+const styles = {
+    dialogContent: {
+        width:320
+    },
+    dialogActionsContainer:{
+        display:"flex",
+        justifyContent: "space-around",
+        padding:20
+    },
+    dialogButton:{
+        backgroundColor: "#9c1818"
+    }
+};
 class Play64Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
 
 
+        this.state = {confirmDialogOpen:false, selectedGameAction: 0};
     }
 
     redirectUnauthorised(){
@@ -57,23 +78,86 @@ class Play64Dashboard extends React.Component {
             });
 
     }
+
+    showConfirmationDialog(gameActionType){
+        this.setState({"confirmDialogOpen":true, "selectedGameAction":gameActionType});
+    }
+
+    handleDialogClose(){
+        this.setState({"confirmDialogOpen":false,"selectedGameAction":0 });
+    }
+
+    handleSubmit(){
+        if (this.state.selectedGameAction === gameActionTypes.surrender){
+            console.log("surre");
+        }
+        else if (this.state.selectedGameAction === gameActionTypes.draw){
+            console.log("draw");
+        }
+        else if (this.state.selectedGameAction === gameActionTypes.exit){
+            console.log("exit");
+        }
+        this.setState({"confirmDialogOpen":false,"selectedGameAction":0 });
+    }
+
     render() {
 
         let {gameId, user} = this.props;
 
         let gameLoaded = gameId ? true : false;
+
+
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
-                {gameLoaded && <div style={{display:"flex"}}>
-                                    <Board64 userId={user.id}/>
+                {gameLoaded &&
+                <div>
+                    <div style={{display: "flex"}}>
+                        <Board64 userId={user.id}/>
 
-                                    <div style={{display:"flex", flexDirection:"column"}}>
-                                        <ParticipantList/>
-                                        <ChatPanel gameId={gameId} />
-                                    </div>
-                                </div>}
+                        <div style={{display: "flex", flexDirection: "column"}}>
+                            <ParticipantList/>
+                            <ChatPanel gameId={gameId}/>
+                        </div>
+                    </div>
+                    <div style={{display: "flex"}}>
+                        <div>
+                            <RaisedButton label="Surrender"
+                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.surrender)}/>
+                            <RaisedButton label="Draw"
+                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.draw)}/>
+                        </div>
+                        <div>
+                            <RaisedButton label="Exit"
+                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
+                        </div>
 
+                    </div>
+                </div>
+                }
+                <Dialog
+                    title="Confirm"
+                    actions={[
+                        <RaisedButton
+                            label="Cancel"
+                            primary={true}
+                            onClick={this.handleDialogClose.bind(this)}
+                            buttonStyle = {styles.dialogButton}
+                        />,
+                        <RaisedButton
+                            label="Ok"
+                            primary={true}
+                            onClick={this.handleSubmit.bind(this)}
+                            buttonStyle = {styles.dialogButton}
+                        />,
+                    ]}
+                    contentStyle={styles.dialogContent}
+                    actionsContainerStyle = {styles.dialogActionsContainer}
+                    modal={true}
+                    open={this.state.confirmDialogOpen}
+                >
+                    Are you sure you want to {this.state.selectedGameAction} ?
+                </Dialog>
 
 
                 {!gameLoaded && <p>no game!</p>}

@@ -15,6 +15,7 @@ import {withRouter} from "react-router-dom";
 
 import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
 
+
 class Board64 extends React.Component {
 
     constructor(props) {
@@ -247,24 +248,29 @@ class Board64 extends React.Component {
 
 
         return (
-            <div style={{display:"flex"}}>
-                <MovesPanel moves={gameState.moves}
-                            userId={userId}
-                            currentMove={currentMove}
-                            replaying={this.state.replaying}
-                            currentMoveChanged={this.currentMoveChanged.bind(this)}/>
-                <div className={styles.board}>
-                    {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
-                    {this.state.replaying && <div className={styles.replayingOverlay}/>}
-                    <table >
-                        {this.createBoard(8,8,this.cellClicked.bind(this, this.props.dispatch),
-                            gameState, userId, currentMove, gameInfo, this.state.replaying)}
-                    </table>
+
+                <div style={{display:"flex"}}>
+                    <MovesPanel moves={gameState.moves}
+                                userId={userId}
+                                currentMove={currentMove}
+                                replaying={this.state.replaying}
+                                currentMoveChanged={this.currentMoveChanged.bind(this)}/>
+                    <div className={styles.board}>
+                        {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
+                        {this.state.replaying && <div className={styles.replayingOverlay}/>}
+                        <table >
+                            {this.createBoard(8,8,this.cellClicked.bind(this, this.props.dispatch),
+                                gameState, userId, currentMove, gameInfo, this.state.replaying)}
+                        </table>
 
 
 
+                    </div>
                 </div>
-            </div>
+
+
+
+
         );
     }
 

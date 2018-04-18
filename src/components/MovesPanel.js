@@ -39,7 +39,8 @@ const styles = {
     },
     listStyle:{
         backgroundColor: "#42454c",
-        padding: "0 18px 0 18px"
+        padding: "0 18px 0 18px",
+        height:500
     },
     movesHeader:{
         color: "white",
