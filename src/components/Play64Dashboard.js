@@ -19,6 +19,7 @@ import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
 import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame } from "../actions/WsClientActions";
 import Dialog from 'material-ui/Dialog';
+import PlayerArea from "./PlayerArea";
 
 const gameActionTypes = {
     surrender: "surrender",
@@ -115,7 +116,8 @@ class Play64Dashboard extends React.Component {
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={3}/>
                 {gameLoaded &&
-                <div>
+                <div >
+                    <PlayerArea forOpponent={true} gameId={gameId} userId={user.id}/>
                     <div style={{display: "flex"}}>
                         <Board64 userId={user.id}/>
 
@@ -124,6 +126,11 @@ class Play64Dashboard extends React.Component {
                             <ChatPanel gameId={gameId}/>
                         </div>
                     </div>
+                    <PlayerArea forOpponent={false} gameId={gameId} userId={user.id}/>
+
+                    <br/>
+                    <br/>
+                    <br/>
                     <div style={{display: "flex"}}>
                         <div>
                             <RaisedButton label="Surrender"
@@ -137,6 +144,8 @@ class Play64Dashboard extends React.Component {
                         </div>
 
                     </div>
+
+
                 </div>
                 }
                 <Dialog

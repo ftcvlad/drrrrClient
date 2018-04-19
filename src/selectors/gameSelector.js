@@ -14,12 +14,56 @@ export const getCurrentGameResult = (state) => {return state.currentGame.gameRes
 export const getCurrentGameId = (state) => {return state.currentGame.gameInfo.gameId};
 
 
-// export const getChatMessages = (state) => {
-//     if (state.currentGame === null){
-//         return [];
+// export const isUserWatching = createSelector(
+//     [ getUser, getCurrentGameInfo],
+//     (user, gameInfo) => {
+//
+//         for (let i=0; i<gameInfo.watchers.length; i++){
+//             if (user.id === gameInfo.watchers[i].id){
+//                 return true;
+//             }
+//         }
+//         return false;
+//
 //     }
-//     return state.currentGame.chatMessages;
-// };
+// );
+
+
+
+export const getOwnPlayerObject = createSelector(
+    [ getUser, getCurrentGameInfo, (_, props) => props.forOpponent, ],
+    (user, gameInfo, forOpponent) => {
+
+
+        if (Object.keys(gameInfo).length === 0){//asdasdsad
+            return {};
+        }
+
+        if (gameInfo.players.length === 0){
+            return {};
+        }
+        else if (gameInfo.players.length === 1){
+            return forOpponent ? {} : gameInfo.players[0];
+        }
+        else if (gameInfo.players.length === 2){
+            if (gameInfo.players[0].id === user.id){
+                return forOpponent ? gameInfo.players[1] : gameInfo.players[0];
+            }
+            else if (gameInfo.players[1].id === user.id){
+                return forOpponent ? gameInfo.players[0] : gameInfo.players[1];
+            }
+            else{//if im watcher return as for white player
+                return forOpponent ? gameInfo.players[1] : gameInfo.players[0];
+            }
+        }
+
+        return {};
+    }
+);
+
+
+
+
 
 // export const getChatMessages = createSelector(
 //     [ getUser, getAllGameInfo ],
