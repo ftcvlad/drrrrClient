@@ -16,7 +16,8 @@ export const messageTypes = {
     CREATE_GAME: 'createGame',
     PLAY_GAME: 'playGame',
     WATCH_GAME: 'watchGame',
-    EXIT_GAME: 'exitGame'
+    EXIT_GAME: 'exitGame',
+    SURRENDER: 'surrender'
 
 };
 

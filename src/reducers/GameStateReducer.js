@@ -18,6 +18,7 @@ export default function gameInfoReducer(state = initialState.currentGame.gameSta
             return Object.assign({}, action.gameState);
         case types.EXIT_GAME_SUCCEED:
             return {};
+        case types.SURRENDER_SUCCEED:
         case types.BROADCAST_GAME_FINISHED_SUCCEED:
             newState = Object.assign({}, state);
             newState.isGameGoing = false;

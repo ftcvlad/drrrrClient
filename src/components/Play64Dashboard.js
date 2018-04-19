@@ -89,7 +89,8 @@ class Play64Dashboard extends React.Component {
 
     handleSubmit(){
         if (this.state.selectedGameAction === gameActionTypes.surrender){
-            console.log("surre");
+            this.props.dispatch(wsSendSurrender(this.props.gameId));
+
         }
         else if (this.state.selectedGameAction === gameActionTypes.draw){
             console.log("draw");
