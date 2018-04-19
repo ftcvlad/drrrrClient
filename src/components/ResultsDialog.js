@@ -2,6 +2,7 @@ import React from "react";
 import styles from './Css/Board64.css';
 
 import PropTypes from 'prop-types';
+
 const wm = require('./images/wm.png');
 const bm = require('./images/bm.png');
 const wk = require('./images/wk.png');
@@ -26,45 +27,60 @@ import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
 
 const inlineStyles = {
     resultsDialogContent: {
-        width:550,
-        backgroundColor:"red"
+        width: 550,
+        position: "absolute",
+        zIndex: 110,
+        margin:"auto",
+        left: 0,
+        right: 0,
+        top:"20%",
+        backgroundColor:"white"
     },
-    resultsDialogActionsContainer:{
-        display:"flex",
-        justifyContent: "space-around",
-        padding:20
+    dialogFooter:{
+        padding:17
     },
-    resultsDialogButton:{
+    dialogHeader: {
+        margin: 0,
+        padding: "17px 24px 20px",
+        color: "#9c1818",
+        fontSize: 22,
+        textAlign: "left",
+        fontWeight: 400
+    },
+    dialogBody:{
+        padding: "0 24px 0 24px"
+    },
+
+
+    resultsDialogButton: {
         backgroundColor: "white",
         border: "1px solid #9c1818",
-        height:30,
+        height: 30,
         lineHeight: 2
     },
-    resultDialogButtonHovered:{
-        backgroundColor: "red"
-    },
-    resultDialogButtonLabel:{
+    resultDialogButtonLabel: {
         color: "#9c1818"
     },
-    tableColumn:{
-        padding:5,
+
+    tableColumn: {
+        padding: 5,
         whiteSpace: "initial",
-        width:40,
+        width: 40,
         borderLeft: "1px solid #d69e9e",
-        textAlign:"center"
+        textAlign: "center"
     },
-    tableColumnPlayer:{
-        width:100,
-        padding:5
+    tableColumnPlayer: {
+        width: 100,
+        padding: 5
     },
-    tableColumnNarrow:{
-        width:35
+    tableColumnNarrow: {
+        width: 35
     },
-    tableBodyRow:{
+    tableBodyRow: {
         borderTop: "1px solid #d69e9e",
         borderBottom: "none"
     },
-    playingRedDiv:{
+    playingRedDiv: {
         backgroundColor: "#9c1818",
         width: 10,
         height: 10,
@@ -72,17 +88,16 @@ const inlineStyles = {
         margin: "auto",
         border: "1px solid #9c1818"
     },
-    playingWhiteDiv:{
+    playingWhiteDiv: {
         backgroundColor: "white",
         width: 10,
         height: 10,
         borderRadius: 10,
         margin: "auto",
         border: "1px solid black"//gdfgdfg
-    },
-    dialogTitleStyle:{
-        color: "#9c1818"
     }
+
+
 
 
 };
@@ -94,38 +109,21 @@ class ResultsDialog extends React.Component {
     }
 
 
-    render(){
+    render() {
 
         let {gameResult, handleCloseResultsDialog} = this.props;
 
 
 
-        // let showResultsDialog = gameResult.length>0;
-
         let narrowColumnStyle = Object.assign({}, inlineStyles.tableColumn, inlineStyles.tableColumnNarrow);
 
         return (
 
-                <Dialog
-                    title="Game results"
-                    titleStyle = {inlineStyles.dialogTitleStyle}
-                    actions={[
-                        <RaisedButton
-                            label="Ok"
-                            primary={true}
-                            labelStyle={inlineStyles.resultDialogButtonLabel}
-                            onClick={handleCloseResultsDialog}
-                            buttonStyle = {inlineStyles.resultsDialogButton}
-                        />
+            <div style={inlineStyles.resultsDialogContent}>
 
-                    ]}
-                    contentStyle={inlineStyles.resultsDialogContent}
-                    actionsContainerStyle = {inlineStyles.resultsDialogActionsContainer}
-                    modal={true}
-                    open={true}
-
-                >
-                    <Table >
+                <h3 style={inlineStyles.dialogHeader}>Game results</h3>
+                <div style={inlineStyles.dialogBody}>
+                    <Table>
                         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                             <TableRow>
 
@@ -139,73 +137,60 @@ class ResultsDialog extends React.Component {
                                 <TableHeaderColumn style={narrowColumnStyle}>Losses</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
-                        <TableBody displayRowCheckbox={false} >
-                            {/*<TableRow>*/}
-                            {/*<TableRowColumn>{gameResult[0].username}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{"white"}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[0].reason}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[0].ratingBefore}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[0].ratingAfter}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[0].stats.wins}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[0].stats.draws}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[0].stats.losses}</TableRowColumn>*/}
-
-                            {/*</TableRow>*/}
-                            {/*<TableRow>*/}
-                            {/*<TableRowColumn>{gameResult[1].username}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{"red"}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[1].reason}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[1].ratingBefore}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[1].ratingAfter}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[1].stats.wins}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[1].stats.draws}</TableRowColumn>*/}
-                            {/*<TableRowColumn>{gameResult[1].stats.losses}</TableRowColumn>*/}
-                            {/*</TableRow>*/}
+                        <TableBody displayRowCheckbox={false}>
 
                             <TableRow style={inlineStyles.tableBodyRow}>
-                                <TableRowColumn  style={inlineStyles.tableColumnPlayer}>{"mozilla@gmail.com"}</TableRowColumn>
-                                <TableRowColumn  style={inlineStyles.tableColumn}><div style={inlineStyles.playingWhiteDiv}></div></TableRowColumn>
-                                <TableRowColumn  style={inlineStyles.tableColumn}>{""}</TableRowColumn>
-                                <TableRowColumn  style={inlineStyles.tableColumn}>{1500}</TableRowColumn>
-                                <TableRowColumn  style={inlineStyles.tableColumn}>{1510}</TableRowColumn>
-                                <TableRowColumn  style={narrowColumnStyle}>{10}</TableRowColumn>
-                                <TableRowColumn  style={narrowColumnStyle}>{17}</TableRowColumn>
-                                <TableRowColumn  style={narrowColumnStyle}>{23}</TableRowColumn>
+                                <TableRowColumn
+                                    style={inlineStyles.tableColumnPlayer}>{gameResult[0].username}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>
+                                    <div style={inlineStyles.playingWhiteDiv}></div>
+                                </TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>{gameResult[0].reason}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>{gameResult[0].ratingBefore}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>{gameResult[0].ratingAfter}</TableRowColumn>
+                                <TableRowColumn style={narrowColumnStyle}>{gameResult[0].stats.wins}</TableRowColumn>
+                                <TableRowColumn style={narrowColumnStyle}>{gameResult[0].stats.draws}</TableRowColumn>
+                                <TableRowColumn style={narrowColumnStyle}>{gameResult[0].stats.losses}</TableRowColumn>
                             </TableRow>
                             <TableRow style={inlineStyles.tableBodyRow}>
-                                <TableRowColumn  style={ inlineStyles.tableColumnPlayer}>{"vl@gmail.com"}</TableRowColumn>
-                                <TableRowColumn  style={inlineStyles.tableColumn}><div style={inlineStyles.playingRedDiv}></div></TableRowColumn>
-                                <TableRowColumn  style={inlineStyles.tableColumn}>{"left"}</TableRowColumn>
-                                <TableRowColumn style={inlineStyles.tableColumn}>{1500}</TableRowColumn>
-                                <TableRowColumn style={inlineStyles.tableColumn}>{1510}</TableRowColumn>
-                                <TableRowColumn style={narrowColumnStyle}>{10}</TableRowColumn>
-                                <TableRowColumn style={narrowColumnStyle}>{17}</TableRowColumn>
-                                <TableRowColumn style={narrowColumnStyle}>{23}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumnPlayer}>{gameResult[1].username}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>
+                                    <div style={inlineStyles.playingRedDiv}></div>
+                                </TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>{gameResult[1].reason}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>{gameResult[1].ratingBefore}</TableRowColumn>
+                                <TableRowColumn style={inlineStyles.tableColumn}>{gameResult[1].ratingAfter}</TableRowColumn>
+                                <TableRowColumn style={narrowColumnStyle}>{gameResult[1].stats.wins}</TableRowColumn>
+                                <TableRowColumn style={narrowColumnStyle}>{gameResult[1].stats.draws}</TableRowColumn>
+                                <TableRowColumn style={narrowColumnStyle}>{gameResult[1].stats.losses}</TableRowColumn>
                             </TableRow>
 
 
                         </TableBody>
                     </Table>
-                </Dialog>
-
-
-
-
+                </div>
+                <div style={inlineStyles.dialogFooter}>
+                    <RaisedButton
+                        label="Save Game"
+                        primary={true}
+                        labelStyle={inlineStyles.resultDialogButtonLabel}
+                        onClick={handleCloseResultsDialog}
+                        buttonStyle={inlineStyles.resultsDialogButton}
+                    />
+                </div>
+            </div>
 
 
         );
     }
 
 
-
 }
 
 ResultsDialog.propTypes = {
-    gameResult:PropTypes.array.isRequired,
+    gameResult: PropTypes.array.isRequired,
     handleCloseResultsDialog: PropTypes.func.isRequired
 };
-
-
 
 
 export default ResultsDialog;

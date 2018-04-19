@@ -9,6 +9,7 @@ export default function gameResultReducer(state = initialState.currentGame.gameR
         case types.BROADCAST_GAME_FINISHED_SUCCEED:
             return action.gameResult.slice();
         case types.BROADCAST_GAME_STARTED_SUCCEED:
+        case types.JOIN_ROOM_PLAY_SUCCEED:
             return [];
 
 

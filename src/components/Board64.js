@@ -242,26 +242,27 @@ class Board64 extends React.Component {
 
     render(){
         console.log("board64");
-        let {gameState, userId, gameInfo, gameResult} = this.props;//asdasd
+        let {gameState, userId, gameInfo, gameResult} = this.props;
 
         let currentMove = -1;
         if (gameState.moves.length>0){
             currentMove = this.state.replaying === true ? this.state.currentMove : gameState.moves.length-1;
         }
 
-       // let showResultsDialog = gameResult.length>0;
-        let showResultsDialog = true;
+        let showResultsDialog = gameResult.length>0;
+
 
         return (
 
-                <div style={{display:"flex"}}>
+                <div className={styles.gamePanelsContainer} >
+                    {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
                     <MovesPanel moves={gameState.moves}
                                 userId={userId}
                                 currentMove={currentMove}
                                 replaying={this.state.replaying}
                                 currentMoveChanged={this.currentMoveChanged.bind(this)}/>
                     <div className={styles.board}>
-                        {!gameState.isGameGoing && <div className={styles.boardOverlay}/>}
+
                         {this.state.replaying && <div className={styles.replayingOverlay}/>}
                         <table >
                             {this.createBoard(8,8,this.cellClicked.bind(this, this.props.dispatch),
