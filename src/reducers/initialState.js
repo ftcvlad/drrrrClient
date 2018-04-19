@@ -5,6 +5,6 @@ export default {
         gameInfo: {},
         gameState: {},
         chatMessages: [],
-        gameResult: {}
+        gameResult: []
     }
 };

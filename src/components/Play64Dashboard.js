@@ -108,7 +108,7 @@ class Play64Dashboard extends React.Component {
         let {gameId, user} = this.props;
 
         let gameLoaded = gameId ? true : false;
-        let showResultsDialog = this.props.gameResult.length>0;
+
 
         return (
             <div style={{textAlign: 'center'}}>
@@ -162,7 +162,7 @@ class Play64Dashboard extends React.Component {
                     Are you sure you want to {this.state.selectedGameAction} ?
                 </Dialog>
 
-                {showResultsDialog && <div>Results Dialog</div>}
+
 
 
                 {!gameLoaded && <p>no game!</p>}
@@ -180,8 +180,7 @@ Play64Dashboard.propTypes={
 function mapStateToProps(state) {
     return {
         gameId: getCurrentGameId(state),
-        user: getUser(state),
-        gameResult: getCurrentGameResult(state)
+        user: getUser(state)
     };
 }
 
