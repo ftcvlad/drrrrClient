@@ -7,7 +7,8 @@ import {createGameSuccess,
     joinGameSucceed,
     userPickSucceed,
     userMoveSucceed,
-    receiveChatMessage} from './WsReceiveActions';
+    receiveChatMessage,
+    exitGameSuccess} from './WsReceiveActions';
 
 
 
@@ -151,3 +152,29 @@ export function wsConnect() {
         promise: (socket, dispatch) => socket.connect(dispatch)
     }
 }
+
+
+//above works :)
+
+
+
+export function wsSendExitGame(gameId){
+    let msg = {
+        msgType: messageTypes.EXIT_GAME,
+        gameId: gameId
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: exitGameSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
+
+
+
+
+
+
+

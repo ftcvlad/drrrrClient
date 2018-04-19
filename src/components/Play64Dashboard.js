@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {removeAllGames} from "../actions/removeActions";
-import {getCurrentGameId} from '../selectors/gameSelector';
+import {getCurrentGameId, getCurrentGameResult} from '../selectors/gameSelector';
 
 
 
@@ -17,7 +17,7 @@ import Board64 from './Board64';
 
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
-import {wsConnect, wsSendJoinRoomPlay } from "../actions/WsClientActions";
+import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame } from "../actions/WsClientActions";
 import Dialog from 'material-ui/Dialog';
 
 const gameActionTypes = {
@@ -95,7 +95,10 @@ class Play64Dashboard extends React.Component {
             console.log("draw");
         }
         else if (this.state.selectedGameAction === gameActionTypes.exit){
-            console.log("exit");
+            this.props.dispatch(wsSendExitGame(this.props.gameId))
+                .then(()=>{
+                    this.props.history.push('/tables64');
+                });
         }
         this.setState({"confirmDialogOpen":false,"selectedGameAction":0 });
     }
@@ -105,7 +108,7 @@ class Play64Dashboard extends React.Component {
         let {gameId, user} = this.props;
 
         let gameLoaded = gameId ? true : false;
-
+        let showResultsDialog = this.props.gameResult.length>0;
 
         return (
             <div style={{textAlign: 'center'}}>
@@ -159,6 +162,8 @@ class Play64Dashboard extends React.Component {
                     Are you sure you want to {this.state.selectedGameAction} ?
                 </Dialog>
 
+                {showResultsDialog && <div>Results Dialog</div>}
+
 
                 {!gameLoaded && <p>no game!</p>}
                 < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
@@ -175,7 +180,8 @@ Play64Dashboard.propTypes={
 function mapStateToProps(state) {
     return {
         gameId: getCurrentGameId(state),
-        user: getUser(state)
+        user: getUser(state),
+        gameResult: getCurrentGameResult(state)
     };
 }
 

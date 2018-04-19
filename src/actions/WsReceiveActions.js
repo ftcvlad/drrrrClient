@@ -24,12 +24,16 @@ export function joinGameSucceed(currentGame){
     return {type: types.JOIN_GAME_SUCCEED, currentGame: currentGame };
 }
 
-export function tables_BroadcastPlayerJoinedSuccess(gameInfo){
-    return {type: types.tables_BROADCAST_PLAYER_JOINED_SUCCEED, gameInfo: gameInfo };
+export function BroadcastParticipantsChangedToTableSuccess(gameInfo){
+    return {type: types.BROADCAST_PARTICIPANTS_CHANGED_to_table_SUCCEED, gameInfo: gameInfo };
 }
 
-export function table_BroadcastPlayerJoinedSuccess(currentGame){
-    return {type: types.table_BROADCAST_PLAYER_JOINED_SUCCEED, currentGame: currentGame };
+export function BroadcastParticipantsChangedToTablesSuccess(gameInfo){
+    return {type: types.BROADCAST_PARTICIPANTS_CHANGED_to_tables_SUCCEED, gameInfo: gameInfo };
+}
+
+export function broadcastGameStartedSuccess(gameState){
+    return {type: types.BROADCAST_GAME_STARTED_SUCCEED, gameState: gameState};
 }
 
 //moves
@@ -45,3 +49,19 @@ export function userMoveSucceed(gameState){
 export function receiveChatMessage(data){
     return {type: types.RECEIVE_CHAT_MESSAGE, msg: data.msg, gameId: data.gameId };
 }
+
+//game move ins move outs
+export function exitGameSuccess(){
+    return {type: types.EXIT_GAME_SUCCEED};
+}
+
+export function broadcastTableRemovedSuccess(gameId){
+    return {type: types.BROADCAST_TABLE_REMOVED_SUCCEED, gameId: gameId};
+}
+
+//finish events
+export function broadcastGameFinishedSuccess(gameResult){
+    return {type: types.BROADCAST_GAME_FINISHED_SUCCEED, gameResult: gameResult};
+}
+
+

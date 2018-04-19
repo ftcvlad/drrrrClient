@@ -3,10 +3,14 @@ import WebSocketAsPromised from 'websocket-as-promised';
 import {
     broadcastGameCreatedSuccess,
     receiveChatMessage,
-    table_BroadcastPlayerJoinedSuccess,
-    tables_BroadcastPlayerJoinedSuccess,
-    userMoveSucceed
+    BroadcastParticipantsChangedToTableSuccess,
+    BroadcastParticipantsChangedToTablesSuccess,
+    userMoveSucceed,
+    broadcastTableRemovedSuccess,
+    broadcastGameStartedSuccess,
+    broadcastGameFinishedSuccess
 } from "../actions/WsReceiveActions";
+import * as types from "../actions/actionTypes";
 
 
 
@@ -42,17 +46,26 @@ export default class SocketClient {
                 if (data.servMessType === messageTypes.BROADCAST_GAME_CREATED){
                     this.dispatch(broadcastGameCreatedSuccess(data.data));
                 }
-                else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED_TO_TABLE){
-                    this.dispatch(table_BroadcastPlayerJoinedSuccess(data.data));
+                else if (data.servMessType === messageTypes.BROADCAST_PARTICIPANTS_CHANGED_to_table){
+                    this.dispatch(BroadcastParticipantsChangedToTableSuccess(data.data));
                 }
-                else if (data.servMessType === messageTypes.BROADCAST_PLAYER_JOINED_TO_TABLES){
-                    this.dispatch(tables_BroadcastPlayerJoinedSuccess(data.data));
+                else if (data.servMessType === messageTypes.BROADCAST_PARTICIPANTS_CHANGED_to_tables){
+                    this.dispatch(BroadcastParticipantsChangedToTablesSuccess(data.data));
                 }
                 else if (data.servMessType === messageTypes.USER_MOVE){
                     this.dispatch(userMoveSucceed(data.data));
                 }
                 else if (data.servMessType === messageTypes.SEND_CHAT_MESSAGE){
                     this.dispatch(receiveChatMessage(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_TABLE_REMOVED){
+                    this.dispatch(broadcastTableRemovedSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_GAME_STARTED){
+                    this.dispatch(broadcastGameStartedSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_GAME_FINISHED){
+                    this.dispatch(broadcastGameFinishedSuccess(data.data));
                 }
             }
 
@@ -88,10 +101,12 @@ export default class SocketClient {
 
             return this.wsp.sendRequest(data)
                 .then(response => {
+                    console.log(response);
                     return resolve(response);
                 })
-                .catch(e => {
+                .catch(e => {//fghhj
                     console.log('response error');
+                    console.log(e);
                     return reject(e);
                 });
 

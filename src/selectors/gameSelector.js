@@ -9,6 +9,7 @@ export const getAllGameInfo = (state) => { return state.gameList;};
 export const getCurrentGameInfo = (state) => {return state.currentGame.gameInfo};
 export const getCurrentGameState = (state) => {return state.currentGame.gameState};
 export const getCurrentGameChatMessages = (state) => {return state.currentGame.chatMessages};
+export const getCurrentGameResult = (state) => {return state.currentGame.gameResult};
 
 export const getCurrentGameId = (state) => {return state.currentGame.gameInfo.gameId};
 

@@ -14,7 +14,8 @@ export default function chatMessagesReducer(state = initialState.currentGame.cha
             newState = state.slice();
             newState.push(action.msg);
             return newState;
-
+        case types.EXIT_GAME_SUCCEED:
+            return [];
         default:
             return state;
     }

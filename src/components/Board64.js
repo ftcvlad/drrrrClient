@@ -159,7 +159,7 @@ class Board64 extends React.Component {
 
         //reverse picked checker for 2nd player
         let pickedChecker = [];
-        if (userId === gameInfo.players[gameState.currentPlayer]["id"] && replaying === false){
+        if (gameInfo.players.length>1 && userId === gameInfo.players[gameState.currentPlayer]["id"] && replaying === false){
             if (gameInfo.players.length>1 && gameState.pickedChecker.length === 2 && userId === gameInfo.players[1]["id"]){
                 pickedChecker.push(gridDimension-1-gameState.pickedChecker[0]);
                 pickedChecker.push(gridDimension-1-gameState.pickedChecker[1]);

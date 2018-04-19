@@ -23,7 +23,6 @@ export default function socketMiddleware(socket) {
 
         return promise(socket, dispatch)
             .then((result) => {
-
                 //next({ result, type: SEND_SUCCESS });//generic success
 
                 if (result){

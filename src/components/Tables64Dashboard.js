@@ -16,8 +16,8 @@ import {withRouter} from "react-router-dom";
 import {roomCategories} from '../actions/roomCategories';
 import PropTypes from 'prop-types';
 
-import {wsConnect, wsSendCreateGame, wsSendJoinRoomTables, wsSendPlayGame,wsSendWatchGame} from '../actions/WsClientActions';
-
+import {wsConnect, wsSendCreateGame, wsSendJoinRoomTables, wsSendPlayGame, wsSendWatchGame} from '../actions/WsClientActions';
+import {removeAllGames} from '../actions/removeActions';
 class Tables64Dashboard extends React.Component {
 
     constructor(props) {

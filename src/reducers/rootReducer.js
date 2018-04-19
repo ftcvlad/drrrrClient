@@ -6,6 +6,7 @@ import gameInfoReducer from './gameInfoReducer';
 import gameStateReducer from './gameStateReducer';
 import gameListReducer from './gameListReducer';
 import chatMessagesReducer from './ChatMessagesReducer';
+import gameResultReducer from './GameResultReducer';
 
 const rootReducer = combineReducers({
     form: formReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     currentGame: combineReducers({
         gameInfo: gameInfoReducer,
         gameState: gameStateReducer,
-        chatMessages: chatMessagesReducer
+        chatMessages: chatMessagesReducer,
+        gameResult: gameResultReducer
     })
 
 });
