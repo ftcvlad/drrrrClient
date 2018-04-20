@@ -38,6 +38,21 @@ const styles = {
     },
     dialogButton:{
         backgroundColor: "#9c1818"
+    },
+    commonActionPanel:{
+        width:250,
+        minWidth:250,
+        padding:5,
+        backgroundColor: "#bababb",
+        margin: "0 5px 5px",
+        button:{
+            border: "1px solid #9c1818",
+            height: 30,
+            lineHeight: 2
+        },
+        buttonLabel:{
+            color: "#9c1818"
+        }
     }
 };
 class Play64Dashboard extends React.Component {
@@ -122,6 +137,15 @@ class Play64Dashboard extends React.Component {
                 <NavBar selectedTab={3}/>
                 {gameLoaded &&
                 <div >
+
+
+
+
+
+
+
+
+
                     <PlayerArea forOpponent={true}
                                 gameId={gameId}
                                 userId={user.id}/>
@@ -131,10 +155,7 @@ class Play64Dashboard extends React.Component {
                         <div style={{display: "flex", flexDirection: "column"}}>
                             <ParticipantList/>
                             <ChatPanel gameId={gameId}/>
-                            <div>
-                                <RaisedButton label="Exit"
-                                              onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
-                            </div>
+
                         </div>
                     </div>
                     <div style={{display:"flex"}}>
@@ -144,7 +165,12 @@ class Play64Dashboard extends React.Component {
                                     userId={user.id}
                                     handleSurrender={this.showConfirmationDialog.bind(this, gameActionTypes.surrender)}
                                     handleDraw={this.showConfirmationDialog.bind(this, gameActionTypes.draw)}/>
-
+                        <div style={styles.commonActionPanel}>
+                            <RaisedButton label="Exit"
+                                          labelStyle={styles.commonActionPanel.buttonLabel}
+                                          buttonStyle={styles.commonActionPanel.button}
+                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
+                        </div>
 
                     </div>
 

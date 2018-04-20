@@ -31,7 +31,8 @@ const styles = {
         width: 480,//500 - padding
         marginLeft: 206,//width of moves
         padding: 10,
-        border: "1px solid black"
+        border: "1px solid black",
+        flexShrink: 0
 
     },
     statusDescription: {
@@ -53,10 +54,10 @@ const styles = {
     normalActionButton:{
         height: 30,
         lineHeight: 2,
-        border: "1px solid black"
+        border: "1px solid #9c1818"
     },
     normalButtonLabel: {
-        //color: "white"
+        color: "#9c1818"
     },
 
     statusTextDiv: {
