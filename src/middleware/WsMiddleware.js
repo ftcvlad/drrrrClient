@@ -43,8 +43,11 @@ export default function socketMiddleware(socket) {
                     else if (result.status === 401){
                         history.push('/');//unauthorised
                     }
-                    else if (result.status === 403){
-                        history.push('/tables64');//not in game
+                    else if (result.status === 403){//forbidden
+                        throw 403;
+                    }
+                    else if (result.status === 409){//userPick, userMove not possible
+
                     }
 
                 }

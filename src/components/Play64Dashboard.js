@@ -49,24 +49,28 @@ class Play64Dashboard extends React.Component {
         this.state = {confirmDialogOpen:false, selectedGameAction: 0};
     }
 
-    redirectUnauthorised(){
-        this.props.history.push('/');
-    }
-
-    redirectNotInGame(){
-        this.props.history.push('/tables64');
-    }
 
     componentDidMount(){
 
         if (!window.socketConnection){
             this.props.dispatch(wsConnect())
                 .then(()=>{
-                    this.props.dispatch(wsSendJoinRoomPlay());
+                    this.props.dispatch(wsSendJoinRoomPlay())
+                        .catch((error)=>{
+                            if (error === 403){
+                                this.props.history.push('/tables64');
+                            }
+                        });
                 });
         }
         else{
-            this.props.dispatch(wsSendJoinRoomPlay());
+            this.props.dispatch(wsSendJoinRoomPlay())
+                .catch((error)=>{
+                    if (error === 403){
+                        this.props.history.push('/tables64');
+                    }
+
+                });
         }
 
 

@@ -110,10 +110,9 @@ export default class SocketClient {
 
             return this.wsp.sendRequest(data)
                 .then(response => {
-                    console.log(response);
                     return resolve(response);
                 })
-                .catch(e => {//fghhj
+                .catch(e => {
                     console.log('response error');
                     console.log(e);
                     return reject(e);
