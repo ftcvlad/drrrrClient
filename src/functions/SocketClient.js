@@ -8,7 +8,10 @@ import {
     userMoveSucceed,
     broadcastTableRemovedSuccess,
     broadcastGameStartedSuccess,
-    broadcastGameFinishedSuccess
+    broadcastGameFinishedSuccess,
+    broadcastConfirmPlayingSuccess,
+    confirmPlayingSuccess,
+    surrenderSuccess
 } from "../actions/WsReceiveActions";
 import * as types from "../actions/actionTypes";
 
@@ -66,6 +69,12 @@ export default class SocketClient {
                 }
                 else if (data.servMessType === messageTypes.BROADCAST_GAME_FINISHED){
                     this.dispatch(broadcastGameFinishedSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_CONFIRM_PLAYING){
+                    this.dispatch(confirmPlayingSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_SURRENDER){
+                    this.dispatch(surrenderSuccess(data.data));
                 }
             }
 

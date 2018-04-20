@@ -4,8 +4,9 @@ import React from "react";
 import PropTypes from 'prop-types';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {getOwnPlayerObject, isUserWatching} from "../selectors/gameSelector";
+import {getOwnPlayerObject, getOwnStatus} from "../selectors/gameSelector";
 import RaisedButton from 'material-ui/RaisedButton';
+import {wsSendConfirmPlaying} from "../actions/WsClientActions";
 
 const playerStatusTexts = ["waiting", "playing", "confirming", "ready"];
 const playerStatuses = {
@@ -55,14 +56,16 @@ class PlayerArea extends React.Component {
 
 
     confirmPlaying(gameId){
-        console.log("confirmed!");
+
+        this.props.dispatch(wsSendConfirmPlaying(gameId));
+
+
     }
 
     render(){
 
         let {player, forOpponent, gameId, userId} = this.props;
-        console.log(player);
-        console.log('-----');
+
         let playerExists = Object.keys(player).length !== 0;
         let belongsToSelf = player.id === userId;
 
@@ -108,12 +111,15 @@ PlayerArea.propTypes = {
     player: PropTypes.object.isRequired,
     forOpponent: PropTypes.bool.isRequired,
     gameId: PropTypes.string.isRequired,
-    userId: PropTypes.number.isRequired
+    userId: PropTypes.number.isRequired,
+    status: PropTypes.number
+
 };
 
 function mapStateToProps(state, ownProps) {
     return {
-        player: getOwnPlayerObject(state, ownProps)
+        player: getOwnPlayerObject(state, ownProps),
+        status: getOwnStatus(state, ownProps)//to rerender when only status changes (and player reference doesn't)
     };
 }
 

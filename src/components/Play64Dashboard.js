@@ -17,7 +17,7 @@ import Board64 from './Board64';
 
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
-import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame } from "../actions/WsClientActions";
+import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender } from "../actions/WsClientActions";
 import Dialog from 'material-ui/Dialog';
 import PlayerArea from "./PlayerArea";
 

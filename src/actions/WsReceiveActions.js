@@ -68,3 +68,10 @@ export function broadcastGameFinishedSuccess(gameResult){
 export function surrenderSuccess(gameResult){
     return {type: types.SURRENDER_SUCCEED, gameResult: gameResult};
 }
+
+export function confirmPlayingSuccess(gameInfo){
+    return {type: types.CONFIRM_PLAYING_SUCCEED, gameInfo: gameInfo};
+}
+
+
+

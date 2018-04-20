@@ -9,7 +9,8 @@ import {createGameSuccess,
     userMoveSucceed,
     receiveChatMessage,
     exitGameSuccess,
-    surrenderSuccess} from './WsReceiveActions';
+    surrenderSuccess,
+    confirmPlayingSuccess} from './WsReceiveActions';
 
 
 
@@ -188,6 +189,20 @@ export function wsSendSurrender(gameId){
     };
 }
 
+
+export function wsSendConfirmPlaying(gameId){
+    let msg = {
+        msgType: messageTypes.CONFIRM_PLAYING,
+        gameId: gameId
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: confirmPlayingSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
 
 
 

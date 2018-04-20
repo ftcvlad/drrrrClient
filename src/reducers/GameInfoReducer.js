@@ -15,9 +15,20 @@ export default function gameInfoReducer(state = initialState.currentGame.gameInf
         case types.REMOVE_ALL_GAMES_SUCCEED:
             return {};
         case types.BROADCAST_PARTICIPANTS_CHANGED_to_table_SUCCEED:
+        case types.CONFIRM_PLAYING_SUCCEED:
             return Object.assign({}, action.gameInfo);
         case types.EXIT_GAME_SUCCEED:
             return {};
+        case types.SURRENDER_SUCCEED:
+
+            newState = Object.assign({}, state);
+
+            for (let i=0; i<newState.players.length; i++){
+               // newState.players[i] = Object.assign({}, newState.players[i]);//to make PlayerArea's mapStateToProps cause rerender
+                newState.players[i].currentStatus = 2;//confirming
+            }
+
+            return newState;//asdasdasda
 
 
 

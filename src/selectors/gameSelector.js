@@ -61,6 +61,10 @@ export const getOwnPlayerObject = createSelector(
     }
 );
 
+export const getOwnStatus = (state, props)=> {
+    return getOwnPlayerObject(state, props).currentStatus;
+};
+
 
 
 

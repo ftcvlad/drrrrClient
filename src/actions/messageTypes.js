@@ -9,6 +9,9 @@ export const messageTypes = {
     BROADCAST_GAME_STARTED: 'broadcastGameStarted',
     BROADCAST_GAME_FINISHED: 'broadcastGameFinished',
     BROADCAST_TABLE_REMOVED: 'broadcastTableRemoved',
+    BROADCAST_CONFIRM_PLAYING: 'broadcastConfirmPlaying',
+    BROADCAST_SURRENDER: 'broadcastSurrender',
+
 
     USER_MOVE: 'userMove',
     USER_PICK: 'userPick',
@@ -17,7 +20,7 @@ export const messageTypes = {
     PLAY_GAME: 'playGame',
     WATCH_GAME: 'watchGame',
     EXIT_GAME: 'exitGame',
-    SURRENDER: 'surrender'
-
+    SURRENDER: 'surrender',
+    CONFIRM_PLAYING: 'confirmPlaying'
 };
 
