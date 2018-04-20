@@ -11,7 +11,9 @@ export const messageTypes = {
     BROADCAST_TABLE_REMOVED: 'broadcastTableRemoved',
     BROADCAST_CONFIRM_PLAYING: 'broadcastConfirmPlaying',
     BROADCAST_SURRENDER: 'broadcastSurrender',
-
+    BROADCAST_SUGGEST_DRAW: 'broadcastSuggestDraw',
+    BROADCAST_RESPOND_DRAW_OFFER: 'broadcastRespondDrawOffer',
+    BROADCAST_CANCEL_DRAW_OFFER: 'broadcastCancelDrawOffer',
 
     USER_MOVE: 'userMove',
     USER_PICK: 'userPick',
@@ -21,6 +23,9 @@ export const messageTypes = {
     WATCH_GAME: 'watchGame',
     EXIT_GAME: 'exitGame',
     SURRENDER: 'surrender',
-    CONFIRM_PLAYING: 'confirmPlaying'
+    SUGGEST_DRAW: 'suggestDraw',
+    CONFIRM_PLAYING: 'confirmPlaying',
+    RESPOND_DRAW_OFFER: 'respondDrawOffer',
+    CANCEL_DRAW_OFFER: 'cancelDrawOffer'
 };
 

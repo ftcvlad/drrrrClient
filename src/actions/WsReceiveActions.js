@@ -65,8 +65,8 @@ export function broadcastGameFinishedSuccess(gameResult){
 }
 
 
-export function surrenderSuccess(gameResult){
-    return {type: types.SURRENDER_SUCCEED, gameResult: gameResult};
+export function surrenderSuccess(gameInfo){
+    return {type: types.SURRENDER_SUCCEED, gameInfo: gameInfo};
 }
 
 export function confirmPlayingSuccess(gameInfo){
@@ -74,4 +74,14 @@ export function confirmPlayingSuccess(gameInfo){
 }
 
 
+export function suggestDrawSuccess(gameInfo){
+    return {type: types.SUGGEST_DRAW_SUCCEED, gameInfo: gameInfo};
+}
 
+export function respondDrawOfferSuccess(gameInfo){
+    return {type: types.RESPOND_DRAW_OFFER_SUCCEED, gameInfo: gameInfo};
+}
+
+export function cancelDrawOfferSuccess(gameInfo){
+    return {type: types.CANCEL_DRAW_OFFER_SUCCEED, gameInfo: gameInfo};
+}

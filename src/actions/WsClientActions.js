@@ -10,7 +10,10 @@ import {createGameSuccess,
     receiveChatMessage,
     exitGameSuccess,
     surrenderSuccess,
-    confirmPlayingSuccess} from './WsReceiveActions';
+    confirmPlayingSuccess,
+    suggestDrawSuccess,
+    respondDrawOfferSuccess,
+    cancelDrawOfferSuccess} from './WsReceiveActions';
 
 
 
@@ -174,22 +177,6 @@ export function wsSendExitGame(gameId){
     };
 }
 
-
-export function wsSendSurrender(gameId){
-    let msg = {
-        msgType: messageTypes.SURRENDER,
-        gameId: gameId
-    };
-
-    return {
-        type: 'socket',
-        successActionCreator: surrenderSuccess,
-        types: [SEND, SEND_SUCCESS, SEND_FAIL],
-        promise: (socket) => socket.sendRequest(msg)
-    };
-}
-
-
 export function wsSendConfirmPlaying(gameId){
     let msg = {
         msgType: messageTypes.CONFIRM_PLAYING,
@@ -205,5 +192,62 @@ export function wsSendConfirmPlaying(gameId){
 }
 
 
+export function wsSendSurrender(gameId){
+    let msg = {
+        msgType: messageTypes.SURRENDER,
+        gameId: gameId
+    };
 
+    return {
+        type: 'socket',
+        successActionCreator: surrenderSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
+
+export function wsSendSuggestDraw(gameId){
+    let msg = {
+        msgType: messageTypes.SUGGEST_DRAW,
+        gameId: gameId
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: suggestDrawSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
+
+export function wsSendRespondDrawOffer(gameId, decision) {
+    let msg = {
+        msgType: messageTypes.RESPOND_DRAW_OFFER,
+        gameId: gameId,
+        decision: decision
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: respondDrawOfferSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
+
+
+export function wsSendCancelDrawOffer(gameId) {
+    let msg = {
+        msgType: messageTypes.CANCEL_DRAW_OFFER,
+        gameId: gameId
+
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: cancelDrawOfferSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
 

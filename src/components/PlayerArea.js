@@ -6,42 +6,60 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {getOwnPlayerObject, getOwnStatus} from "../selectors/gameSelector";
 import RaisedButton from 'material-ui/RaisedButton';
-import {wsSendConfirmPlaying} from "../actions/WsClientActions";
+import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer} from "../actions/WsClientActions";
 
-const playerStatusTexts = ["waiting", "playing", "confirming", "ready"];
+const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer"];
 const playerStatuses = {
     waiting: 0,
     playing: 1,
     confirming: 2,
-    ready:3
+    ready: 3,
+    suggestingDraw: 4,
+    resolvingDrawOffer: 5
 };
 
+
+
 const styles = {
-    statusLine:{
-        display:"flex",
-        height:20,
-        alignItems:"center",
+    statusLine: {
+        display: "flex",
+        height: 20,
+        alignItems: "center",
         justifyContent: "space-around"
     },
-    mainContainer:{
+    mainContainer: {
         width: 480,//500 - padding
         marginLeft: 206,//width of moves
-        padding:10,
+        padding: 10,
         border: "1px solid black"
 
     },
-    statusDescription:{
+    statusDescription: {
         display: "flex"
     },
-    confirmPlayButton:{
+    buttonContainer:{
+        display: "flex",
+        width:220,
+        justifyContent:"space-between"
+    },
+    urgentActionButton: {
         backgroundColor: "#9c1818",
         height: 30,
         lineHeight: 2
     },
-    confirmPlayButtonLabel:{
+    urgentButtonLabel: {
         color: "white"
     },
-    statusTextDiv:{
+    normalActionButton:{
+        height: 30,
+        lineHeight: 2,
+        border: "1px solid black"
+    },
+    normalButtonLabel: {
+        //color: "white"
+    },
+
+    statusTextDiv: {
         marginLeft: 10
     }
 
@@ -52,17 +70,25 @@ class PlayerArea extends React.Component {
     constructor(props) {
         super(props);
 
+
     }
 
 
-    confirmPlaying(gameId){
-
+    confirmPlaying(gameId) {
         this.props.dispatch(wsSendConfirmPlaying(gameId));
-
-
     }
 
-    render(){
+    respondDrawOffer(gameId, decision) {
+        this.props.dispatch(wsSendRespondDrawOffer(gameId, decision));
+    }
+
+    cancelDrawOffer(gameId){
+        this.props.dispatch(wsSendCancelDrawOffer(gameId));
+    }
+
+
+
+    render() {
 
         let {player, forOpponent, gameId, userId} = this.props;
 
@@ -70,41 +96,73 @@ class PlayerArea extends React.Component {
         let belongsToSelf = player.id === userId;
 
         let displayConfirmButton = belongsToSelf && (playerStatuses.confirming === player.currentStatus);
+        let displayConfirmDrawButton = belongsToSelf && (playerStatuses.resolvingDrawOffer === player.currentStatus);
+        let displayDrawSurrenderButtons = belongsToSelf && (playerStatuses.playing === player.currentStatus);
+        let displayCancelDrawOfferButton = belongsToSelf && (playerStatuses.suggestingDraw === player.currentStatus);
+
         return (
 
             <div style={styles.mainContainer}>
 
-                <div style={styles.statusLine} >
+                <div style={styles.statusLine}>
                     <div style={styles.statusDescription}>
                         <div>Status:</div>
-                        <div style={styles.statusTextDiv}>{playerExists && playerStatusTexts[player.currentStatus]}</div>
+                        <div
+                            style={styles.statusTextDiv}>{playerExists && playerStatusTexts[player.currentStatus]}</div>
                     </div>
                     <div>
+
                         {displayConfirmButton &&
-                        <RaisedButton label="Confirm"
-                                      labelStyle={styles.confirmPlayButtonLabel}
-                                      buttonStyle={styles.confirmPlayButton}
-                                      onClick={this.confirmPlaying.bind(this, gameId)}/>}
+                        <div style={styles.buttonContainer}>
+                            <RaisedButton label="Play"
+                                          labelStyle={styles.urgentButtonLabel}
+                                          buttonStyle={styles.urgentActionButton}
+                                          onClick={this.confirmPlaying.bind(this, gameId)}/>
+                        </div>}
+
+
+                        {displayCancelDrawOfferButton &&
+                        <div style={styles.buttonContainer}>
+                            <RaisedButton label="Cancel"
+                                          labelStyle={styles.urgentButtonLabel}
+                                          buttonStyle={styles.urgentActionButton}
+                                          onClick={this.cancelDrawOffer.bind(this, gameId)}/>
+                        </div>}
+
+
+
+                        {displayConfirmDrawButton &&
+                        <div style={styles.buttonContainer}>
+                            <RaisedButton label="Accept"
+                                          labelStyle={styles.urgentButtonLabel}
+                                          buttonStyle={styles.urgentActionButton}
+                                          onClick={this.respondDrawOffer.bind(this, gameId, true)}/>
+                            <RaisedButton label="Decline"
+                                          labelStyle={styles.urgentButtonLabel}
+                                          buttonStyle={styles.urgentActionButton}
+                                          onClick={this.respondDrawOffer.bind(this, gameId, false)}/>
+                        </div>}
+
+                        {displayDrawSurrenderButtons &&
+                        <div style={styles.buttonContainer}>
+                            <RaisedButton label="Draw"
+                                          labelStyle={styles.normalButtonLabel}
+                                          buttonStyle={styles.normalActionButton}
+                                          onClick={this.props.handleDraw}/>
+                            <RaisedButton label="Surrender"
+                                          labelStyle={styles.normalButtonLabel}
+                                          buttonStyle={styles.normalActionButton}
+                                          onClick={this.props.handleSurrender}/>
+                        </div>}
+
+
+
                     </div>
-
-
-
-
-
                 </div>
-            </div>
+            </div>);
 
 
-
-
-
-
-
-        );
     }
-
-
-
 }
 
 PlayerArea.propTypes = {
@@ -112,14 +170,14 @@ PlayerArea.propTypes = {
     forOpponent: PropTypes.bool.isRequired,
     gameId: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
-    status: PropTypes.number
+    handleSurrender: PropTypes.func,
+    handleDraw: PropTypes.func
 
 };
 
 function mapStateToProps(state, ownProps) {
     return {
-        player: getOwnPlayerObject(state, ownProps),
-        status: getOwnStatus(state, ownProps)//to rerender when only status changes (and player reference doesn't)
+        player: getOwnPlayerObject(state, ownProps)
     };
 }
 

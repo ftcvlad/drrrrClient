@@ -11,7 +11,10 @@ import {
     broadcastGameFinishedSuccess,
     broadcastConfirmPlayingSuccess,
     confirmPlayingSuccess,
-    surrenderSuccess
+    surrenderSuccess,
+    suggestDrawSuccess,
+    respondDrawOfferSuccess,
+    cancelDrawOfferSuccess
 } from "../actions/WsReceiveActions";
 import * as types from "../actions/actionTypes";
 
@@ -75,6 +78,15 @@ export default class SocketClient {
                 }
                 else if (data.servMessType === messageTypes.BROADCAST_SURRENDER){
                     this.dispatch(surrenderSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_SUGGEST_DRAW){
+                    this.dispatch(suggestDrawSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_RESPOND_DRAW_OFFER){
+                    this.dispatch(respondDrawOfferSuccess(data.data));
+                }
+                else if (data.servMessType === messageTypes.BROADCAST_CANCEL_DRAW_OFFER){
+                    this.dispatch(cancelDrawOfferSuccess(data.data));
                 }
             }
 

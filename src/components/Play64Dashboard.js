@@ -17,7 +17,7 @@ import Board64 from './Board64';
 
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
-import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender } from "../actions/WsClientActions";
+import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender, wsSendSuggestDraw } from "../actions/WsClientActions";
 import Dialog from 'material-ui/Dialog';
 import PlayerArea from "./PlayerArea";
 
@@ -98,7 +98,8 @@ class Play64Dashboard extends React.Component {
 
         }
         else if (this.state.selectedGameAction === gameActionTypes.draw){
-            console.log("draw");
+            this.props.dispatch(wsSendSuggestDraw(this.props.gameId));
+
         }
         else if (this.state.selectedGameAction === gameActionTypes.exit){
             this.props.dispatch(wsSendExitGame(this.props.gameId))
@@ -113,7 +114,7 @@ class Play64Dashboard extends React.Component {
 
         let {gameId, user} = this.props;
 
-        let gameLoaded = gameId ? true : false;
+        let gameLoaded = !!gameId;
 
 
         return (
@@ -121,33 +122,34 @@ class Play64Dashboard extends React.Component {
                 <NavBar selectedTab={3}/>
                 {gameLoaded &&
                 <div >
-                    <PlayerArea forOpponent={true} gameId={gameId} userId={user.id}/>
+                    <PlayerArea forOpponent={true}
+                                gameId={gameId}
+                                userId={user.id}/>
                     <div style={{display: "flex"}}>
                         <Board64 userId={user.id}/>
 
                         <div style={{display: "flex", flexDirection: "column"}}>
                             <ParticipantList/>
                             <ChatPanel gameId={gameId}/>
+                            <div>
+                                <RaisedButton label="Exit"
+                                              onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
+                            </div>
                         </div>
                     </div>
-                    <PlayerArea forOpponent={false} gameId={gameId} userId={user.id}/>
+                    <div style={{display:"flex"}}>
 
-                    <br/>
-                    <br/>
-                    <br/>
-                    <div style={{display: "flex"}}>
-                        <div>
-                            <RaisedButton label="Surrender"
-                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.surrender)}/>
-                            <RaisedButton label="Draw"
-                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.draw)}/>
-                        </div>
-                        <div>
-                            <RaisedButton label="Exit"
-                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
-                        </div>
+                        <PlayerArea forOpponent={false}
+                                    gameId={gameId}
+                                    userId={user.id}
+                                    handleSurrender={this.showConfirmationDialog.bind(this, gameActionTypes.surrender)}
+                                    handleDraw={this.showConfirmationDialog.bind(this, gameActionTypes.draw)}/>
+
 
                     </div>
+
+
+
 
 
                 </div>
