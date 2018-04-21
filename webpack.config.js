@@ -47,7 +47,7 @@ module.exports = {
       headers: {
           "Access-Control-Allow-Origin":  '*'
       },
-      contentBase: path.resolve(__dirname, "dist"),
-      watchContentBase: true //make sure hot reloaded?
+      contentBase: path.resolve(__dirname, "dist")//,
+      //watchContentBase: true //make sure hot reloaded?
   }
 };

@@ -83,7 +83,6 @@ class ParticipantPanel extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {messageToSend: ""};
     }
 
     openPersonProfile(personId) {
@@ -170,16 +169,18 @@ ParticipantPanel.propTypes={
     gameInfo: PropTypes.object.isRequired,
 };
 
+//
+//
+// function mapStateToProps(state) {
+//     return {
+//         gameInfo: getCurrentGameInfo(state)
+//     };
+// }
 
 
-function mapStateToProps(state) {
-    return {
-        gameInfo: getCurrentGameInfo(state)
-    };
-}
+export default ParticipantPanel;
 
-
-export default withRouter(connect(
-    mapStateToProps
-)(ParticipantPanel));
+// export default withRouter(connect(
+//     mapStateToProps
+// )(ParticipantPanel));
 

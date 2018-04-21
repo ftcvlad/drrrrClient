@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {removeAllGames} from "../actions/removeActions";
-import {getCurrentGameId, getCurrentGameResult} from '../selectors/gameSelector';
+import {getCurrentGameId, getCurrentGameInfo, getCurrentGameResult} from '../selectors/gameSelector';
 
 
 
@@ -153,7 +153,7 @@ class Play64Dashboard extends React.Component {
                         <Board64 userId={user.id}/>
 
                         <div style={{display: "flex", flexDirection: "column"}}>
-                            <ParticipantList/>
+                            <ParticipantList gameInfo={this.props.gameInfo}/>
                             <ChatPanel gameId={gameId}/>
 
                         </div>
@@ -215,14 +215,16 @@ class Play64Dashboard extends React.Component {
 }
 Play64Dashboard.propTypes={
     gameId: PropTypes.string,
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    gameInfo: PropTypes.object.isRequired
 };
 
 
 function mapStateToProps(state) {
     return {
         gameId: getCurrentGameId(state),
-        user: getUser(state)
+        user: getUser(state),
+        gameInfo: getCurrentGameInfo(state)//TODO now with any gameInfo change (ie status) redraw all panels
     };
 }
 
