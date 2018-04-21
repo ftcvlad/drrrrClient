@@ -10,6 +10,7 @@ import {withRouter} from "react-router-dom";
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {wsSendCreateGame} from '../actions/WsClientActions';
+import PropTypes from 'prop-types';
 
 const styles={
     createGamePanel:{
@@ -31,7 +32,7 @@ const styles={
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 20
+        margin: "10 0 10 0"
     }
 };
 
@@ -47,6 +48,7 @@ class CreateGamePanel extends React.Component {
         let data = {
             timeReserve: this.state.timeReserve * 5
         };
+
 
         this.props.dispatch(wsSendCreateGame(data))
             .then(()=> {
@@ -98,6 +100,9 @@ class CreateGamePanel extends React.Component {
     }
 }
 
+CreateGamePanel.propTypes={
+    dispatch: PropTypes.func.isRequired
+};
 
 
 

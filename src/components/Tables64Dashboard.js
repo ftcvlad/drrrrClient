@@ -25,6 +25,7 @@ import EmptyWatchersSlot from 'material-ui/svg-icons/social/people-outline';
 import FilledWatchersSlot from 'material-ui/svg-icons/social/people';
 import ParticipantList from "./ParticipantPanel";
 import CreateGamePanel from "./CreateGamePanel";
+import {getUser} from "../selectors/userSelector";
 
 const styles = {
     sidePanelContainer:{
@@ -44,7 +45,10 @@ const styles = {
         width: 530,
         backgroundColor: "#42454c",
         marginRight:20,
-        padding:5
+        padding:5,
+        display:"flex",
+        alignItems:"center",
+        flexDirection:"column"
     },
     selectedRow:{
         backgroundColor: "#d0ab44"
@@ -58,7 +62,10 @@ const styles = {
         color: "#9c1818"
     },
     tableButtonColumn:{
-        padding:0
+        padding:0,
+        display:"flex",
+        justifyContent:"center",
+        alignItems: "center"
     },
     thColumn:{
         color: "#d0ab44"
@@ -66,7 +73,15 @@ const styles = {
     tableColumnNarrow:{
         width:35,
         whiteSpace: "initial",
-        paddingRight: 15,
+        paddingRight: 15
+
+    },
+    tableColumnMedium:{
+        width:60,
+        whiteSpace: "initial",
+        paddingRight: 0
+    },
+    thWideStyle:{
 
     },
     tableColumn:{
@@ -74,6 +89,10 @@ const styles = {
     },
     thRow:{
         backgroundColor: "#4f525a"
+    },
+    noGames:{
+        color: "white",
+        marginTop:150
     }
 };
 
@@ -92,10 +111,26 @@ class Tables64Dashboard extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState){//state update based on props
 
+
+
         if (prevState.selectedGameInfo.gameId === "" && nextProps.gameInfoList.length>0){
             return {selectedGameInfo:nextProps.gameInfoList[0]};
         }
-        return null;
+        else{
+            let selectedGameInNewProps = nextProps.gameInfoList.find(gi => gi.gameId === prevState.selectedGameInfo.gameId);
+            if (!selectedGameInNewProps){
+                if (nextProps.gameInfoList.length>0){
+                    return {selectedGameInfo:nextProps.gameInfoList[0]};
+                }
+                else{
+                    return {selectedGameInfo: {players:[], watchers:[], gameId: ""}};
+                }
+            }
+            else{
+                return {selectedGameInfo: selectedGameInNewProps};
+            }
+        }
+
 
     }
 
@@ -108,7 +143,6 @@ class Tables64Dashboard extends React.Component {
                     this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
 
                 });
-                //.catch((e)=>zzzzz);//TODO for this/any fail display frame, or update local state
         }
         else{
             this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
@@ -146,47 +180,39 @@ class Tables64Dashboard extends React.Component {
 
     }
 
-
+    returnClicked(){
+        this.props.history.push('/play64');
+    }
 
     getWatcherDiv(gameInfo){
         if (gameInfo.watchers.length > 0){
-            return (<div>
-                <FilledWatchersSlot/>
-            </div>);
+            return (<div><FilledWatchersSlot/></div>);
         }
         else{
-            return (<div>
-                <EmptyWatchersSlot/>
-            </div>);
+            return (<div><EmptyWatchersSlot/></div>);
         }
     }
 
     getPlayerDiv(gameInfo, playerNumber){
-
-
         if (!gameInfo.players[playerNumber]){
-            return (<div>
-                        <EmptyPlayerSlot/>
-                    </div>);
+            return (<div><EmptyPlayerSlot/></div>);
         }
         else{
             return (
                 <div>
                     <FilledPlayerSlot/>
-                    <span>1500</span>
+                    <span>{gameInfo.players[playerNumber].rating}</span>
                 </div>
             );
         }
-
     }
 
     handleRowSelected(selectedRows){
         this.setState({selectedGameInfo: this.props.gameInfoList[selectedRows[0]]});
     }
 
-    render() {
-        let {gameInfoList} = this.props;
-console.log("table renedr");
+
+    getTableRows(gameInfoList, userId){
 
         // for (let i=0;i<10;i++){
         //     gameInfoList.push({players:[{id:1},{id:2}], watchers:[],gameId:5});//asdasdds
@@ -195,34 +221,60 @@ console.log("table renedr");
         let tableRows = [];
 
         for (let i=0; i<gameInfoList.length;i++){
-            let isSelected =  gameInfoList[i].gameId === this.state.selectedGameInfo.gameId;
+            const isSelected =  gameInfoList[i].gameId === this.state.selectedGameInfo.gameId;
 
+            const isPlayer = (gameInfoList[i].players.find(p=>p.id === userId) !== undefined);
+            const isWatcher = (gameInfoList[i].watchers.find(p=>p.id === userId) !== undefined);
+            const ownGame = isPlayer || isWatcher;
+
+            const canPlay = gameInfoList[i].players.length<2;
 
             const rowStyle = isSelected ? styles.selectedRow : (i%2 === 0 ? {backgroundColor:"#dedede"} : {});
 
             tableRows.push(<TableRow style={rowStyle} key={gameInfoList[i].gameId}>
-                                <TableRowColumn >{this.getPlayerDiv(gameInfoList[i], 0)}</TableRowColumn>
-                                <TableRowColumn >{this.getPlayerDiv(gameInfoList[i], 1)}</TableRowColumn>
-                                <TableRowColumn style={styles.tableColumnNarrow}>{this.getWatcherDiv(gameInfoList[i])}</TableRowColumn>
-                                <TableRowColumn style={styles.tableColumnNarrow} >15 min</TableRowColumn>
-                                <TableRowColumn style={styles.tableButtonColumn}>
-                                    {isSelected && <RaisedButton label="Play"
-                                                                 buttonStyle={styles.button}
-                                                                 labelStyle={styles.buttonLabel}
-                                                                 onClick={this.playClicked.bind(this, gameInfoList[i].gameId)} />}
-                                </TableRowColumn>
-                                <TableRowColumn style={styles.tableButtonColumn}>
-                                    {isSelected && <RaisedButton label="Watch"
-                                                                 buttonStyle={styles.button}
-                                                                 labelStyle={styles.buttonLabel}
-                                                                 onClick={this.watchClicked.bind(this, gameInfoList[i].gameId)} />}
-                                </TableRowColumn>
-                            </TableRow>);
+                <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 0)}</TableRowColumn>
+                <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 1)}</TableRowColumn>
+                <TableRowColumn style={styles.tableColumnNarrow}>{this.getWatcherDiv(gameInfoList[i])}</TableRowColumn>
+                <TableRowColumn style={styles.tableColumnNarrow} >{gameInfoList[i].timeReserve + " min"}</TableRowColumn>
+                {/*<TableRowColumn  >{gameInfoList[i].timeReserve + " min"}</TableRowColumn>*/}
+                <TableRowColumn style={styles.tableButtonColumn}>
+
+                    {isSelected && !ownGame && <div style={{width:200, display:"flex", justifyContent:"space-around"}}>
+                        {canPlay && <RaisedButton label="Play"
+                                      buttonStyle={styles.button}
+                                      labelStyle={styles.buttonLabel}
+                                      onClick={this.playClicked.bind(this, gameInfoList[i].gameId)} />}
+
+                        <RaisedButton label="Watch"
+                                      buttonStyle={styles.button}
+                                      labelStyle={styles.buttonLabel}
+                                      onClick={this.watchClicked.bind(this, gameInfoList[i].gameId)}/>
+                    </div>}
+
+
+                    {isSelected && ownGame &&
+                        <RaisedButton label="Return"
+                                        buttonStyle={styles.button}
+                                        labelStyle={styles.buttonLabel}
+                                        onClick={this.returnClicked.bind(this)}/>}
+                </TableRowColumn>
+
+            </TableRow>);
         }
+        return tableRows;
+    }
+
+    render() {
+        let {gameInfoList, user} = this.props;
+console.log("table renedr");
+
+
+        const tableRows = this.getTableRows(gameInfoList, user.id);
+
 
         let gamesExist = tableRows.length > 0;
-
         let thNarrowStyle = Object.assign({}, styles.thColumn, styles.tableColumnNarrow );
+        let thMediumStyle = Object.assign({}, styles.thColumn, styles.tableColumnMedium );
 
         return (
             <div style={{textAlign: 'center'}}>
@@ -232,12 +284,12 @@ console.log("table renedr");
                         {gamesExist && <Table onRowSelection={this.handleRowSelected.bind(this)}>
                                         <TableHeader style={styles.thRow} displaySelectAll={false} adjustForCheckbox={false}>
                                             <TableRow>
-                                                <TableHeaderColumn style={styles.thColumn}>Player 1</TableHeaderColumn>
-                                                <TableHeaderColumn style={styles.thColumn}>Player 2</TableHeaderColumn>
+                                                <TableHeaderColumn style={thMediumStyle}>Player 1</TableHeaderColumn>
+                                                <TableHeaderColumn style={thMediumStyle}>Player 2</TableHeaderColumn>
                                                 <TableHeaderColumn style={thNarrowStyle}>Watchers</TableHeaderColumn>
                                                 <TableHeaderColumn style={thNarrowStyle}>Time reserve</TableHeaderColumn>
-                                                <TableHeaderColumn></TableHeaderColumn>
-                                                <TableHeaderColumn></TableHeaderColumn>
+                                                <TableHeaderColumn  ></TableHeaderColumn>
+
                                             </TableRow>
                                         </TableHeader>
 
@@ -246,13 +298,13 @@ console.log("table renedr");
                                             {tableRows}
                                         </TableBody>
                                     </Table>}
-                        {!gamesExist && <div>No games...</div>}
+                        {!gamesExist && <div style={styles.noGames}>No games...</div>}
                     </div>
                     <div style={styles.sidePanelContainer}>
                         <ParticipantList gameInfo = {this.state.selectedGameInfo}/>
 
 
-                        <CreateGamePanel/>
+                        <CreateGamePanel dispatch={this.props.dispatch}/>
                     </div>
                 </div>
 
@@ -267,14 +319,16 @@ console.log("table renedr");
 }
 
 Tables64Dashboard.propTypes={
-    gameInfoList: PropTypes.array.isRequired
+    gameInfoList: PropTypes.array.isRequired,
+    user: PropTypes.object.isRequired,
 };
 
 
 
 function mapStateToProps(state) {
     return {
-        gameInfoList:getAllGameInfo(state)
+        gameInfoList:getAllGameInfo(state),
+        user: getUser(state)
     };
 }
 
