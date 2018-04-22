@@ -251,3 +251,15 @@ export function wsSendCancelDrawOffer(gameId) {
     };
 }
 
+export function wsSendTimeIsUp(gameId) {
+    let msg = {
+        msgType: messageTypes.TIME_IS_UP,
+        gameId: gameId
+    };
+
+    return {
+        type: 'socket',
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}

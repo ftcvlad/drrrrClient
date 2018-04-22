@@ -235,7 +235,7 @@ class Tables64Dashboard extends React.Component {
                 <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 0)}</TableRowColumn>
                 <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 1)}</TableRowColumn>
                 <TableRowColumn style={styles.tableColumnNarrow}>{this.getWatcherDiv(gameInfoList[i])}</TableRowColumn>
-                <TableRowColumn style={styles.tableColumnNarrow} >{gameInfoList[i].timeReserve + " min"}</TableRowColumn>
+                <TableRowColumn style={styles.tableColumnNarrow} >{gameInfoList[i].timeReserve/60 + " min"}</TableRowColumn>
                 {/*<TableRowColumn  >{gameInfoList[i].timeReserve + " min"}</TableRowColumn>*/}
                 <TableRowColumn style={styles.tableButtonColumn}>
 

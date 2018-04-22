@@ -4,9 +4,10 @@ import React from "react";
 import PropTypes from 'prop-types';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {getOwnPlayerObject, getOwnStatus} from "../selectors/gameSelector";
+import {getCurrentGameState, getMovingPlayerId, getOwnPlayerObject, getOwnStatus} from "../selectors/gameSelector";
 import RaisedButton from 'material-ui/RaisedButton';
-import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer} from "../actions/WsClientActions";
+import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp} from "../actions/WsClientActions";
+import Timer from './Timer';
 
 const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer"];
 const playerStatuses = {
@@ -71,7 +72,23 @@ class PlayerArea extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {whiteSide: null};
+    }
 
+
+    static getDerivedStateFromProps(nextProps, prevState){
+
+        if (nextProps.player !== null){
+            if (prevState.whiteSide === nextProps.player.playsWhite){
+                return null;
+            }
+
+            return {whiteSide: nextProps.player.playsWhite };
+        }
+
+
+
+        return null;
     }
 
 
@@ -84,22 +101,49 @@ class PlayerArea extends React.Component {
     }
 
     cancelDrawOffer(gameId){
+
+
         this.props.dispatch(wsSendCancelDrawOffer(gameId));
     }
 
 
+    handleTimeIsUp(){
+
+        this.props.dispatch(wsSendTimeIsUp(this.props.gameId));
+    }
 
     render() {
 
-        let {player, forOpponent, gameId, userId} = this.props;
+        let {player, movingPlayerId, gameId, userId} = this.props;
 
-        let playerExists = Object.keys(player).length !== 0;
-        let belongsToSelf = player.id === userId;
 
-        let displayConfirmButton = belongsToSelf && (playerStatuses.confirming === player.currentStatus);
-        let displayConfirmDrawButton = belongsToSelf && (playerStatuses.resolvingDrawOffer === player.currentStatus);
-        let displayDrawSurrenderButtons = belongsToSelf && (playerStatuses.playing === player.currentStatus);
-        let displayCancelDrawOfferButton = belongsToSelf && (playerStatuses.suggestingDraw === player.currentStatus);
+        let timerOn = false;
+        let displayConfirmButton = false;
+        let displayConfirmDrawButton = false;
+        let displayDrawSurrenderButtons = false;
+        let displayCancelDrawOfferButton = false;
+
+        if (player !== null){
+            let belongsToSelf = player.id === userId;
+
+            displayConfirmButton = belongsToSelf && (playerStatuses.confirming === player.currentStatus);
+            displayConfirmDrawButton = belongsToSelf && (playerStatuses.resolvingDrawOffer === player.currentStatus);
+            displayDrawSurrenderButtons = belongsToSelf && (playerStatuses.playing === player.currentStatus);
+            displayCancelDrawOfferButton = belongsToSelf && (playerStatuses.suggestingDraw === player.currentStatus);
+
+
+
+            if (movingPlayerId !== null && player.id === movingPlayerId &&
+                (playerStatuses.suggestingDraw === player.currentStatus ||
+                    playerStatuses.playing === player.currentStatus ||
+                    playerStatuses.suggestingDraw === player.currentStatus )){
+                timerOn = true;
+            }
+        }
+
+
+        console.log("play AREA");
+
 
         return (
 
@@ -109,7 +153,7 @@ class PlayerArea extends React.Component {
                     <div style={styles.statusDescription}>
                         <div>Status:</div>
                         <div
-                            style={styles.statusTextDiv}>{playerExists && playerStatusTexts[player.currentStatus]}</div>
+                            style={styles.statusTextDiv}>{player !== null && playerStatusTexts[player.currentStatus]}</div>
                     </div>
                     <div>
 
@@ -160,6 +204,10 @@ class PlayerArea extends React.Component {
 
                     </div>
                 </div>
+
+                <br/>
+                <Timer timerOn={timerOn} whiteSide={this.state.whiteSide} handleTimeIsUp={this.handleTimeIsUp.bind(this)} />
+
             </div>);
 
 
@@ -167,18 +215,25 @@ class PlayerArea extends React.Component {
 }
 
 PlayerArea.propTypes = {
-    player: PropTypes.object.isRequired,
+    player: PropTypes.object,
+    movingPlayerId:  PropTypes.number,
+
+
+
     forOpponent: PropTypes.bool.isRequired,
     gameId: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
     handleSurrender: PropTypes.func,
     handleDraw: PropTypes.func
 
+
 };
 
 function mapStateToProps(state, ownProps) {
     return {
-        player: getOwnPlayerObject(state, ownProps)
+        player: getOwnPlayerObject(state, ownProps),
+        movingPlayerId: getMovingPlayerId(state)
+
     };
 }
 

@@ -26,6 +26,7 @@ export const messageTypes = {
     SUGGEST_DRAW: 'suggestDraw',
     CONFIRM_PLAYING: 'confirmPlaying',
     RESPOND_DRAW_OFFER: 'respondDrawOffer',
-    CANCEL_DRAW_OFFER: 'cancelDrawOffer'
+    CANCEL_DRAW_OFFER: 'cancelDrawOffer',
+    TIME_IS_UP: 'timeIsUp'
 };
 

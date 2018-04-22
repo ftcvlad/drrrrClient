@@ -14,36 +14,63 @@ export const getCurrentGameResult = (state) => {return state.currentGame.gameRes
 export const getCurrentGameId = (state) => {return state.currentGame.gameInfo.gameId};
 
 
-// export const isUserWatching = createSelector(
-//     [ getUser, getCurrentGameInfo],
-//     (user, gameInfo) => {
-//
-//         for (let i=0; i<gameInfo.watchers.length; i++){
-//             if (user.id === gameInfo.watchers[i].id){
-//                 return true;
-//             }
-//         }
-//         return false;
-//
-//     }
-// );
+
+export const getIsGameGoing = (state) => {return state.currentGame.gameState.isGameGoing};
+
+export const getMovingPlayerId = createSelector(
+    [ getCurrentGameInfo, getCurrentGameState],
+    (gameInfo, gameState) => {
+
+        if (!gameState.isGameGoing){
+            return null;
+        }
+        if (!gameInfo.players[gameState.currentPlayer]){//TODO gameState.currentPlayer 1, but player exit, palyers[1] === undefined, and gameFinished broadcasted separately a bit later. broadcast gameExit instead!
+            return null;
+        }
+        return gameInfo.players[gameState.currentPlayer].id;
+
+    }
+);
+
+
+export const getTimeLeft = createSelector(
+    [ getCurrentGameInfo, getCurrentGameState, (_, props) => props.whiteSide],
+    (gameInfo, gameState, whiteSide) => {
+
+
+        console.log("********************");
+
+        if (whiteSide === null){
+            return gameInfo.timeReserve;
+        }
+        else{  console.log(whiteSide === true ? gameState.timeLeft[0] : gameState.timeLeft[1]);
+            return whiteSide === true ? gameState.timeLeft[0] : gameState.timeLeft[1];
+        }
+
+
+    }
+);
+
+
+
+
 
 
 
 export const getOwnPlayerObject = createSelector(
-    [ getUser, getCurrentGameInfo, (_, props) => props.forOpponent, ],
+    [ getUser, getCurrentGameInfo, (_, props) => props.forOpponent ],
     (user, gameInfo, forOpponent) => {
 
 
         if (Object.keys(gameInfo).length === 0){//asdasdsad
-            return {};
+            return null;
         }
 
         if (gameInfo.players.length === 0){
-            return {};
+            return null;
         }
         else if (gameInfo.players.length === 1){
-            return forOpponent ? {} : gameInfo.players[0];
+            return forOpponent ? null : gameInfo.players[0];
         }
         else if (gameInfo.players.length === 2){
             if (gameInfo.players[0].id === user.id){
@@ -57,14 +84,9 @@ export const getOwnPlayerObject = createSelector(
             }
         }
 
-        return {};
+        return null;
     }
 );
-
-// export const getOwnStatus = (state, props)=> {
-//     return getOwnPlayerObject(state, props).currentStatus;
-// };
-
 
 
 
