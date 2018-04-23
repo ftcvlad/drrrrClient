@@ -31,7 +31,7 @@ const styles = {
     statusLine: {
         display: "flex",
         height: 35,
-        padding: "0 6 0 6",
+        padding: "0 6 0 35",
         alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "#4f525a"
@@ -116,7 +116,17 @@ const styles = {
     userContainer:{
         flex:1,
         margin:4,
-        fontFamily: "monospace"
+        fontFamily: "monospace",
+
+        display:"flex",
+        flexDirection:"column",
+        alignItems:"center"
+    },
+    usernameText: {
+        margin:4,
+        textOverflow:"ellipsis",
+        overflow:"hidden",
+        maxWidth:200
     }
 
 };
@@ -270,10 +280,11 @@ class PlayerArea extends React.Component {
 
                         <div style={{display:"flex", flexGrow:1, alignItems:"center"}}>
                             <div style={styles.userContainer}>
-                                <div style={{margin:4, textOverflow:"ellipsis", overflow:"hidden"}}>{player!==null && player.username}</div>
+                                <div style={styles.usernameText}>{player!==null && player.username}</div>
 
                                 <div style={{display:"inline-flex"}}>
                                     <IconButton iconStyle={styles.smallIcon}
+                                                tooltip={"rating"}
                                                    style={styles.smallButton}>
                                             <RatingStar/>
                                     </IconButton>
