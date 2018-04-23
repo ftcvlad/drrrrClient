@@ -43,12 +43,16 @@ const styles = {
         width:250,
         minWidth:250,
         padding:5,
-        backgroundColor: "#bababb",
-        margin: "0 5px 5px",
+        backgroundColor: "#42454c",
+        margin: "0 5px 0 5px",
+        display:"flex",
         button:{
             border: "1px solid #9c1818",
             height: 30,
             lineHeight: 2
+        },
+        buttonRootsStyle:{
+            marginTop:30
         },
         buttonLabel:{
             color: "#9c1818"
@@ -166,10 +170,14 @@ class Play64Dashboard extends React.Component {
                                     handleSurrender={this.showConfirmationDialog.bind(this, gameActionTypes.surrender)}
                                     handleDraw={this.showConfirmationDialog.bind(this, gameActionTypes.draw)}/>
                         <div style={styles.commonActionPanel}>
-                            <RaisedButton label="Exit"
-                                          labelStyle={styles.commonActionPanel.buttonLabel}
-                                          buttonStyle={styles.commonActionPanel.button}
-                                          onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
+                            <div style={{backgroundColor:"#4f525a", flexGrow:1}}>
+                                <RaisedButton label="Exit"
+                                              labelStyle={styles.commonActionPanel.buttonLabel}
+                                              buttonStyle={styles.commonActionPanel.button}
+                                              style={styles.commonActionPanel.buttonRootsStyle}
+                                              onClick={this.showConfirmationDialog.bind(this, gameActionTypes.exit)}/>
+                            </div>
+
                         </div>
 
                     </div>

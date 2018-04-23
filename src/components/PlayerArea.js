@@ -210,9 +210,6 @@ class PlayerArea extends React.Component {
 
 
                 <div style={{display:"flex"}}>
-                    <div style={styles.imgDiv}>
-
-                    </div>
 
                     <div style={styles.otherContentDiv}>
                         <div style={styles.statusLine}>
@@ -273,7 +270,7 @@ class PlayerArea extends React.Component {
 
                         <div style={{display:"flex", flexGrow:1, alignItems:"center"}}>
                             <div style={styles.userContainer}>
-                                <div style={{margin:4}}>{player!==null && player.username}</div>
+                                <div style={{margin:4, textOverflow:"ellipsis", overflow:"hidden"}}>{player!==null && player.username}</div>
 
                                 <div style={{display:"inline-flex"}}>
                                     <IconButton iconStyle={styles.smallIcon}
