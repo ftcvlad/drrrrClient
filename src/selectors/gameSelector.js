@@ -37,13 +37,10 @@ export const getTimeLeft = createSelector(
     [ getCurrentGameInfo, getCurrentGameState, (_, props) => props.whiteSide],
     (gameInfo, gameState, whiteSide) => {
 
-
-        console.log("********************");
-
         if (whiteSide === null){
             return gameInfo.timeReserve;
         }
-        else{  console.log(whiteSide === true ? gameState.timeLeft[0] : gameState.timeLeft[1]);
+        else{
             return whiteSide === true ? gameState.timeLeft[0] : gameState.timeLeft[1];
         }
 

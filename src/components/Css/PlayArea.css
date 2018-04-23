@@ -1,0 +1,29 @@
+
+.playAreaContainer{
+    display: flex;
+    position:relative;
+}
+
+.playAreaContainer .playAreaOverlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #505050;
+    z-index: 100;
+    opacity: 0.8;
+}
+
+
+.playAreaContainer .boardContainer {
+    position: relative;
+}
+
+
+.boardContainer .replayingOverlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #2196f3;
+    z-index: 100;
+    opacity: 0.2;
+}

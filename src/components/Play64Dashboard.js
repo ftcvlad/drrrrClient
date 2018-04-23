@@ -11,7 +11,7 @@ import {getCurrentGameId, getCurrentGameInfo, getCurrentGameResult} from '../sel
 
 import {getUser} from '../selectors/userSelector';
 import PropTypes from 'prop-types';
-import Board64 from './Board64';
+import PlayArea from './PlayArea';
 
 
 
@@ -154,7 +154,7 @@ class Play64Dashboard extends React.Component {
                                 gameId={gameId}
                                 userId={user.id}/>
                     <div style={{display: "flex"}}>
-                        <Board64 userId={user.id}/>
+                        <PlayArea userId={user.id}/>
 
                         <div style={{display: "flex", flexDirection: "column"}}>
                             <ParticipantList gameInfo={this.props.gameInfo}/>

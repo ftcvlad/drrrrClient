@@ -47,9 +47,6 @@ class Timer extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState){//TODO understand lifecycle better
 
-        console.log("get derived!");
-        console.log(nextProps);
-
 
         if (prevState.timeLeft === -1 || (prevState.isGameGoing === false && nextProps.isGameGoing === true)){
             return {timeLeft: nextProps.timeLeft, timerOn: nextProps.timerOn, isGameGoing: nextProps.isGameGoing};

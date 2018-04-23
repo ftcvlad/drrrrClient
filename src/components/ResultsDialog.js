@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './Css/Board64.css';
+import styles from './Css/PlayArea.css';
 
 import PropTypes from 'prop-types';
 
@@ -111,7 +111,7 @@ class ResultsDialog extends React.Component {
 
     render() {
 
-        let {gameResult, handleCloseResultsDialog} = this.props;
+        let {gameResult, saveGame} = this.props;
 
 
 
@@ -174,7 +174,7 @@ class ResultsDialog extends React.Component {
                         label="Save Game"
                         primary={true}
                         labelStyle={inlineStyles.resultDialogButtonLabel}
-                        onClick={handleCloseResultsDialog}
+                        onClick={saveGame}
                         buttonStyle={inlineStyles.resultsDialogButton}
                     />
                 </div>
@@ -189,7 +189,7 @@ class ResultsDialog extends React.Component {
 
 ResultsDialog.propTypes = {
     gameResult: PropTypes.array.isRequired,
-    handleCloseResultsDialog: PropTypes.func.isRequired
+    saveGame: PropTypes.func.isRequired
 };
 
 
