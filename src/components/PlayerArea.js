@@ -8,6 +8,12 @@ import {getCurrentGameState, getMovingPlayerId, getOwnPlayerObject, getOwnStatus
 import RaisedButton from 'material-ui/RaisedButton';
 import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp} from "../actions/WsClientActions";
 import Timer from './Timer';
+import StatusWaiting from 'material-ui/svg-icons/action/hourglass-full';
+import StatusReady from 'material-ui/svg-icons/action/done';
+import RatingStar from 'material-ui/svg-icons/toggle/star';
+
+import IconButton from 'material-ui/IconButton';
+const wm = require('./images/wm.png');
 
 const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer"];
 const playerStatuses = {
@@ -24,45 +30,93 @@ const playerStatuses = {
 const styles = {
     statusLine: {
         display: "flex",
-        height: 20,
+        height: 35,
+        padding: "0 6 0 6",
         alignItems: "center",
-        justifyContent: "space-around"
+        justifyContent: "space-between",
+        backgroundColor: "#4f525a"
     },
     mainContainer: {
         width: 480,//500 - padding
         marginLeft: 206,//width of moves
         padding: 10,
-        border: "1px solid black",
+        backgroundColor: "#42454c",
         flexShrink: 0
 
     },
     statusDescription: {
-        display: "flex"
+        display: "flex",
+        alignItems:"center"
     },
     buttonContainer:{
         display: "flex",
-        width:220,
-        justifyContent:"space-between"
+        width:210,
+        justifyContent:"flex-end"
     },
     urgentActionButton: {
         backgroundColor: "#9c1818",
-        height: 30,
+        height: 26,
         lineHeight: 2
     },
     urgentButtonLabel: {
-        color: "white"
+        color: "white",
+        fontSize:12
     },
     normalActionButton:{
-        height: 30,
+        height: 26,
         lineHeight: 2,
         border: "1px solid #9c1818"
     },
     normalButtonLabel: {
-        color: "#9c1818"
+        color: "#9c1818",
+        fontSize:12
     },
 
     statusTextDiv: {
-        marginLeft: 10
+        marginLeft: 10,
+        color: "#d0ab44"
+    },
+
+    checkerDiv:{
+        width:20,
+        height:20,
+        borderRadius:14,
+        boxShadow: "2px 2px 5px black"
+    },
+    timerDiv:{
+
+    },
+    imgDiv:{
+        backgroundColor:"blue",
+        flexGrow:0
+    },
+    otherContentDiv:{
+        flexGrow:1,
+        backgroundColor: "grey",
+        display:"flex",
+        flexDirection:"column"
+    },
+    smallIcon:{
+        color: "#d0ab44",
+        width:22,
+        height:22
+    },
+    smallButton:{
+        padding:0,
+        width:22,
+        height:22,
+        margin: "0 2px 0 2px"
+    },
+    moveContainer:{
+        display:"flex",
+        flex:1,
+        alignItems:"center",
+        justifyContent:"center"
+    },
+    userContainer:{
+        flex:1,
+        margin:4,
+        fontFamily: "monospace"
     }
 
 };
@@ -143,74 +197,120 @@ class PlayerArea extends React.Component {
 
 
         console.log("play AREA");
+        let statusIcon = (player.currentStatus === playerStatuses.playing) || (player.currentStatus === playerStatuses.ready) ? <StatusReady/>: <StatusWaiting/>;
 
+        let checkerStyle = Object.assign({},styles.checkerDiv,
+            movingPlayerId === player.id ? {border: "3px solid #d0ab44", boxShadow: "0px 0px 16px 4px #d0ab44"}: {},
+            player.playsWhite ? {backgroundColor:"white"}:{backgroundColor:"#8c0606"});
 
         return (
 
             <div style={styles.mainContainer}>
 
-                <div style={styles.statusLine}>
-                    <div style={styles.statusDescription}>
-                        <div>Status:</div>
-                        <div
-                            style={styles.statusTextDiv}>{player !== null && playerStatusTexts[player.currentStatus]}</div>
+
+
+                <div style={{display:"flex"}}>
+                    <div style={styles.imgDiv}>
+
                     </div>
-                    <div>
 
-                        {displayConfirmButton &&
-                        <div style={styles.buttonContainer}>
-                            <RaisedButton label="Play"
-                                          labelStyle={styles.urgentButtonLabel}
-                                          buttonStyle={styles.urgentActionButton}
-                                          onClick={this.confirmPlaying.bind(this, gameId)}/>
-                        </div>}
+                    <div style={styles.otherContentDiv}>
+                        <div style={styles.statusLine}>
+                            <div style={styles.statusDescription}>
+                                <IconButton iconStyle={styles.smallIcon}
+                                            style={styles.smallButton}>
+                                    {statusIcon}
+                                </IconButton>
+                                <div
+                                    style={styles.statusTextDiv}>{player !== null && playerStatusTexts[player.currentStatus]}</div>
+                            </div>
+                            <div>
+
+                                {displayConfirmButton &&
+                                <div style={styles.buttonContainer}>
+                                    <RaisedButton label="Play"
+                                                  labelStyle={styles.urgentButtonLabel}
+                                                  buttonStyle={styles.urgentActionButton}
+                                                  onClick={this.confirmPlaying.bind(this, gameId)}/>
+                                </div>}
+
+                                {displayCancelDrawOfferButton &&
+                                <div style={styles.buttonContainer}>
+                                    <RaisedButton label="Cancel"
+                                                  labelStyle={styles.urgentButtonLabel}
+                                                  buttonStyle={styles.urgentActionButton}
+                                                  onClick={this.cancelDrawOffer.bind(this, gameId)}/>
+                                </div>}
+
+                                {displayConfirmDrawButton &&
+                                <div style={styles.buttonContainer}>
+                                    <RaisedButton label="Accept"
+                                                  labelStyle={styles.urgentButtonLabel}
+                                                  style={{marginRight:10}}
+                                                  buttonStyle={styles.urgentActionButton}
+                                                  onClick={this.respondDrawOffer.bind(this, gameId, true)}/>
+                                    <RaisedButton label="Decline"
+                                                  labelStyle={styles.urgentButtonLabel}
+                                                  buttonStyle={styles.urgentActionButton}
+                                                  onClick={this.respondDrawOffer.bind(this, gameId, false)}/>
+                                </div>}
+
+                                {displayDrawSurrenderButtons &&
+                                <div style={styles.buttonContainer}>
+                                    <RaisedButton label="Draw"
+                                                  style={{marginRight:10}}
+                                                  labelStyle={styles.normalButtonLabel}
+                                                  buttonStyle={styles.normalActionButton}
+                                                  onClick={this.props.handleDraw}/>
+                                    <RaisedButton label="Surrender"
+                                                  labelStyle={styles.normalButtonLabel}
+                                                  buttonStyle={styles.normalActionButton}
+                                                  onClick={this.props.handleSurrender}/>
+                                </div>}
+
+                            </div>
+                        </div>
+
+                        <div style={{display:"flex", flexGrow:1, alignItems:"center"}}>
+                            <div style={styles.userContainer}>
+                                <div style={{margin:4}}>{player!==null && player.username}</div>
+
+                                <div style={{display:"inline-flex"}}>
+                                    <IconButton iconStyle={styles.smallIcon}
+                                                   style={styles.smallButton}>
+                                            <RatingStar/>
+                                    </IconButton>
+                                    <div style={{margin:4}}>{player!==null && player.rating}</div>
+                                </div>
 
 
-                        {displayCancelDrawOfferButton &&
-                        <div style={styles.buttonContainer}>
-                            <RaisedButton label="Cancel"
-                                          labelStyle={styles.urgentButtonLabel}
-                                          buttonStyle={styles.urgentActionButton}
-                                          onClick={this.cancelDrawOffer.bind(this, gameId)}/>
-                        </div>}
+
+                            </div>
+
+                            <div style={styles.moveContainer}>
+                                <div style={{width:60, display: "flex", justifyContent:"center"}}>
+                                    <div style={checkerStyle}></div>
+                                </div>
+
+
+                                <div style={styles.timerDiv}>
+                                    <Timer timerOn={timerOn} whiteSide={this.state.whiteSide} handleTimeIsUp={this.handleTimeIsUp.bind(this)} />
+                                </div>
+                            </div>
 
 
 
-                        {displayConfirmDrawButton &&
-                        <div style={styles.buttonContainer}>
-                            <RaisedButton label="Accept"
-                                          labelStyle={styles.urgentButtonLabel}
-                                          buttonStyle={styles.urgentActionButton}
-                                          onClick={this.respondDrawOffer.bind(this, gameId, true)}/>
-                            <RaisedButton label="Decline"
-                                          labelStyle={styles.urgentButtonLabel}
-                                          buttonStyle={styles.urgentActionButton}
-                                          onClick={this.respondDrawOffer.bind(this, gameId, false)}/>
-                        </div>}
 
-                        {displayDrawSurrenderButtons &&
-                        <div style={styles.buttonContainer}>
-                            <RaisedButton label="Draw"
-                                          labelStyle={styles.normalButtonLabel}
-                                          buttonStyle={styles.normalActionButton}
-                                          onClick={this.props.handleDraw}/>
-                            <RaisedButton label="Surrender"
-                                          labelStyle={styles.normalButtonLabel}
-                                          buttonStyle={styles.normalActionButton}
-                                          onClick={this.props.handleSurrender}/>
-                        </div>}
-
-
-
+                        </div>
                     </div>
                 </div>
 
-                <br/>
-                <Timer timerOn={timerOn} whiteSide={this.state.whiteSide} handleTimeIsUp={this.handleTimeIsUp.bind(this)} />
+
+
 
             </div>);
 
-
+//fghfghfghfghfghfghfghfsdfsdfsdfsdf
     }
 }
 

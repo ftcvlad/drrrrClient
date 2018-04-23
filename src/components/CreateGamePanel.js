@@ -41,12 +41,12 @@ class CreateGamePanel extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {timeReserve: 1};
+        this.state = {timeReserve: 3};
     }
 
     handleCreateGame(e) {
         let data = {
-            timeReserve:2 //this.state.timeReserve * 5 * 60
+            timeReserve: this.state.timeReserve * 5 * 60
         };
 
 

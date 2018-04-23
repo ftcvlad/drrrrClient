@@ -92,8 +92,10 @@ class Timer extends React.Component {
         if (timestamp === -1){
             return "--:--";
         }
-        let ss = timestamp % 60;
-        let mm = Math.floor(timestamp / 60);
+        let ss = timestamp % 60 + "";
+        ss = ss.length === 2 ? ss : "0"+ss;
+        let mm = Math.floor(timestamp / 60) + "";
+        mm = mm.length === 2 ? mm : "0"+mm;
         return mm+":"+ss;
     }
 
