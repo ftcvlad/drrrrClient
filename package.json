@@ -27,6 +27,7 @@
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "react-spinners": "^0.3.2",
     "react-world-flags": "^0.0.3",
     "redux": "^3.7.2",
     "redux-form": "^7.2.3",

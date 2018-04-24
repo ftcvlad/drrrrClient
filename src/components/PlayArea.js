@@ -9,7 +9,8 @@ import {connect} from "react-redux";
 import {getCurrentGameInfo, getCurrentGameResult, getCurrentGameState} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 
-import {wsSendUserPick, wsSendUserMove, wsSendSaveGame} from '../actions/WsClientActions';
+import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
+import {httpSaveGame} from '../actions/http/profileActions';
 import ResultsDialog from "./ResultsDialog";
 
 
@@ -72,9 +73,13 @@ class PlayArea extends React.Component {
 
 
 
-    saveGame(resId){
+    saveGame(resId, description){
 
-        return this.props.dispatch(wsSendSaveGame(this.props.gameInfo.gameId, resId));//remove results from state
+        let data = {resId: resId,
+                    description: description,
+                    gameId: this.props.gameInfo.gameId};
+
+        return this.props.dispatch(httpSaveGame(data));
     }
 
 

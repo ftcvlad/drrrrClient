@@ -33,7 +33,7 @@ const customFetchMiddleware = store => next => action => {
                         return response.json();
                     }
                 }
-                else if (response.status === 401) {//validation error or unauthorised
+                else if (response.status === 401 || response.status === 422) {//validation error or unauthorised
                     return response.json().then(data => {
                         throw data.message;
                     });

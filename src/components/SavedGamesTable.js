@@ -44,7 +44,30 @@ const styles = {
         //display:"flex",
        // justifyContent: "space-around",
         paddingRight:"38px"
-    }
+    },
+    checkerDiv:{
+        width:15,
+        height:15,
+        borderRadius:14,
+        boxShadow: "2px 2px 5px black"
+    },
+    tableColumnChecker:{
+        width:15,
+        whiteSpace: "initial",
+        paddingRight: 3,
+        paddingLeft:3
+    },
+    tableColumnResult:{
+        width:35,
+        whiteSpace: "initial",
+        paddingRight: 15,
+        paddingLeft:24
+    },
+    tableColumnMedium:{
+        width:60,
+        whiteSpace: "initial",
+        paddingRight: 0
+    },
 };
 
 class SavedGamesTable extends React.Component {
@@ -80,12 +103,8 @@ class SavedGamesTable extends React.Component {
 
         for (let i = 0; i < gameList.length; i++) {
 
-            let myRatingBefore;
-            let myRatingAfter ;
-            let oppRatingBefore;
-            let oppRatingAfter;
-            let result;
-            let playsWhite;
+            let myRatingBefore, myRatingAfter, oppRatingBefore, oppRatingAfter, result, playsWhite, opponentUsername, userUsername;
+
 
             if (gameList[i].user_id === userId){
                 myRatingBefore =  gameList[i].u_rating_before ;
@@ -94,6 +113,8 @@ class SavedGamesTable extends React.Component {
                 oppRatingAfter =  gameList[i].o_rating_after ;
                 result = gameList[i].match_result;
                 playsWhite = gameList[i].plays_white;
+                opponentUsername = gameList[i].o_username;
+                userUsername = gameList[i].u_username;
             }
             else if (gameList[i].opponent_id === userId){
                 myRatingBefore =  gameList[i].o_rating_before ;
@@ -102,20 +123,55 @@ class SavedGamesTable extends React.Component {
                 oppRatingAfter =  gameList[i].u_rating_after ;
                 result = 2-gameList[i].match_result;
                 playsWhite = 1-gameList[i].plays_white;
+                opponentUsername = gameList[i].u_username;
+                userUsername = gameList[i].o_username;
             }
 
+            let date = new Date(gameList[i].created_at*1000);
+
+            let hours = "0" + date.getHours();//asdasas
+            let minutes = "0" + date.getMinutes();
+            let seconds = "0" + date.getSeconds();
+
+            let day = "0" + date.getDate();
+            let month = "0" + (date.getMonth()+1);
+            let year = ""+date.getFullYear();
+
+            let formattedDayTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            let formattedYearTime = day.substr(-2) + '/' + month.substr(-2) + '/' + year.substr(-2);
 
 
+
+            let checkerStyle = Object.assign({}, styles.checkerDiv,  playsWhite ? {backgroundColor:"white"}:{backgroundColor:"#8c0606"});
 
             tableRows.push(<TableRow key={i}>
-                <TableRowColumn>{gameList[i].created_at}</TableRowColumn>
-                <TableRowColumn>{playsWhite}</TableRowColumn>
-                <TableRowColumn>{matchResultTypes[result]}</TableRowColumn>
-                <TableRowColumn>{myRatingBefore}</TableRowColumn>
-                <TableRowColumn>{myRatingAfter}</TableRowColumn>
-                <TableRowColumn>{"opponent name :("}</TableRowColumn>
-                <TableRowColumn>{oppRatingBefore}</TableRowColumn>
-                <TableRowColumn>{oppRatingAfter}</TableRowColumn>
+                <TableRowColumn>
+                    <div>{formattedYearTime}</div>
+                    <div>{formattedDayTime}</div>
+                </TableRowColumn>
+                <TableRowColumn>
+                    <div>{userUsername}</div>
+                    <div>
+                        <span>{myRatingBefore}</span>
+                        <span>{myRatingAfter}</span>
+                    </div>
+
+                </TableRowColumn>
+                <TableRowColumn style={styles.tableColumnChecker}>
+                    <div style={checkerStyle}></div>
+                </TableRowColumn>
+                <TableRowColumn style={styles.tableColumnResult}>{matchResultTypes[result]}</TableRowColumn>
+                <TableRowColumn>
+                    <div>{opponentUsername}</div>
+                    <div>
+                        <span>{oppRatingBefore}</span>
+                        <span>{oppRatingAfter}</span>
+                    </div>
+
+                </TableRowColumn>
+
+
+
                 <TableRowColumn>{gameList[i].description}</TableRowColumn>
                 <TableRowColumn style={styles.tableButtonColumn}>
 
@@ -145,13 +201,10 @@ class SavedGamesTable extends React.Component {
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>Time</TableHeaderColumn>
-                            <TableHeaderColumn>Plays white</TableHeaderColumn>
-                            <TableHeaderColumn>Result</TableHeaderColumn>
-                            <TableHeaderColumn>Rating before</TableHeaderColumn>
-                            <TableHeaderColumn>Rating after</TableHeaderColumn>
+                            <TableHeaderColumn>User</TableHeaderColumn>
+                            <TableHeaderColumn style={styles.tableColumnChecker}></TableHeaderColumn>
+                            <TableHeaderColumn style={styles.tableColumnResult}>Result</TableHeaderColumn>
                             <TableHeaderColumn>Opponent</TableHeaderColumn>
-                            <TableHeaderColumn>Rating before</TableHeaderColumn>
-                            <TableHeaderColumn>Rating after</TableHeaderColumn>
                             <TableHeaderColumn>Description</TableHeaderColumn>
                             <TableHeaderColumn></TableHeaderColumn>
 

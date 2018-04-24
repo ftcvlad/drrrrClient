@@ -38,9 +38,9 @@ class ViewGameArea extends React.Component {
 
 
 
-//asdasdasdasdasddssdfsdf
+
     render(){
-console.log("wtf");
+
         let { moves, boardState, playsWhite} = this.props;
 
         let currentMove = -1;

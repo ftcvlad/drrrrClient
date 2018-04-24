@@ -29,6 +29,5 @@ export const messageTypes = {
     CANCEL_DRAW_OFFER: 'cancelDrawOffer',
     TIME_IS_UP: 'timeIsUp',
 
-    SAVE_GAME: 'saveGame'
 };
 

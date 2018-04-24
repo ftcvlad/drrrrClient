@@ -2,17 +2,8 @@ import React from "react";
 import styles from './Css/PlayArea.css';
 
 import PropTypes from 'prop-types';
+import TextField from 'material-ui/TextField';
 
-const wm = require('./images/wm.png');
-const bm = require('./images/bm.png');
-const wk = require('./images/wk.png');
-const bk = require('./images/bk.png');
-const lastTurnImg = require("./images/lastTurn.png");
-import MovesPanel from './MovesPanel';
-import {getUser} from "../selectors/userSelector";
-import {connect} from "react-redux";
-import {getCurrentGameInfo, getCurrentGameResult, getCurrentGameState} from "../selectors/gameSelector";
-import {withRouter} from "react-router-dom";
 import {
     Table,
     TableBody,
@@ -21,9 +12,8 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
+import { BeatLoader} from 'react-spinners';
 
 const inlineStyles = {
     resultsDialogContent: {
@@ -37,7 +27,10 @@ const inlineStyles = {
         backgroundColor:"white"
     },
     dialogFooter:{
-        padding:17
+        padding:17,
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"flex-end"
     },
     dialogHeader: {
         margin: 0,
@@ -95,6 +88,17 @@ const inlineStyles = {
         borderRadius: 10,
         margin: "auto",
         border: "1px solid black"//gdfgdfg
+    },
+    tfUnderlineStyle: {
+        borderColor: "#9c1818",
+        bottom:10
+    },
+    tfUnderlineFocusStyle:{
+        display: "none"
+    },
+    spinnerDiv:{
+        width:100
+
     }
 
 
@@ -106,17 +110,20 @@ class ResultsDialog extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {gameDescription: "", errorText: "", gameSaved: false, saving: false};
     }
 
 
     handleSaveGame(resId){
 
-        this.props.saveGame(resId)
+        this.setState({errorText:"", saving: true});
+        this.props.saveGame(resId, this.state.gameDescription)
             .then(()=>{
-                console.log("game saved!");
+                this.setState({gameSaved: true, saving: false});
             })
-            .catch(()=>{
-                console.log("game save failed!");
+            .catch((e)=>{
+                this.setState({errorText: "error!", saving: false});
             })
     }
 
@@ -129,6 +136,7 @@ class ResultsDialog extends React.Component {
 
 
         let narrowColumnStyle = Object.assign({}, inlineStyles.tableColumn, inlineStyles.tableColumnNarrow);
+
 
         return (
 
@@ -183,13 +191,38 @@ class ResultsDialog extends React.Component {
                     </Table>
                 </div>
                 <div style={inlineStyles.dialogFooter}>
-                    <RaisedButton
-                        label="Save Game"
-                        primary={true}
-                        labelStyle={inlineStyles.resultDialogButtonLabel}
-                        onClick={this.handleSaveGame.bind(this, resId)}
-                        buttonStyle={inlineStyles.resultsDialogButton}
-                    />
+
+
+                        <div style={inlineStyles.spinnerDiv}>
+                            <BeatLoader
+                                color={'#9c1818'}
+                                size={10}
+                                loading={this.state.saving}/>
+                        </div >
+
+                        {!this.state.saving && <RaisedButton
+                            disabled={this.state.gameSaved}
+                            label={this.state.gameSaved ? "Saved" : "Save Game"}
+                            primary={true}
+                            labelStyle={inlineStyles.resultDialogButtonLabel}
+                            onClick={this.handleSaveGame.bind(this, resId)}
+                            buttonStyle={inlineStyles.resultsDialogButton}
+                        />}
+
+                        <TextField
+                            disabled={this.state.gameSaved}
+                            hintText="Game description (max 255 char)"
+                            underlineStyle={inlineStyles.tfUnderlineStyle}
+                            underlineFocusStyle={inlineStyles.tfUnderlineFocusStyle}
+                            style={{marginLeft: "20px"}}
+                            errorText={this.state.errorText}
+                            errorStyle={{bottom:3, fontSize:"medium"}}
+                            onChange={(()=>{return ((e, value)=>this.setState({gameDescription: value}));})()}
+                        />
+
+
+
+
                 </div>
             </div>
 
