@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import {getCurrentGameInfo, getCurrentGameResult, getCurrentGameState} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 
-import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
+import {wsSendUserPick, wsSendUserMove, wsSendSaveGame} from '../actions/WsClientActions';
 import ResultsDialog from "./ResultsDialog";
 
 
@@ -32,7 +32,7 @@ class PlayArea extends React.Component {
         }
     }
 
-    onCellClicked(userId, replaying, gameInfo, r,c, gameState){
+    onCellClicked(userId, replaying, gameInfo, gameState, r,c){
 
         // if (!animationRunning) {
         //     if (gameGoing){
@@ -72,9 +72,9 @@ class PlayArea extends React.Component {
 
 
 
-    saveGame(){
-        console.log("ura");
-        //this.props.dispatch();//remove results from state
+    saveGame(resId){
+
+        return this.props.dispatch(wsSendSaveGame(this.props.gameInfo.gameId, resId));//remove results from state
     }
 
 
@@ -115,20 +115,19 @@ class PlayArea extends React.Component {
                 <div className={styles.playAreaContainer} >
                     {!gameState.isGameGoing && <div className={styles.playAreaOverlay}/>}
                     <MovesPanel moves={gameState.moves}
-                                userId={userId}
                                 currentMove={currentMove}
-                                replaying={this.state.replaying}
                                 currentMoveChanged={this.currentMoveChanged.bind(this)}/>
 
 
                     <div className={styles.boardContainer}>
                         {this.state.replaying && <div className={styles.replayingOverlay}/>}
                         <Board currentMove={currentMove}
-                                    gameState={gameState}
+                                    moves={gameState.moves}
+                                    boardState={gameState.boardState}
                                     reverseView = {reverseView}
                                     pickedChecker={pickedChecker}
                                     onCellClicked={
-                                        this.onCellClicked.bind(this, userId, this.state.replaying, gameInfo)
+                                        this.onCellClicked.bind(this, userId, this.state.replaying, gameInfo, gameState)
                                     }
                                     />
                     </div>
@@ -139,6 +138,7 @@ class PlayArea extends React.Component {
 
                     {showResultsDialog && <ResultsDialog
                                     saveGame={this.saveGame.bind(this)}
+                                    userId={userId}
                                     gameResult={gameResult}/>}
 
 

@@ -18,17 +18,17 @@ class Board extends React.Component {
     }
 
 
-    createBoard(rows, cols, onCellClicked, gameState, reverseView, currentMove, pickedChecker){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, onCellClicked, moves, latestBoardState, reverseView, currentMove, pickedChecker){//TODO recreated after every state update. Improve?
 
 
-        let gridDimension = gameState.boardState.length;
+        let gridDimension = latestBoardState.length;
         //return board to the state after currently selected move.
 
-        let boardStateWithHistory = gameState.boardState.map(arr => arr.slice());
+        let boardStateWithHistory = latestBoardState.map(arr => arr.slice());
 
-        for (let i=gameState.moves.length-1; i>currentMove; i--){
+        for (let i=moves.length-1; i>currentMove; i--){
 
-            const moveInfo = gameState.moves[i].moveInfo;
+            const moveInfo = moves[i].moveInfo;
             for (let j=moveInfo.length-1; j>=0; j--){
                 let type = moveInfo[j].prevType;
                 boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col] = 0;
@@ -57,8 +57,8 @@ class Board extends React.Component {
 
         // //previous positions
         let prevPositions = [];
-        if (gameState.moves.length>0){
-            let lastMove = gameState.moves[currentMove];
+        if (moves.length>0){
+            let lastMove = moves[currentMove];
             prevPositions = lastMove["moveInfo"].map(o => Object.assign({},o.prev));//bug to be remembered † map(o => o.prev);
             if (reverseView){//reverse killedPieces for 2nd player
                 for (let i=0;i<prevPositions.length;i++){
@@ -72,8 +72,8 @@ class Board extends React.Component {
 
         //killed pieces
         let killedPieces = [];
-        if (gameState.moves.length>0){
-            let lastMove = gameState.moves[gameState.moves.length-1];
+        if (moves.length>0){
+            let lastMove = moves[moves.length-1];
             if (lastMove.finished === false){
                 killedPieces = lastMove["moveInfo"].map(o => o.killed);
                 if (reverseView){//reverse killedPieces for 2nd player
@@ -97,7 +97,7 @@ class Board extends React.Component {
                 if (counter % 2 !== 0) {
                     nextRowTds.push(<td key={c} id={i} onClick={(function (r, c) {
                         return function () {
-                            onCellClicked(r, c, gameState);//dsdsf
+                            onCellClicked(r, c);//dsdsf
                         }
                     })(r, c)}><div>{this.addCheckerImage(boardState[r][c], r, c, pickedChecker, killedPieces)}
                         {this.addLastTurnImages(prevPositions, r, c)}
@@ -173,13 +173,13 @@ class Board extends React.Component {
 
     render(){
 
-        let {currentMove, gameState, reverseView, onCellClicked, pickedChecker} = this.props;
+        let {currentMove, moves, boardState, reverseView, onCellClicked, pickedChecker} = this.props;
 
         return (
         <div className={styles.board}>
 
             <table >
-                {this.createBoard(8,8,onCellClicked,gameState, reverseView, currentMove, pickedChecker)}
+                {this.createBoard(8,8,onCellClicked, moves, boardState, reverseView, currentMove, pickedChecker)}
             </table>
 
 
@@ -196,7 +196,8 @@ Board.propTypes = {
     currentMove: PropTypes.number.isRequired,
     onCellClicked: PropTypes.func.isRequired,
     pickedChecker: PropTypes.array.isRequired,
-    gameState: PropTypes.object.isRequired,
+    moves: PropTypes.array.isRequired,
+    boardState: PropTypes.array.isRequired,
     reverseView: PropTypes.bool.isRequired
 
 

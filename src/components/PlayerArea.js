@@ -186,6 +186,8 @@ class PlayerArea extends React.Component {
         let displayConfirmDrawButton = false;
         let displayDrawSurrenderButtons = false;
         let displayCancelDrawOfferButton = false;
+        let statusIcon = null;
+        let checkerStyle = {};
 
         if (player !== null){
             let belongsToSelf = player.id === userId;
@@ -203,15 +205,18 @@ class PlayerArea extends React.Component {
                     playerStatuses.suggestingDraw === player.currentStatus )){
                 timerOn = true;
             }
+
+            statusIcon = (player.currentStatus === playerStatuses.playing) || (player.currentStatus === playerStatuses.ready) ? <StatusReady/>: <StatusWaiting/>;
+            checkerStyle = Object.assign({},styles.checkerDiv,
+                movingPlayerId === player.id ? {border: "3px solid #d0ab44", boxShadow: "0px 0px 16px 4px #d0ab44"}: {},
+                player.playsWhite ? {backgroundColor:"white"}:{backgroundColor:"#8c0606"});
         }
 
 
-        console.log("play AREA");
-        let statusIcon = (player.currentStatus === playerStatuses.playing) || (player.currentStatus === playerStatuses.ready) ? <StatusReady/>: <StatusWaiting/>;
+        console.log("player AREA");
 
-        let checkerStyle = Object.assign({},styles.checkerDiv,
-            movingPlayerId === player.id ? {border: "3px solid #d0ab44", boxShadow: "0px 0px 16px 4px #d0ab44"}: {},
-            player.playsWhite ? {backgroundColor:"white"}:{backgroundColor:"#8c0606"});
+
+
 
         return (
 
@@ -226,7 +231,7 @@ class PlayerArea extends React.Component {
                             <div style={styles.statusDescription}>
                                 <IconButton iconStyle={styles.smallIcon}
                                             style={styles.smallButton}>
-                                    {statusIcon}
+                                    {statusIcon!==null && statusIcon}
                                 </IconButton>
                                 <div
                                     style={styles.statusTextDiv}>{player !== null && playerStatusTexts[player.currentStatus]}</div>
@@ -278,7 +283,7 @@ class PlayerArea extends React.Component {
                             </div>
                         </div>
 
-                        <div style={{display:"flex", flexGrow:1, alignItems:"center"}}>
+                        {player!==null && <div style={{display:"flex", flexGrow:1, alignItems:"center"}}>
                             <div style={styles.userContainer}>
                                 <div style={styles.usernameText}>{player!==null && player.username}</div>
 
@@ -309,7 +314,7 @@ class PlayerArea extends React.Component {
 
 
 
-                        </div>
+                        </div>}
                     </div>
                 </div>
 

@@ -263,3 +263,19 @@ export function wsSendTimeIsUp(gameId) {
         promise: (socket) => socket.sendRequest(msg)
     };
 }
+
+
+export function wsSendSaveGame(gameId, resultId) {//asdasdasd
+    let msg = {
+        msgType: messageTypes.SAVE_GAME,
+        gameId: gameId,
+        resultId: resultId
+    };
+
+    return {
+        type: 'socket',
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    };
+}
+

@@ -144,7 +144,7 @@ class MovesPanel extends React.Component {
 //sdfsdfdsf
     render(){
 
-        let {moves, userId, currentMove} = this.props;
+        let {moves, currentMove} = this.props;
         let listItems = [];
         for (let i=moves.length-1; i>=0; i--){
             let player = moves[i].player;
@@ -230,9 +230,7 @@ class MovesPanel extends React.Component {
 
 MovesPanel.propTypes={
     moves: PropTypes.array.isRequired,
-    userId: PropTypes.number.isRequired,
     currentMoveChanged: PropTypes.func.isRequired,
-    replaying:PropTypes.bool.isRequired,
     currentMove: PropTypes.number.isRequired
 
 };

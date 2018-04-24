@@ -29,6 +29,9 @@ const customFetchMiddleware = store => next => action => {
                             return response.json().then(data => store.dispatch(action.successActionCreator(data)));
                         }
                     }
+                    else if (response.status === 200){
+                        return response.json();
+                    }
                 }
                 else if (response.status === 401) {//validation error or unauthorised
                     return response.json().then(data => {

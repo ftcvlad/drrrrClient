@@ -109,10 +109,23 @@ class ResultsDialog extends React.Component {
     }
 
 
+    handleSaveGame(resId){
+
+        this.props.saveGame(resId)
+            .then(()=>{
+                console.log("game saved!");
+            })
+            .catch(()=>{
+                console.log("game save failed!");
+            })
+    }
+
+
     render() {
 
-        let {gameResult, saveGame} = this.props;
+        let {gameResult, userId} = this.props;
 
+        let resId = gameResult[0].resId ;
 
 
         let narrowColumnStyle = Object.assign({}, inlineStyles.tableColumn, inlineStyles.tableColumnNarrow);
@@ -174,7 +187,7 @@ class ResultsDialog extends React.Component {
                         label="Save Game"
                         primary={true}
                         labelStyle={inlineStyles.resultDialogButtonLabel}
-                        onClick={saveGame}
+                        onClick={this.handleSaveGame.bind(this, resId)}
                         buttonStyle={inlineStyles.resultsDialogButton}
                     />
                 </div>
@@ -189,7 +202,8 @@ class ResultsDialog extends React.Component {
 
 ResultsDialog.propTypes = {
     gameResult: PropTypes.array.isRequired,
-    saveGame: PropTypes.func.isRequired
+    saveGame: PropTypes.func.isRequired,
+    userId: PropTypes.number.isRequired
 };
 
 
