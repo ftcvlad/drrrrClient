@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware} from 'redux';
 import rootReducer from '../reducers/rootReducer';
 import thunk from 'redux-thunk';
-import {getUser} from '../actions/userActions';
+import {getAuthedUser} from '../actions/http/userActions';
 import fetchMiddleware from '../middleware/fetchMiddleware';
 import wsMiddleware from '../middleware/WsMiddleware';
 
@@ -20,7 +20,7 @@ export default function configureStore(socketClient) {
 
 
 function fetchInitialState(store){//.catch(()=>console.log("failed fetching user"));??
-    return store.dispatch(getUser())
+    return store.dispatch(getAuthedUser())
         .then(() => {
             return store;
         });

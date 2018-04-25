@@ -4,14 +4,14 @@ import React from "react";
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import {Toolbar, ToolbarGroup, ToolbarSeparator} from 'material-ui/Toolbar';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {browserHistory} from 'react-router';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import  {connect} from "react-redux";
-import {logout, register} from "../actions/authActions";
+import {logout} from "../actions/authActions";
 import {getUser} from "../selectors/userSelector";
 import AccountBox from 'material-ui/svg-icons/action/account-box';
 
@@ -57,15 +57,14 @@ class NavBar extends React.Component {
                 return this.props.history.push('/tables64');
             case 2:
                 return this.props.history.push('/etudes');
-            case 3:
-                return this.props.history.push('/profile');
+
 
         }
     }
 
 
     profileClicked(){
-        return this.props.history.push('/profile');
+        return this.props.history.push('/profile/'+this.props.user.id);
     }
 
     logoutClicked(){

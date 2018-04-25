@@ -15,10 +15,10 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 
-
-import {getUser} from "../selectors/userSelector";
+import RatingStar from 'material-ui/svg-icons/toggle/star';
 import {httpGetSavedGameList} from '../actions/http/profileActions';
 import ViewGameArea from './ViewGameArea';
+
 
 const matchResultTypes = ["Lose", "Draw", "Win"];
 
@@ -54,20 +54,59 @@ const styles = {
     tableColumnChecker:{
         width:15,
         whiteSpace: "initial",
-        paddingRight: 3,
-        paddingLeft:3
+        paddingRight: 5,
+        paddingLeft:3,
+        textAlign: "center"
     },
     tableColumnResult:{
         width:35,
         whiteSpace: "initial",
         paddingRight: 15,
-        paddingLeft:24
+        paddingLeft:24,
+        textAlign: "center"
     },
-    tableColumnMedium:{
+    tableColumnTime:{
         width:60,
         whiteSpace: "initial",
-        paddingRight: 0
+        paddingRight: 5,
+        paddingLeft:24,
+        textAlign: "center"
     },
+    tableColumnUser:{
+        textAlign: "center",
+        paddingRight:5
+    },
+    mainContainer:{
+        display:"flex",
+        paddingTop:30
+    },
+    tableContainer:{
+        flexShrink:0,
+        width: 800,
+        backgroundColor: "#42454c",
+        marginRight:20,
+        padding:5,
+        display:"flex",
+        alignItems:"center",
+        flexDirection:"column",
+        minHeight:300
+    },
+    thColumn:{
+        color: "#d0ab44"
+    },
+    thRow:{
+        backgroundColor: "#4f525a"
+    },
+    ratingIcon:{
+        color: "#d0ab44",
+        width:13,
+        height:13
+    },
+    usernameText:{
+        fontWeight:"bold",
+        textOverflow:"ellipsis",
+        overflow:"hidden"
+    }
 };
 
 class SavedGamesTable extends React.Component {
@@ -79,16 +118,14 @@ class SavedGamesTable extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(httpGetSavedGameList(this.props.user.id))
+
+        this.props.dispatch(httpGetSavedGameList(this.props.targetUserId))
             .then((res) => {
-                console.log(res);
                 this.setState({gameList: res});
             });
     }
 
     viewGame(moves, boardState, playsWhite) {
-        console.log(moves);
-
         this.setState({dialogOpen:true, moves: moves, boardState: boardState, playsWhite});
     }
 
@@ -96,7 +133,7 @@ class SavedGamesTable extends React.Component {
         this.setState({dialogOpen:false});
     }
 
-    getTableRows(gameList, userId) {
+    getTableRows(gameList, targetUserId) {
 
 
         let tableRows = [];
@@ -106,7 +143,7 @@ class SavedGamesTable extends React.Component {
             let myRatingBefore, myRatingAfter, oppRatingBefore, oppRatingAfter, result, playsWhite, opponentUsername, userUsername;
 
 
-            if (gameList[i].user_id === userId){
+            if (gameList[i].user_id == targetUserId){
                 myRatingBefore =  gameList[i].u_rating_before ;
                 myRatingAfter =  gameList[i].u_rating_after ;
                 oppRatingBefore = gameList[i].o_rating_before;
@@ -116,7 +153,7 @@ class SavedGamesTable extends React.Component {
                 opponentUsername = gameList[i].o_username;
                 userUsername = gameList[i].u_username;
             }
-            else if (gameList[i].opponent_id === userId){
+            else if (gameList[i].opponent_id == targetUserId){
                 myRatingBefore =  gameList[i].o_rating_before ;
                 myRatingAfter =  gameList[i].o_rating_after ;
                 oppRatingBefore = gameList[i].u_rating_before;
@@ -143,28 +180,34 @@ class SavedGamesTable extends React.Component {
 
 
             let checkerStyle = Object.assign({}, styles.checkerDiv,  playsWhite ? {backgroundColor:"white"}:{backgroundColor:"#8c0606"});
+            let firstUserStyle = Object.assign({}, styles.tableColumnUser, {backgroundColor: "#dcdcdc"});
+            let columnResult = Object.assign({}, styles.tableColumnResult, {backgroundColor: "#dcdcdc"} );
+            let columnChecker = Object.assign({}, styles.tableColumnChecker, {backgroundColor: "#dcdcdc"} );
 
             tableRows.push(<TableRow key={i}>
-                <TableRowColumn>
+                <TableRowColumn style={styles.tableColumnTime}>
                     <div>{formattedYearTime}</div>
                     <div>{formattedDayTime}</div>
                 </TableRowColumn>
-                <TableRowColumn>
-                    <div>{userUsername}</div>
-                    <div>
-                        <span>{myRatingBefore}</span>
+                <TableRowColumn style={firstUserStyle}>
+                    <div style={styles.usernameText} title={userUsername}>{userUsername}</div>
+                    <div style={{paddingTop:3}} title={"rating before / after"}>
+                        <RatingStar style={styles.ratingIcon} tooltip={"rating before/after"}/>
+                        <span>{myRatingBefore+ " / "}</span>
                         <span>{myRatingAfter}</span>
                     </div>
 
                 </TableRowColumn>
-                <TableRowColumn style={styles.tableColumnChecker}>
+                <TableRowColumn style={columnChecker}>
                     <div style={checkerStyle}></div>
                 </TableRowColumn>
-                <TableRowColumn style={styles.tableColumnResult}>{matchResultTypes[result]}</TableRowColumn>
-                <TableRowColumn>
-                    <div>{opponentUsername}</div>
-                    <div>
-                        <span>{oppRatingBefore}</span>
+                <TableRowColumn style={columnResult}>{matchResultTypes[result]}</TableRowColumn>
+                <TableRowColumn style={styles.tableColumnUser}>
+                    <div style={styles.usernameText} title={opponentUsername}>{opponentUsername}</div>
+                    <div style={{paddingTop:3}} title={"rating before / after"}>
+
+                        <RatingStar  style={styles.ratingIcon} tooltip={"rating before/after"}/>
+                        <span>{oppRatingBefore+ " / "}</span>
                         <span>{oppRatingAfter}</span>
                     </div>
 
@@ -172,7 +215,7 @@ class SavedGamesTable extends React.Component {
 
 
 
-                <TableRowColumn>{gameList[i].description}</TableRowColumn>
+                <TableRowColumn style={{paddingRight:5}} title={gameList[i].description}>{gameList[i].description}</TableRowColumn>
                 <TableRowColumn style={styles.tableButtonColumn}>
 
                     <RaisedButton label="View"
@@ -185,66 +228,77 @@ class SavedGamesTable extends React.Component {
 
             </TableRow>);
         }
-        return tableRows;
+        return tableRows;//asdasdsad
     }
 
     render() {
 
 
         let {gameList} = this.state;
-        let tableRows = this.getTableRows(gameList, this.props.user.id);
+        let tableRows = this.getTableRows(gameList, this.props.targetUserId);
 
+
+        let thResultStyle = Object.assign({}, styles.tableColumnResult, styles.thColumn );
+        let thTimeStyle = Object.assign({}, styles.tableColumnTime, styles.thColumn );
+        let thUserStyle = Object.assign({}, styles.tableColumnUser, styles.thColumn);
         return (
 
-            <div>
-                <Table>
-                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                        <TableRow>
-                            <TableHeaderColumn>Time</TableHeaderColumn>
-                            <TableHeaderColumn>User</TableHeaderColumn>
-                            <TableHeaderColumn style={styles.tableColumnChecker}></TableHeaderColumn>
-                            <TableHeaderColumn style={styles.tableColumnResult}>Result</TableHeaderColumn>
-                            <TableHeaderColumn>Opponent</TableHeaderColumn>
-                            <TableHeaderColumn>Description</TableHeaderColumn>
-                            <TableHeaderColumn></TableHeaderColumn>
 
-                        </TableRow>
-                    </TableHeader>
+            <div style={styles.mainContainer}>
+                <div style={styles.tableContainer}>
+                    <Table>
+                        <TableHeader style={styles.thRow} displaySelectAll={false} adjustForCheckbox={false}>
+                            <TableRow>
+                                <TableHeaderColumn style={thTimeStyle}>Time</TableHeaderColumn>
+                                <TableHeaderColumn style={thUserStyle}>User</TableHeaderColumn>
+                                <TableHeaderColumn style={styles.tableColumnChecker}></TableHeaderColumn>
+                                <TableHeaderColumn style={thResultStyle}>Result</TableHeaderColumn>
+                                <TableHeaderColumn style={thUserStyle}>Opponent</TableHeaderColumn>
+                                <TableHeaderColumn style={styles.thColumn}>Description</TableHeaderColumn>
+                                <TableHeaderColumn></TableHeaderColumn>
 
-
-                    <TableBody displayRowCheckbox={false}>
-                        {tableRows}
-                    </TableBody>
-                </Table>
-
-                <Dialog
-                    title="View saved game"
-                    //contentStyle={styles.dialogContent}
-                    modal={true}
-                    open={this.state.dialogOpen}
-                    contentStyle={{width:800}}
-                    actionsContainerStyle = {styles.dialogActionsContainer}
-                    actions={[
-                        <RaisedButton
-                            label="Ok"
-                            primary={true}
-                            onClick={this.handleCloseGame.bind(this)}
-                            buttonStyle = {styles.dialogButton}
-                        />,
-                    ]}
+                            </TableRow>
+                        </TableHeader>
 
 
-                >
+                        <TableBody displayRowCheckbox={false}>
+                            {tableRows}
+                        </TableBody>
+                    </Table>
 
-                    <ViewGameArea
-                        playsWhite={this.state.playsWhite}
-                        moves={this.state.moves}
-                        boardState={this.state.boardState}
-                    />
+                    <Dialog
+                        title="View saved game"
+                        //contentStyle={styles.dialogContent}
+                        modal={true}
+                        open={this.state.dialogOpen}
+                        contentStyle={{width:800}}
+                        actionsContainerStyle = {styles.dialogActionsContainer}
+                        actions={[
+                            <RaisedButton
+                                label="Ok"
+                                primary={true}
+                                onClick={this.handleCloseGame.bind(this)}
+                                buttonStyle = {styles.dialogButton}
+                            />,
+                        ]}
 
-                </Dialog>
 
+                    >
+
+                        <ViewGameArea
+                            playsWhite={this.state.playsWhite}
+                            moves={this.state.moves}
+                            boardState={this.state.boardState}
+                        />
+
+                    </Dialog>
+                </div>
             </div>
+
+
+
+
+
 
 
         );
@@ -252,17 +306,12 @@ class SavedGamesTable extends React.Component {
 }
 
 SavedGamesTable.propTypes = {
-    user: PropTypes.object.isRequired
+    targetUserId: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired
 };
 
 
-function mapStateToProps(state) {
-    return {
-        user: getUser(state)
-    };
-}
 
 
-export default (connect(
-    mapStateToProps
-)(SavedGamesTable));
+
+export default SavedGamesTable;

@@ -5,12 +5,10 @@ import PropTypes from 'prop-types';
 
 import MovesPanel from './MovesPanel';
 import Board from './Board';
-import {connect} from "react-redux";
-import {getCurrentGameInfo, getCurrentGameResult, getCurrentGameState} from "../selectors/gameSelector";
-import {withRouter} from "react-router-dom";
 
-import {wsSendUserPick, wsSendUserMove, wsSendSaveGame} from '../actions/WsClientActions';
-import ResultsDialog from "./ResultsDialog";
+
+import { wsSendSaveGame} from '../actions/WsClientActions';
+
 
 
 class ViewGameArea extends React.Component {

@@ -8,6 +8,40 @@ const wk = require('./images/wk.png');
 const bk = require('./images/bk.png');
 const lastTurnImg = require("./images/lastTurn.png");
 
+const boardBorderImg = require('./images/boardborder.png');
+const boardImg = require('./images/board2.jpg');
+
+const inlineStyles={
+    rotatedBorder:  {
+
+        WebkitTransform: "rotate(180deg)",     /* Chrome and other webkit browsers */
+        MozTransform: "rotate(180deg)",        /* FF */
+        OTransform: "rotate(180deg)",         /* Opera */
+        MsTransform: "rotate(180deg)",         /* IE9 */
+        transform: "rotate(180deg)"             /* W3C compliant browsers */
+    },
+    boardBorder:{
+        position:"absolute",
+        top:0,
+        left:0,
+        zIndex: "0"
+    },
+    board:{
+        position:"absolute",
+        top:0,
+        left:0,
+        zIndex: "1",
+        width:"100%"
+    },
+    myDiv:{
+        width:"92%",
+        height:"92%",
+        marginLeft: "4%",
+        marginTop: "4%",
+        position:"relative"
+
+    }
+};
 
 class Board extends React.Component {
 
@@ -169,18 +203,24 @@ class Board extends React.Component {
     }
 
 
-//sdfsdf
+//sdfsdfdfsdfdfdfdggdf
 
     render(){
 
         let {currentMove, moves, boardState, reverseView, onCellClicked, pickedChecker} = this.props;
 
+        let boardImgStyle = reverseView ? Object.assign({}, inlineStyles.boardBorder, inlineStyles.rotatedBorder) : inlineStyles.boardBorder ;
+
         return (
         <div className={styles.board}>
+            <img style={boardImgStyle} src={boardBorderImg} />
+            <div style={inlineStyles.myDiv}>
+                <img style={inlineStyles.board} src={boardImg} />
+                <table>
+                    {this.createBoard(8,8,onCellClicked, moves, boardState, reverseView, currentMove, pickedChecker)}
+                </table>
 
-            <table >
-                {this.createBoard(8,8,onCellClicked, moves, boardState, reverseView, currentMove, pickedChecker)}
-            </table>
+            </div>
 
 
 

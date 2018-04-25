@@ -16,7 +16,7 @@ const Root = ({ store }) => (
                 <Route exact path="/" component={MainDashboard} />
                 <Route path="/tables64" component={Tables64Dashboard} />
                 <Route path="/play64" component={Play64Dashboard} />
-                <Route path="/profile" component={ProfileDashboard}/>
+                <Route path="/profile/:id"  component={ProfileDashboard}/>
             </Switch>
         </Router>
     </Provider>
@@ -27,3 +27,5 @@ Root.propTypes = {
 };
 
 export default Root;
+
+//key={ this.context.router.getCurrentPath()}

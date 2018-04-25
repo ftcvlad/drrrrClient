@@ -30,16 +30,3 @@ const App = () => (
 
 
 
-
-// // Assuming Pusher
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: '6d7a5647256303979656',
-//     cluster: 'eu',
-//     encrypted: true
-// });
-//
-// window.Echo.channel('game1channel')
-//     .listen('ExampleEvent', (e) => {
-//         console.log(e.update);
-//     });
