@@ -10,7 +10,7 @@ import {
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
-import {getAllGameInfo} from "../selectors/gameSelector";
+import {getAllGameInfo, getCurrentGameId} from "../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 
 import {roomCategories} from '../actions/roomCategories';
@@ -111,8 +111,6 @@ class Tables64Dashboard extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState){//state update based on props
 
-
-
         if (prevState.selectedGameInfo.gameId === "" && nextProps.gameInfoList.length>0){
             return {selectedGameInfo:nextProps.gameInfoList[0]};
         }
@@ -212,6 +210,8 @@ class Tables64Dashboard extends React.Component {
     }
 
 
+
+
     getTableRows(gameInfoList, userId){
 
         // for (let i=0;i<10;i++){
@@ -231,6 +231,7 @@ class Tables64Dashboard extends React.Component {
 
             const rowStyle = isSelected ? styles.selectedRow : (i%2 === 0 ? {backgroundColor:"#dedede"} : {});
 
+            //TODO don't show here if own game
             tableRows.push(<TableRow style={rowStyle} key={gameInfoList[i].gameId}>
                 <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 0)}</TableRowColumn>
                 <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 1)}</TableRowColumn>
@@ -304,7 +305,8 @@ console.log("table renedr");
                         <ParticipantList gameInfo = {this.state.selectedGameInfo}/>
 
 
-                        <CreateGamePanel dispatch={this.props.dispatch}/>
+                        {!this.props.gameId &&
+                            <CreateGamePanel dispatch={this.props.dispatch}/> }
                     </div>
                 </div>
 
@@ -328,7 +330,8 @@ Tables64Dashboard.propTypes={
 function mapStateToProps(state) {
     return {
         gameInfoList:getAllGameInfo(state),
-        user: getUser(state)
+        user: getUser(state),
+        gameId: getCurrentGameId(state)
     };
 }
 
