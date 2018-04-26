@@ -31,7 +31,8 @@ export default function gameListReducer(state = initialState.gameList, action) {
                 return gameInfo.gameId !==  action.gameId;
             });
             return newState;
-
+        case types.LEAVE_ROOM_TABLES_SUCCEED:
+            return [];
 
         default:
             return state;

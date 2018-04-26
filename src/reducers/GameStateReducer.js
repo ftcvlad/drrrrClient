@@ -15,6 +15,7 @@ export default function gameInfoReducer(state = initialState.currentGame.gameSta
         case types.USER_PICK_SUCCEED:
         case types.USER_MOVE_SUCCEED:
         case types.BROADCAST_GAME_STARTED_SUCCEED:
+        case types.UPDATE_TIME_LEFT_SUCCEED:
             return Object.assign({}, action.gameState);
         case types.EXIT_GAME_SUCCEED:
             return {};

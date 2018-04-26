@@ -15,7 +15,13 @@ export const getCurrentGameId = (state) => {return state.currentGame.gameInfo.ga
 
 
 
-export const getIsGameGoing = (state) => {return state.currentGame.gameState.isGameGoing};
+export const getIsGameGoing = (state) => {
+    if (!state.currentGame.gameState.isGameGoing ){//false or undefined
+        return false;
+    }
+    return true;
+
+};
 
 export const getMovingPlayerId = createSelector(
     [ getCurrentGameInfo, getCurrentGameState],

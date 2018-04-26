@@ -20,10 +20,12 @@ import RatingStar from 'material-ui/svg-icons/toggle/star';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {getUser} from "../selectors/userSelector";
+import {getCurrentGameId} from '../selectors/gameSelector';
 import PropTypes from 'prop-types';
 import { BeatLoader} from 'react-spinners';
 import LetterAvatar from './LetterAvatar';
-
+import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
+import GameReturnFrame from './GameReturnFrame';
 
 
 const styles = {
@@ -173,6 +175,23 @@ class ProfileDashboard extends React.Component {
 
     componentDidMount() {
        this.getTargetUser(this.state.targetUserId);
+
+        if (!window.socketConnection){
+            this.props.dispatch(wsConnect())
+                .then(()=>{
+                    this.props.dispatch(wsSendJoinRoomPlay())
+                        .catch((error)=>{});
+                });
+        }
+        else{
+            this.props.dispatch(wsSendLeaveRoomTables())
+                .catch((error)=>{ });
+
+            this.props.dispatch(wsSendUpdateTimeLeft())
+                .catch((error)=>{ });
+
+
+        }
     }
 
 
@@ -221,12 +240,16 @@ class ProfileDashboard extends React.Component {
 
         }
 
+        let inGame = !!this.props.gameId;
+
 //dfgdffgsdffgfgdfdffdgfgffggf
         return (
 
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={1}/>
-
+                {inGame &&
+                    <GameReturnFrame/>
+                }
 
                 <div style={{padding: "50px", position:"relative"}}>
 
@@ -358,12 +381,14 @@ class ProfileDashboard extends React.Component {
 }
 
 ProfileDashboard.propTypes = {
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    gameId: PropTypes.string
 };
 
 function mapStateToProps(state) {
     return {
-        user: getUser(state)
+        user: getUser(state),
+        gameId: getCurrentGameId(state)
     };
 }
 

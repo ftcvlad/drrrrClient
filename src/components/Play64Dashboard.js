@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {removeAllGames} from "../actions/removeActions";
-import {getCurrentGameId, getCurrentGameInfo, getCurrentGameResult} from '../selectors/gameSelector';
+import {getCurrentGameId, getCurrentGameInfo} from '../selectors/gameSelector';
 
 
 
@@ -17,7 +17,7 @@ import PlayArea from './PlayArea';
 
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
-import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender, wsSendSuggestDraw } from "../actions/WsClientActions";
+import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender, wsSendSuggestDraw,wsSendLeaveRoomTables, wsSendUpdateTimeLeft } from "../actions/WsClientActions";
 import Dialog from 'material-ui/Dialog';
 import PlayerArea from "./PlayerArea";
 
@@ -83,17 +83,17 @@ class Play64Dashboard extends React.Component {
                 });
         }
         else{
-            this.props.dispatch(wsSendJoinRoomPlay())
-                .catch((error)=>{
-                    if (error === 403){
-                        this.props.history.push('/tables64');
-                    }
+            this.props.dispatch(wsSendLeaveRoomTables())
+                .catch((error)=>{ });
 
+            this.props.dispatch(wsSendUpdateTimeLeft())//when entering room should set timer correctly
+                .catch((error)=>{
+                    if (error === 403){this.props.history.push('/tables64'); }
                 });
         }
 
-
     }
+
     clearAllGamesCache() {///!!! for development
 
         this.props.dispatch(removeAllGames())

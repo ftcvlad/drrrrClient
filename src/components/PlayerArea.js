@@ -4,7 +4,10 @@ import React from "react";
 import PropTypes from 'prop-types';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {getCurrentGameState, getMovingPlayerId, getOwnPlayerObject, getOwnStatus} from "../selectors/gameSelector";
+import {
+    getIsGameGoing, getMovingPlayerId, getOwnPlayerObject,
+    getOwnStatus
+} from "../selectors/gameSelector";
 import RaisedButton from 'material-ui/RaisedButton';
 import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp} from "../actions/WsClientActions";
 import Timer from './Timer';
@@ -82,9 +85,6 @@ const styles = {
         height:20,
         borderRadius:14,
         boxShadow: "2px 2px 5px black"
-    },
-    timerDiv:{
-
     },
     imgDiv:{
         backgroundColor:"blue",
@@ -199,10 +199,7 @@ class PlayerArea extends React.Component {
 
 
 
-            if (movingPlayerId !== null && player.id === movingPlayerId &&
-                (playerStatuses.suggestingDraw === player.currentStatus ||
-                    playerStatuses.playing === player.currentStatus ||
-                    playerStatuses.suggestingDraw === player.currentStatus )){
+            if (movingPlayerId !== null && player.id === movingPlayerId ){
                 timerOn = true;
             }
 
@@ -306,9 +303,11 @@ class PlayerArea extends React.Component {
                                 </div>
 
 
-                                <div style={styles.timerDiv}>
-                                    <Timer timerOn={timerOn} whiteSide={this.state.whiteSide} handleTimeIsUp={this.handleTimeIsUp.bind(this)} />
-                                </div>
+
+                                <Timer timerOn={timerOn}
+                                       whiteSide={this.state.whiteSide}
+                                       handleTimeIsUp={this.handleTimeIsUp.bind(this)} />
+
                             </div>
 
 
@@ -332,7 +331,6 @@ PlayerArea.propTypes = {
     movingPlayerId:  PropTypes.number,
 
 
-
     forOpponent: PropTypes.bool.isRequired,
     gameId: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
@@ -346,6 +344,7 @@ function mapStateToProps(state, ownProps) {
     return {
         player: getOwnPlayerObject(state, ownProps),
         movingPlayerId: getMovingPlayerId(state)
+
 
     };
 }

@@ -48,13 +48,15 @@ class Timer extends React.Component {
     static getDerivedStateFromProps(nextProps, prevState){//TODO understand lifecycle better
 
 
-        if (prevState.timeLeft === -1 || (prevState.isGameGoing === false && nextProps.isGameGoing === true)){
+        if (prevState.timeLeft === -1 || nextProps.timeLeft < prevState.timeLeft ||
+            (prevState.isGameGoing === false && nextProps.isGameGoing === true)){
             return {timeLeft: nextProps.timeLeft, timerOn: nextProps.timerOn, isGameGoing: nextProps.isGameGoing};
         }
-
         else{
-            return {timeLeft: prevState.timeLeft, timerOn: nextProps.timerOn, isGameGoing: nextProps.isGameGoing};
+            return { timerOn: nextProps.timerOn, isGameGoing: nextProps.isGameGoing};
         }
+
+
 
     }
 
@@ -108,11 +110,11 @@ class Timer extends React.Component {
 
 
 Timer.propTypes = {
+    isGameGoing: PropTypes.bool.isRequired,
 
     timerOn: PropTypes.bool.isRequired,
     timeLeft: PropTypes.number.isRequired,
     whiteSide: PropTypes.bool,
-    isGameGoing: PropTypes.bool.isRequired,
     handleTimeIsUp: PropTypes.func.isRequired
 
 };
@@ -121,8 +123,8 @@ Timer.propTypes = {
 
 function mapStateToProps(state, ownProps) {
     return {
-        timeLeft: getTimeLeft(state, ownProps),
-        isGameGoing: getIsGameGoing(state)
+        isGameGoing: getIsGameGoing(state),
+        timeLeft: getTimeLeft(state, ownProps)
     };
 }
 

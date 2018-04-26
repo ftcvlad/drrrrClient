@@ -5,7 +5,9 @@ import React from 'react';
 import {getUser} from "../selectors/userSelector";
 import NavBar from "./NavBar";
 import {RegisterForm, LoginForm} from "./LoginRegisterForm";
-
+import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
+import GameReturnFrame from './GameReturnFrame';
+import {getCurrentGameId} from "../selectors/gameSelector";
 
 class MainDashboard extends React.Component {
 
@@ -22,7 +24,21 @@ class MainDashboard extends React.Component {
 
     componentWillMount() {
 
+        if (!window.socketConnection){
+            this.props.dispatch(wsConnect())
+                .then(()=>{
+                    this.props.dispatch(wsSendJoinRoomPlay())
+                        .catch((error)=>{ });
+                });
+        }
+        else{
+            this.props.dispatch(wsSendLeaveRoomTables())
+                .catch((error)=>{ });
 
+            this.props.dispatch(wsSendUpdateTimeLeft())
+                .catch((error)=>{ });
+
+        }
     }
 
     clearState(){
@@ -50,13 +66,16 @@ class MainDashboard extends React.Component {
 
     render() {
         let {user} = this.props;
-
+        let inGame = !!this.props.gameId;
 
         let userLoggedIn = Object.keys(user).length !== 0;
 
         return (
             <div className="">
                 <NavBar selectedTab={0}/>
+                {inGame &&
+                    <GameReturnFrame/>
+                }
                 <h1>Checkers main dashboard! to be continued...</h1>
                 {!userLoggedIn &&
                 <div>
@@ -74,13 +93,15 @@ class MainDashboard extends React.Component {
 }
 
 MainDashboard.propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
+    gameId: PropTypes.string
 };
 
 
 function mapStateToProps(state) {
     return {
-        user: getUser(state)
+        user: getUser(state),
+        gameId: getCurrentGameId(state)
     };
 }
 

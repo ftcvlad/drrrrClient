@@ -1,5 +1,6 @@
 export const messageTypes = {
     JOIN_ROOM_TABLES: "joinRoomTables",
+    LEAVE_ROOM_TABLES: "leaveRoomTables",
     JOIN_ROOM_PLAY: "joinRoomPlay",
 
     BROADCAST_GAME_CREATED: 'broadcastGameCreated',
@@ -28,6 +29,7 @@ export const messageTypes = {
     RESPOND_DRAW_OFFER: 'respondDrawOffer',
     CANCEL_DRAW_OFFER: 'cancelDrawOffer',
     TIME_IS_UP: 'timeIsUp',
+    UPDATE_TIME_LEFT: 'updateTimeLeft'
 
 };
 

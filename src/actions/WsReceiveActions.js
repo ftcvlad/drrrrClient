@@ -19,6 +19,12 @@ export function joinRoomTablesSuccess(gameList){
     return {type: types.JOIN_ROOM_TABLES_SUCCEED, gameList: gameList };
 }
 
+export function leaveRoomTablesSuccess(){
+    return {type: types.LEAVE_ROOM_TABLES_SUCCEED };
+}
+
+
+
 //play and watch
 export function joinGameSucceed(currentGame){
     return {type: types.JOIN_GAME_SUCCEED, currentGame: currentGame };
@@ -84,4 +90,8 @@ export function respondDrawOfferSuccess(gameInfo){
 
 export function cancelDrawOfferSuccess(gameInfo){
     return {type: types.CANCEL_DRAW_OFFER_SUCCEED, gameInfo: gameInfo};
+}
+
+export function updateTimeLeftSuccess(gameState){
+    return {type: types.UPDATE_TIME_LEFT_SUCCEED, gameState: gameState};
 }

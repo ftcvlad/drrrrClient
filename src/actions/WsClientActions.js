@@ -13,11 +13,25 @@ import {createGameSuccess,
     confirmPlayingSuccess,
     suggestDrawSuccess,
     respondDrawOfferSuccess,
-    cancelDrawOfferSuccess} from './WsReceiveActions';
+    cancelDrawOfferSuccess,
+    leaveRoomTablesSuccess,
+    updateTimeLeftSuccess} from './WsReceiveActions';
 
 
 
 
+export function wsSendUpdateTimeLeft(){
+    let msg = {
+        msgType: messageTypes.UPDATE_TIME_LEFT
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: updateTimeLeftSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    }
+}
 
 
 export function wsSendJoinRoomTables(roomCategory) {
@@ -30,6 +44,20 @@ export function wsSendJoinRoomTables(roomCategory) {
     return {
         type: 'socket',
         successActionCreator: joinRoomTablesSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    }
+}
+
+export function wsSendLeaveRoomTables() {
+
+    let msg = {
+        msgType: messageTypes.LEAVE_ROOM_TABLES
+    };
+
+    return {
+        type: 'socket',
+        successActionCreator: leaveRoomTablesSuccess,
         types: [SEND, SEND_SUCCESS, SEND_FAIL],
         promise: (socket) => socket.sendRequest(msg)
     }

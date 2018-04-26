@@ -16,7 +16,10 @@ import {withRouter} from "react-router-dom";
 import {roomCategories} from '../actions/roomCategories';
 import PropTypes from 'prop-types';
 
-import {wsConnect, wsSendJoinRoomTables, wsSendPlayGame, wsSendWatchGame} from '../actions/WsClientActions';
+import {
+    wsConnect, wsSendJoinRoomPlay, wsSendJoinRoomTables, wsSendPlayGame, wsSendUpdateTimeLeft,
+    wsSendWatchGame
+} from '../actions/WsClientActions';
 import {removeAllGames} from '../actions/removeActions';
 
 import EmptyPlayerSlot from 'material-ui/svg-icons/social/person-outline';
@@ -26,6 +29,7 @@ import FilledWatchersSlot from 'material-ui/svg-icons/social/people';
 import ParticipantList from "./ParticipantPanel";
 import CreateGamePanel from "./CreateGamePanel";
 import {getUser} from "../selectors/userSelector";
+import GameReturnFrame from './GameReturnFrame';
 
 const styles = {
     sidePanelContainer:{
@@ -92,7 +96,7 @@ const styles = {
     },
     noGames:{
         color: "white",
-        marginTop:150
+        marginTop:100
     }
 };
 
@@ -139,11 +143,15 @@ class Tables64Dashboard extends React.Component {
             this.props.dispatch(wsConnect())
                 .then(()=>{
                     this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
+                    this.props.dispatch(wsSendJoinRoomPlay())
+                        .catch(()=>{ console.log("not in gaame");});
 
                 });
         }
         else{
             this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
+            this.props.dispatch(wsSendUpdateTimeLeft())
+                .catch((error)=>{ });
         }
 
 
@@ -231,7 +239,7 @@ class Tables64Dashboard extends React.Component {
 
             const rowStyle = isSelected ? styles.selectedRow : (i%2 === 0 ? {backgroundColor:"#dedede"} : {});
 
-            //TODO don't show here if own game
+
             tableRows.push(<TableRow style={rowStyle} key={gameInfoList[i].gameId}>
                 <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 0)}</TableRowColumn>
                 <TableRowColumn style={styles.tableColumnMedium}>{this.getPlayerDiv(gameInfoList[i], 1)}</TableRowColumn>
@@ -242,9 +250,9 @@ class Tables64Dashboard extends React.Component {
 
                     {isSelected && !ownGame && <div style={{width:200, display:"flex", justifyContent:"space-around"}}>
                         {canPlay && <RaisedButton label="Play"
-                                      buttonStyle={styles.button}
-                                      labelStyle={styles.buttonLabel}
-                                      onClick={this.playClicked.bind(this, gameInfoList[i].gameId)} />}
+                                                  buttonStyle={styles.button}
+                                                  labelStyle={styles.buttonLabel}
+                                                  onClick={this.playClicked.bind(this, gameInfoList[i].gameId)} />}
 
                         <RaisedButton label="Watch"
                                       buttonStyle={styles.button}
@@ -253,14 +261,11 @@ class Tables64Dashboard extends React.Component {
                     </div>}
 
 
-                    {isSelected && ownGame &&
-                        <RaisedButton label="Return"
-                                        buttonStyle={styles.button}
-                                        labelStyle={styles.buttonLabel}
-                                        onClick={this.returnClicked.bind(this)}/>}
                 </TableRowColumn>
 
             </TableRow>);
+
+
         }
         return tableRows;
     }
@@ -277,9 +282,14 @@ console.log("table renedr");
         let thNarrowStyle = Object.assign({}, styles.thColumn, styles.tableColumnNarrow );
         let thMediumStyle = Object.assign({}, styles.thColumn, styles.tableColumnMedium );
 
+        let inGame = !!this.props.gameId;
+
         return (
             <div style={{textAlign: 'center'}}>
                 <NavBar selectedTab={1}/>
+                {inGame &&
+                    <GameReturnFrame/>
+                }
                 <div style={styles.mainContainer}>
                     <div style={styles.tableContainer}>
                         {gamesExist && <Table onRowSelection={this.handleRowSelected.bind(this)}>
@@ -305,7 +315,7 @@ console.log("table renedr");
                         <ParticipantList gameInfo = {this.state.selectedGameInfo}/>
 
 
-                        {!this.props.gameId &&
+                        {!inGame &&
                             <CreateGamePanel dispatch={this.props.dispatch}/> }
                     </div>
                 </div>
