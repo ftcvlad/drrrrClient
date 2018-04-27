@@ -87,6 +87,9 @@ class ParticipantPanel extends React.Component {
 
     openPersonProfile(personId) {
         console.log(personId);
+
+        this.props.history.push('/profile/'+personId);
+
     }
 
     sendPrivateMessage(personId){
@@ -178,7 +181,7 @@ ParticipantPanel.propTypes={
 // }
 
 
-export default ParticipantPanel;
+export default withRouter(ParticipantPanel);
 
 // export default withRouter(connect(
 //     mapStateToProps

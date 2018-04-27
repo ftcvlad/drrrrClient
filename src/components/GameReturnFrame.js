@@ -9,14 +9,16 @@ import Timer from './Timer';
 import StatusWaiting from 'material-ui/svg-icons/action/hourglass-full';
 import StatusReady from 'material-ui/svg-icons/action/done';
 
-const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer"];
+const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer", "disconnected", "dropping"];
 const playerStatuses = {
     waiting: 0,
     playing: 1,
     confirming: 2,
     ready: 3,
     suggestingDraw: 4,
-    resolvingDrawOffer: 5
+    resolvingDrawOffer: 5,
+    disconnected: 6,
+    dropper: 7
 };
 
 const styles ={
@@ -24,8 +26,8 @@ const styles ={
         display: "flex",
         flexDirection: "column",
         position: "fixed",
-        right:0,
-        bottom:0,
+        right:5,
+        bottom:5,
         width:350,
         height: 131,
         backgroundColor: "wheat",

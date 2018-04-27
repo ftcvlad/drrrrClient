@@ -9,7 +9,7 @@ import {
     getOwnStatus
 } from "../selectors/gameSelector";
 import RaisedButton from 'material-ui/RaisedButton';
-import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp} from "../actions/WsClientActions";
+import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp, wsSendDropOpponent} from "../actions/WsClientActions";
 import Timer from './Timer';
 import StatusWaiting from 'material-ui/svg-icons/action/hourglass-full';
 import StatusReady from 'material-ui/svg-icons/action/done';
@@ -18,14 +18,16 @@ import RatingStar from 'material-ui/svg-icons/toggle/star';
 import IconButton from 'material-ui/IconButton';
 const wm = require('./images/wm.png');
 
-const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer"];
+const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer", "disconnected", "dropping"];
 const playerStatuses = {
     waiting: 0,
     playing: 1,
     confirming: 2,
     ready: 3,
     suggestingDraw: 4,
-    resolvingDrawOffer: 5
+    resolvingDrawOffer: 5,
+    disconnected: 6,
+    dropper: 7
 };
 
 
@@ -165,9 +167,12 @@ class PlayerArea extends React.Component {
     }
 
     cancelDrawOffer(gameId){
-
-
         this.props.dispatch(wsSendCancelDrawOffer(gameId));
+    }
+
+    dropOpponent(gameId){
+
+        this.props.dispatch(wsSendDropOpponent(gameId));
     }
 
 
@@ -186,6 +191,7 @@ class PlayerArea extends React.Component {
         let displayConfirmDrawButton = false;
         let displayDrawSurrenderButtons = false;
         let displayCancelDrawOfferButton = false;
+        let displayDropOpponentButton = false;
         let statusIcon = null;
         let checkerStyle = {};
 
@@ -196,7 +202,7 @@ class PlayerArea extends React.Component {
             displayConfirmDrawButton = belongsToSelf && (playerStatuses.resolvingDrawOffer === player.currentStatus);
             displayDrawSurrenderButtons = belongsToSelf && (playerStatuses.playing === player.currentStatus);
             displayCancelDrawOfferButton = belongsToSelf && (playerStatuses.suggestingDraw === player.currentStatus);
-
+            displayDropOpponentButton = belongsToSelf && (playerStatuses.dropper === player.currentStatus);
 
 
             if (movingPlayerId !== null && player.id === movingPlayerId ){
@@ -275,6 +281,15 @@ class PlayerArea extends React.Component {
                                                   labelStyle={styles.normalButtonLabel}
                                                   buttonStyle={styles.normalActionButton}
                                                   onClick={this.props.handleSurrender}/>
+                                </div>}
+
+
+                                {displayDropOpponentButton &&
+                                <div style={styles.buttonContainer}>
+                                    <RaisedButton label="Drop opponent"
+                                                  labelStyle={styles.urgentButtonLabel}
+                                                  buttonStyle={styles.urgentActionButton}
+                                                  onClick={this.dropOpponent.bind(this, gameId)}/>
                                 </div>}
 
                             </div>

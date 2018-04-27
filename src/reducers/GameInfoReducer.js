@@ -20,6 +20,7 @@ export default function gameInfoReducer(state = initialState.currentGame.gameInf
         case types.RESPOND_DRAW_OFFER_SUCCEED:
         case types.SURRENDER_SUCCEED:
         case types.CANCEL_DRAW_OFFER_SUCCEED:
+        case types.DROP_OPPONENT_SUCCEED:
             return Object.assign({}, action.gameInfo);
         case types.EXIT_GAME_SUCCEED:
             return {};

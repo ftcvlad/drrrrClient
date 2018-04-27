@@ -233,16 +233,15 @@ class ProfileDashboard extends React.Component {
             losses = userProfile.losses;
             draws = userProfile.draws;
             total = wins+losses+draws;
-            winsP = Math.floor(wins/total*100)+"%";
-            drawsP = Math.floor(draws/total*100)+"%";
-            lossesP = Math.floor(losses/total*100)+"%";
+            winsP = total>0 ? Math.floor(wins/total*100)+"%" : "--";
+            drawsP = total>0 ? Math.floor(draws/total*100)+"%" : "--";
+            lossesP = total>0 ? Math.floor(losses/total*100)+"%" : "--";
 
 
         }
 
         let inGame = !!this.props.gameId;
 
-//dfgdffgsdffgfgdfdffdgfgffggf
         return (
 
             <div style={{textAlign: 'center'}}>

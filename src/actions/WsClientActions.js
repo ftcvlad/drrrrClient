@@ -15,7 +15,8 @@ import {createGameSuccess,
     respondDrawOfferSuccess,
     cancelDrawOfferSuccess,
     leaveRoomTablesSuccess,
-    updateTimeLeftSuccess} from './WsReceiveActions';
+    updateTimeLeftSuccess,
+    dropOpponentSuccess} from './WsReceiveActions';
 
 
 
@@ -293,5 +294,17 @@ export function wsSendTimeIsUp(gameId) {
 }
 
 
+export function wsSendDropOpponent(gameId){
+    let msg = {
+        msgType: messageTypes.DROP_OPPONENT,
+        gameId: gameId
+    };
 
+    return {
+        type: 'socket',
+        successActionCreator: dropOpponentSuccess,
+        types: [SEND, SEND_SUCCESS, SEND_FAIL],
+        promise: (socket) => socket.sendRequest(msg)
+    }
+}
 

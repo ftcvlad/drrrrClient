@@ -29,7 +29,8 @@ export const messageTypes = {
     RESPOND_DRAW_OFFER: 'respondDrawOffer',
     CANCEL_DRAW_OFFER: 'cancelDrawOffer',
     TIME_IS_UP: 'timeIsUp',
-    UPDATE_TIME_LEFT: 'updateTimeLeft'
+    UPDATE_TIME_LEFT: 'updateTimeLeft',
+    DROP_OPPONENT: 'dropOpponent'
 
 };
 

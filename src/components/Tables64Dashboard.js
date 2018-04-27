@@ -230,13 +230,10 @@ class Tables64Dashboard extends React.Component {
 
         for (let i=0; i<gameInfoList.length;i++){
             const isSelected =  gameInfoList[i].gameId === this.state.selectedGameInfo.gameId;
-
-            const isPlayer = (gameInfoList[i].players.find(p=>p.id === userId) !== undefined);
-            const isWatcher = (gameInfoList[i].watchers.find(p=>p.id === userId) !== undefined);
-            const ownGame = isPlayer || isWatcher;
-
+            const inGame = !!this.props.gameId;
             const canPlay = gameInfoList[i].players.length<2;
 
+            
             const rowStyle = isSelected ? styles.selectedRow : (i%2 === 0 ? {backgroundColor:"#dedede"} : {});
 
 
@@ -248,7 +245,7 @@ class Tables64Dashboard extends React.Component {
                 {/*<TableRowColumn  >{gameInfoList[i].timeReserve + " min"}</TableRowColumn>*/}
                 <TableRowColumn style={styles.tableButtonColumn}>
 
-                    {isSelected && !ownGame && <div style={{width:200, display:"flex", justifyContent:"space-around"}}>
+                    {isSelected && !inGame && <div style={{width:200, display:"flex", justifyContent:"space-around"}}>
                         {canPlay && <RaisedButton label="Play"
                                                   buttonStyle={styles.button}
                                                   labelStyle={styles.buttonLabel}

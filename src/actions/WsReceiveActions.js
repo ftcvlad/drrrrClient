@@ -95,3 +95,9 @@ export function cancelDrawOfferSuccess(gameInfo){
 export function updateTimeLeftSuccess(gameState){
     return {type: types.UPDATE_TIME_LEFT_SUCCEED, gameState: gameState};
 }
+
+
+export function dropOpponentSuccess(gameInfo){
+    return {type: types.DROP_OPPONENT_SUCCEED, gameInfo: gameInfo};
+}
+
