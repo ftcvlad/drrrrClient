@@ -1,3 +1,2 @@
-//
-//
-// export const GET_SAVED_GAMES_SUCCESS = 'GET_SAVED_GAME_SUCCESS';
+
+export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';

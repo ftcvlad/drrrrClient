@@ -1,6 +1,5 @@
-import {GET_SAVED_GAMES_SUCCESS} from "./actionTypes";
-import {SEND, SEND_FAIL, SEND_SUCCESS} from "../actionTypes";
-import {messageTypes} from "../messageTypes";
+import {USER_UPDATE_SUCCESS } from "./actionTypes";
+
 
 export function httpGetSavedGameList(userId){
     return {
@@ -34,4 +33,27 @@ export function httpSaveGame(data){
             body:JSON.stringify(data),
         }
     };
+}
+
+
+export function httpUpdateUserProfile(data, userId){
+    return {
+        type: "API_CALL",
+        successActionCreator: userUpdateSucceed,
+        request: {
+            url: 'http://localhost:8080/user/'+userId,
+            method: 'put',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            credentials: 'include',
+            body:JSON.stringify(data),
+        }
+    };
+}
+
+function userUpdateSucceed(data){
+    return {type: USER_UPDATE_SUCCESS, user:data };
 }

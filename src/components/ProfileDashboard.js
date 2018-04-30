@@ -26,7 +26,7 @@ import { BeatLoader} from 'react-spinners';
 import LetterAvatar from './LetterAvatar';
 import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
 import GameReturnFrame from './GameReturnFrame';
-
+import UpdateProfileForm from './UpdateProfileForm';
 
 const styles = {
     statsRatingContainer: {
@@ -163,7 +163,8 @@ class ProfileDashboard extends React.Component {
             tabIndex: '1',
             userProfile: null,
             profileLoaded: false,
-            targetUserId: props.match.params.id
+            targetUserId: props.match.params.id,
+
         };
     }
 
@@ -212,13 +213,28 @@ class ProfileDashboard extends React.Component {
     getTargetUser(userId){
         this.props.dispatch(httpGetUser(userId))
             .then((u) => {
-                this.setState({userProfile: u, profileLoaded: true});
+
+                if (u){
+                    this.setState({userProfile: u, profileLoaded: true});
+                }
+                else{
+                    this.setState({userProfile: null, profileLoaded: false});
+                }
+
             })
             .catch(() => {
                 console.log('get profile error!');
             });
     }
+    convertUnixTimestampToDate(timestamp){
+        let date = new Date(timestamp*1000);
 
+        let day = "0" + date.getDate();
+        let month = "0" + (date.getMonth()+1);
+        let year = ""+date.getFullYear();
+
+        return  day.substr(-2) + '/' + month.substr(-2) + '/' + year.substr(-2);
+    }
 
     render() {
 
@@ -228,7 +244,8 @@ class ProfileDashboard extends React.Component {
 
         let wins, draws, losses, total, winsP, lossesP, drawsP;
         let avatarStyle, avatarLetter;
-        if (userProfile !== null){
+        let sourceUserObject;
+        if (userProfile !== null){//can be null if not loaded or undefined if id does not exist
             wins = userProfile.wins;
             losses = userProfile.losses;
             draws = userProfile.draws;
@@ -236,11 +253,14 @@ class ProfileDashboard extends React.Component {
             winsP = total>0 ? Math.floor(wins/total*100)+"%" : "--";
             drawsP = total>0 ? Math.floor(draws/total*100)+"%" : "--";
             lossesP = total>0 ? Math.floor(losses/total*100)+"%" : "--";
-
-
+            sourceUserObject = this.state.userProfile.id === this.props.user.id ? this.props.user : this.state.userProfile;
+alert(sourceUserObject.gender);
         }
 
         let inGame = !!this.props.gameId;
+
+        //if own profile, source of information is logged in user
+
 
         return (
 
@@ -263,8 +283,8 @@ class ProfileDashboard extends React.Component {
                         {this.state.profileLoaded &&
 
                                 <div style={styles.avatarContainer}>
-                                    <LetterAvatar username={userProfile.email}/>
-                                    <div style={styles.avatarText}>{userProfile.email}</div>
+                                    <LetterAvatar username={sourceUserObject.username}/>
+                                    <div style={styles.avatarText}>{sourceUserObject.username}</div>
                                 </div>
                         }
                     </div>
@@ -324,7 +344,7 @@ class ProfileDashboard extends React.Component {
                                         <div style={styles.ratingContainer}>
 
                                             <RatingStar style={styles.ratingIcon}/>
-                                            <div style={styles.ratingText}>{userProfile && userProfile.rating}</div>
+                                            <div style={styles.ratingText}>{sourceUserObject && sourceUserObject.rating}</div>
 
                                         </div>
                                     </div>
@@ -339,17 +359,17 @@ class ProfileDashboard extends React.Component {
                                             </div>
                                             <div style={styles.profileItemRow}>
                                                 <div style={styles.profileItemLabel}>registered:</div>
-                                                <div style={styles.profileItemText}>{userProfile.created_at}</div>
+                                                <div style={styles.profileItemText}>{sourceUserObject.created_at}</div>
                                             </div>
 
                                             <div style={styles.profileItemRow}>
                                                 <div style={styles.profileItemLabel}>Gender:</div>
-                                                <div style={styles.profileItemText}>{userProfile.gender ? userProfile.gender : ""}</div>
+                                                <div style={styles.profileItemText}>{sourceUserObject.gender ? (sourceUserObject.gender === 0 ? "M": "F") : ""}</div>
                                             </div>
 
                                             <div style={styles.profileItemRow}>
                                                 <div style={styles.profileItemLabel}>Birthday:</div>
-                                                <div style={styles.profileItemText}>{userProfile.birthday ? userProfile.birthday : ""}</div>
+                                                <div style={styles.profileItemText}>{sourceUserObject.birthday ? this.convertUnixTimestampToDate(sourceUserObject.birthday) : ""}</div>
                                             </div>
                                         </div>
 
@@ -363,11 +383,15 @@ class ProfileDashboard extends React.Component {
                                                      dispatch={this.props.dispatch}/>
                                 </div>
                             </Tab>
+
+                            {this.state.profileLoaded && this.state.userProfile.id === this.props.user.id &&
                             <Tab label="Settings" value="3" icon={<Settings/>}>
-                                <div>
-                                    My settingss :)
-                                </div>
-                            </Tab>
+
+                                <UpdateProfileForm user={this.props.user}
+                                                    dispatch={this.props.dispatch}/>
+
+
+                            </Tab>}
                         </Tabs>}
 
 

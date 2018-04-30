@@ -37,7 +37,11 @@ const styles={
         fontSize: 15
     },
     inputStyle:{
-        color:"white"
+        color:"white",
+        WebkitBoxShadow: '0 0 0 1000px #4f525a inset'
+    },
+    hintStyle:{
+        zIndex: "1"
     },
     tfUnderlineFocusStyle:{
         display: "none"
@@ -58,6 +62,7 @@ const renderPasswordField = (field) => (
                floatingLabelText={"Password"}
                floatingLabelStyle={styles.floatingLabelStyle}
                inputStyle={styles.inputStyle}
+               hintStyle={styles.hintStyle}
                underlineFocusStyle={styles.tfUnderlineFocusStyle}
                onChange={field.input.onChange}
                errorText={field.meta.error}/>
@@ -69,6 +74,7 @@ const renderEmailField = (field) => (
                floatingLabelText={"Email"}
                floatingLabelStyle={styles.floatingLabelStyle}
                inputStyle={styles.inputStyle}
+               hintStyle={styles.hintStyle}
                underlineFocusStyle={styles.tfUnderlineFocusStyle}
                onChange={field.input.onChange}
                errorText={field.meta.error}/>

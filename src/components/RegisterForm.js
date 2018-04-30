@@ -39,7 +39,11 @@ const styles={
         fontSize: 15
     },
     inputStyle:{
-        color:"white"
+        color:"white",
+        WebkitBoxShadow: '0 0 0 1000px #4f525a inset'//to prevent autofill background https://stackoverflow.com/questions/34429195/disable-autofill-forms-with-react-and-material-ui
+    },
+    hintStyle:{
+      zIndex: "1"
     },
     tfUnderlineFocusStyle:{
         display: "none"
@@ -61,6 +65,7 @@ const renderPasswordField = (field) => (
                inputStyle={styles.inputStyle}
                underlineFocusStyle={styles.tfUnderlineFocusStyle}
                floatingLabelText={"Password"}
+               hintStyle={styles.hintStyle}
                onChange={field.input.onChange}
                errorText={field.meta.error}/>
 );
@@ -71,8 +76,10 @@ const renderEmailField = (field) => (
                floatingLabelText={"Email"}
                floatingLabelStyle={styles.floatingLabelStyle}
                inputStyle={styles.inputStyle}
+               hintStyle={styles.hintStyle}
                underlineFocusStyle={styles.tfUnderlineFocusStyle}
                onChange={field.input.onChange}
+
                errorText={field.meta.error}/>
 );
 
@@ -81,6 +88,7 @@ const renderUsernameField = (field) => (
     <TextField name={"username"}
                floatingLabelFixed={true}
                floatingLabelText={"Username"}
+               hintStyle={styles.hintStyle}
                floatingLabelStyle={styles.floatingLabelStyle}
                inputStyle={styles.inputStyle}
                underlineFocusStyle={styles.tfUnderlineFocusStyle}

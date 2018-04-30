@@ -65,7 +65,7 @@ class RulesDashboard extends React.Component {
 
         return (
             <div className="">
-                <NavBar selectedTab={0}/>
+                <NavBar selectedTab={3}/>
                 {inGame &&
                     <GameReturnFrame/>
                 }
