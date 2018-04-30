@@ -245,7 +245,7 @@ class ProfileDashboard extends React.Component {
         let wins, draws, losses, total, winsP, lossesP, drawsP;
         let avatarStyle, avatarLetter;
         let sourceUserObject;
-        if (userProfile !== null){//can be null if not loaded or undefined if id does not exist
+        if (this.state.profileLoaded){//can be null if not loaded or undefined if id does not exist
             wins = userProfile.wins;
             losses = userProfile.losses;
             draws = userProfile.draws;
@@ -254,7 +254,7 @@ class ProfileDashboard extends React.Component {
             drawsP = total>0 ? Math.floor(draws/total*100)+"%" : "--";
             lossesP = total>0 ? Math.floor(losses/total*100)+"%" : "--";
             sourceUserObject = this.state.userProfile.id === this.props.user.id ? this.props.user : this.state.userProfile;
-alert(sourceUserObject.gender);
+//alert(sourceUserObject.gender);
         }
 
         let inGame = !!this.props.gameId;
@@ -344,7 +344,7 @@ alert(sourceUserObject.gender);
                                         <div style={styles.ratingContainer}>
 
                                             <RatingStar style={styles.ratingIcon}/>
-                                            <div style={styles.ratingText}>{sourceUserObject && sourceUserObject.rating}</div>
+                                            <div style={styles.ratingText}>{sourceUserObject.rating}</div>
 
                                         </div>
                                     </div>
@@ -364,12 +364,12 @@ alert(sourceUserObject.gender);
 
                                             <div style={styles.profileItemRow}>
                                                 <div style={styles.profileItemLabel}>Gender:</div>
-                                                <div style={styles.profileItemText}>{sourceUserObject.gender ? (sourceUserObject.gender === 0 ? "M": "F") : ""}</div>
+                                                <div style={styles.profileItemText}>{sourceUserObject.gender !== null ? (sourceUserObject.gender === 0 ? "M": "F") : ""}</div>
                                             </div>
 
                                             <div style={styles.profileItemRow}>
                                                 <div style={styles.profileItemLabel}>Birthday:</div>
-                                                <div style={styles.profileItemText}>{sourceUserObject.birthday ? this.convertUnixTimestampToDate(sourceUserObject.birthday) : ""}</div>
+                                                <div style={styles.profileItemText}>{sourceUserObject.birthday!==null ? this.convertUnixTimestampToDate(sourceUserObject.birthday) : ""}</div>
                                             </div>
                                         </div>
 

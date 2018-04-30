@@ -5,14 +5,14 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 import PropTypes from 'prop-types';
-
+import { BeatLoader} from 'react-spinners';
 import {httpUpdateUserProfile} from '../actions/http/profileActions';
 const styles = {
     outerContainer: {
 
 
         width: 300,
-        margin: "auto",
+        //margin: "auto",
         padding: 5,
         backgroundColor: "#42454c",
         marginTop:50
@@ -48,11 +48,12 @@ class UpdateProfileForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {username: "", gender: "", birthday:""}
+        this.state = {username: "", gender: "", birthday:"", updating:false}
     }
 
     static getDerivedStateFromProps(nextProps, PrevState){
-        return {username: nextProps.username, gender: nextProps.gender, birthday: nextProps.birthday}
+
+        return {username: nextProps.user.username, gender: nextProps.user.gender, birthday: nextProps.user.birthday}
     }
 
 
@@ -68,11 +69,16 @@ class UpdateProfileForm extends React.Component {
             birthday: this.state.birthday
         };
 
-        this.props.dispatch(httpUpdateUserProfile(data, this.props.user.id));
+        this.setState({updating:true});
+        this.props.dispatch(httpUpdateUserProfile(data, this.props.user.id))
+            .then(()=>this.setState({updating:false}));
 
     }
 
     render() {
+        console.log(this.state.gender);
+
+        let datepickerValue = this.state.birthday ? new Date(this.state.birthday*1000)  : null;
         return (
 
             <div style={styles.outerContainer}>
@@ -81,6 +87,7 @@ class UpdateProfileForm extends React.Component {
                         <TextField name={"username"}
                                    floatingLabelFixed={true}
                                    floatingLabelText={"Username"}
+                                   value={this.state.username}
                                     hintStyle={styles.hintStyle}
                                     floatingLabelStyle={styles.floatingLabelStyle}
                                     inputStyle={styles.inputStyle}
@@ -99,20 +106,23 @@ class UpdateProfileForm extends React.Component {
                                           onChange={(() => {
                                               return ((e, value) => this.setState({gender: value}));
                                           })()}
-                                          defaultSelected="not_light">
+                                          defaultSelected={this.state.gender}>
                             <RadioButton
                                 value={0}
-                                iconStyle={{fill: '#d0ab44'}}
-                                labelStyle={{color:"white"}}
+
+
+
+
+                                iconStyle={{fill: 'white'}}
+                                labelStyle={{color:"#d0ab44"}}
                                 label="Male"
-                                style={styles.radioButton}
+
                             />
                             <RadioButton
                                 value={1}
                                 label="Female"
-                                iconStyle={{fill: '#d0ab44'}}
-                                labelStyle={{color:"white"}}
-                                style={{color:"orange"}}
+                                iconStyle={{fill: 'white'}}
+                                labelStyle={{color:"#d0ab44"}}
 
                             />
 
@@ -124,22 +134,41 @@ class UpdateProfileForm extends React.Component {
 
 
                             <DatePicker hintText="Select birth date"
+
+                                        inputStyle={{color: 'white'}}
+                                        value={datepickerValue}
                                         onChange={(() => {
                                             return ((e, value) => this.setState({birthday: value.getTime() / 1000}));
-                                        })()}/>/>
+                                        })()}/>
 
 
                     </div>
 
-                    <div>
+                    <div style={{
+                        display:"flex",
+                        alignItems:"center",
+                        justifyContent:"space-around"
+                    }}>
+
+
+
                         <RaisedButton
                             type="submit"
                             label={"Update profile"}
+                            disabled={this.state.updating}
                             secondary={true}
                             onClick={this.handleUpdateProfile.bind(this)}
                             buttonStyle={styles.submitButton}
                             // style={styles.button}
                         />
+
+
+                            <BeatLoader
+                                color={'white'}
+                                size={10}
+                                loading={this.state.updating}/>
+
+
                     </div>
 
                 </div>
@@ -155,7 +184,7 @@ class UpdateProfileForm extends React.Component {
 
 UpdateProfileForm.propTypes = {
    user:PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired
+   dispatch: PropTypes.func.isRequired
 
 };
 

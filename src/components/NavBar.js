@@ -22,7 +22,8 @@ const styles = {
         width: '100%'
     },
     tabStyle: {
-        backgroundColor: '#e8e8e8'
+       // backgroundColor: '#e8e8e8'
+        backgroundColor:"#4f525a",
     },
     toolGroupStyle:{
         flex:1
@@ -82,6 +83,10 @@ class NavBar extends React.Component {
         let {user} = this.props;
         let userLoggedIn = Object.keys(user).length !== 0;
         return (
+
+           
+
+
             <Toolbar>
                 <ToolbarGroup firstChild={true}  style={styles.toolGroupStyle}>
                     <Tabs initialSelectedIndex={this.props.selectedTab} style={styles.tabsStyle}  onChange={this.handleTabChange.bind(this)}>
