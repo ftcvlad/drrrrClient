@@ -16,6 +16,7 @@ import StatusReady from 'material-ui/svg-icons/action/done';
 import RatingStar from 'material-ui/svg-icons/toggle/star';
 
 import IconButton from 'material-ui/IconButton';
+
 const wm = require('./images/wm.png');
 
 const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer", "disconnected", "dropping"];
@@ -228,6 +229,7 @@ class PlayerArea extends React.Component {
 
 
                 <div style={{display:"flex"}}>
+
 
                     <div style={styles.otherContentDiv}>
                         <div style={styles.statusLine}>

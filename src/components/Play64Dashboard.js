@@ -79,16 +79,20 @@ class Play64Dashboard extends React.Component {
                             if (error === 403){
                                 this.props.history.push('/tables64');
                             }
+                            else if (error === 401){
+                                this.props.history.push('/');
+                            }
                         });
                 });
         }
         else{
             this.props.dispatch(wsSendLeaveRoomTables())
-                .catch((error)=>{ });
+                .catch((error)=>{ if (error===401){ this.props.history.push('/'); }});
 
             this.props.dispatch(wsSendUpdateTimeLeft())//when entering room should set timer correctly
                 .catch((error)=>{
                     if (error === 403){this.props.history.push('/tables64'); }
+                    else if (error === 401){this.props.history.push('/');}
                 });
         }
 

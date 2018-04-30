@@ -180,15 +180,15 @@ class ProfileDashboard extends React.Component {
             this.props.dispatch(wsConnect())
                 .then(()=>{
                     this.props.dispatch(wsSendJoinRoomPlay())
-                        .catch((error)=>{});
+                        .catch((error)=>{ if (error===401){ this.props.history.push('/'); }});
                 });
         }
         else{
             this.props.dispatch(wsSendLeaveRoomTables())
-                .catch((error)=>{ });
+                .catch((error)=>{ if (error===401){ this.props.history.push('/'); }});
 
             this.props.dispatch(wsSendUpdateTimeLeft())
-                .catch((error)=>{ });
+                .catch((error)=>{ if (error===401){ this.props.history.push('/'); }});
 
 
         }

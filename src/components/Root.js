@@ -5,7 +5,7 @@ import { Router, Route, Switch } from 'react-router-dom'
 import MainDashboard from './MainDashboard'
 import Play64Dashboard from './Play64Dashboard'
 import Tables64Dashboard from './Tables64Dashboard'
-
+import RulesDashboard from './RulesDashboard';
 import history from '../history';
 import ProfileDashboard from "./ProfileDashboard";
 
@@ -17,6 +17,7 @@ const Root = ({ store }) => (
                 <Route path="/tables64" component={Tables64Dashboard} />
                 <Route path="/play64" component={Play64Dashboard} />
                 <Route path="/profile/:id"  component={ProfileDashboard}/>
+                <Route path="/rules"  component={RulesDashboard}/>
             </Switch>
         </Router>
     </Provider>

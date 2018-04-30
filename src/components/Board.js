@@ -209,7 +209,7 @@ class Board extends React.Component {
 
         let {currentMove, moves, boardState, reverseView, onCellClicked, pickedChecker} = this.props;
 
-        let boardImgStyle = reverseView ? Object.assign({}, inlineStyles.boardBorder, inlineStyles.rotatedBorder) : inlineStyles.boardBorder ;
+        let boardImgStyle = !reverseView ? Object.assign({}, inlineStyles.boardBorder, inlineStyles.rotatedBorder) : inlineStyles.boardBorder ;
 
         return (
         <div className={styles.board}>

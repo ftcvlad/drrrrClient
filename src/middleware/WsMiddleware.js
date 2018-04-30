@@ -41,7 +41,8 @@ export default function socketMiddleware(socket) {
                         return result;
                     }
                     else if (result.status === 401){
-                        history.push('/');//unauthorised
+                        //history.push('/');//unauthorised
+                        throw 401;
                     }
                     else if (result.status === 403){//forbidden
                         throw 403;

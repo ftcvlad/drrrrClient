@@ -142,16 +142,18 @@ class Tables64Dashboard extends React.Component {
 
             this.props.dispatch(wsConnect())
                 .then(()=>{
-                    this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
+                    this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM))
+                        .catch((error)=>{ if (error==401){ this.props.history.push('/'); }});
                     this.props.dispatch(wsSendJoinRoomPlay())
-                        .catch(()=>{ console.log("not in gaame");});
+                        .catch((error)=>{ if (error==401){ this.props.history.push('/'); }});
 
                 });
         }
         else{
-            this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM));
+            this.props.dispatch(wsSendJoinRoomTables(roomCategories.TABLE_64_ROOM))
+                .catch((error)=>{ if (error===401){ this.props.history.push('/'); }});
             this.props.dispatch(wsSendUpdateTimeLeft())
-                .catch((error)=>{ });
+                .catch((error)=>{ if (error===401)this.props.history.push('/');});
         }
 
 

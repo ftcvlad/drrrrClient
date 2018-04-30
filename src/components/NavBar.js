@@ -57,6 +57,8 @@ class NavBar extends React.Component {
                 return this.props.history.push('/tables64');
             case 2:
                 return this.props.history.push('/etudes');
+            case 3:
+                return this.props.history.push('/rules');
 
 
         }
@@ -86,6 +88,8 @@ class NavBar extends React.Component {
                         <Tab value={0} label="Home" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
                         <Tab value={1} label="Tables" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
                         <Tab value={2} label="Etudes" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
+                        <Tab value={3} label="Rules" style={styles.tabStyle} buttonStyle={styles.buttonStyle}> </Tab>
+
 
 
 

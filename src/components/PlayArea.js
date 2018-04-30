@@ -23,6 +23,12 @@ class PlayArea extends React.Component {
     }
 
 
+    static getDerivedStateFromProps(nextProps, prevState){
+        if (nextProps.gameState.isGameGoing === false && prevState.replaying === true){
+            return {replaying: false};
+        }
+        return null;//sadsdf
+    }
 
     currentMoveChanged(moveNum){
         if (moveNum === this.props.gameState.moves.length-1){
