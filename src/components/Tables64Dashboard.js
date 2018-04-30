@@ -285,7 +285,7 @@ console.log("table renedr");
 
         return (
             <div style={{textAlign: 'center'}}>
-                <NavBar selectedTab={1}/>
+                <NavBar />
                 {inGame &&
                     <GameReturnFrame/>
                 }

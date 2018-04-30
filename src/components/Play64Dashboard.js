@@ -142,9 +142,9 @@ class Play64Dashboard extends React.Component {
 
         return (
             <div style={{textAlign: 'center'}}>
-                <NavBar selectedTab={3}/>
+                <NavBar/>
                 {gameLoaded &&
-                <div >
+                <div style={{marginTop:50}}>
 
 
 

@@ -265,7 +265,7 @@ class ProfileDashboard extends React.Component {
         return (
 
             <div style={{textAlign: 'center'}}>
-                <NavBar selectedTab={1}/>
+                <NavBar/>
                 {inGame &&
                     <GameReturnFrame/>
                 }
