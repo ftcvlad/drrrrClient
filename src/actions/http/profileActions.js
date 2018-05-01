@@ -57,3 +57,24 @@ export function httpUpdateUserProfile(data, userId){
 function userUpdateSucceed(data){
     return {type: USER_UPDATE_SUCCESS, user:data };
 }
+
+
+
+export function httpGetEtudeList(){
+    return {
+        type: "API_CALL",
+        request: {
+            url: 'http://localhost:8080/etudes',
+            method: 'get',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            credentials: 'include'
+        }
+    };
+}
+
+
+

@@ -8,6 +8,7 @@ import Tables64Dashboard from './Tables64Dashboard'
 import RulesDashboard from './RulesDashboard';
 import history from '../history';
 import ProfileDashboard from "./ProfileDashboard";
+import EtudesDashboard from "./EtudesDashboard";
 
 const Root = ({ store }) => (
     <Provider store={store}>
@@ -18,6 +19,7 @@ const Root = ({ store }) => (
                 <Route path="/play64" component={Play64Dashboard} />
                 <Route path="/profile/:id"  component={ProfileDashboard}/>
                 <Route path="/rules"  component={RulesDashboard}/>
+                <Route path="/etudes"  component={EtudesDashboard}/>
             </Switch>
         </Router>
     </Provider>
