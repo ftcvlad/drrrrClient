@@ -136,7 +136,9 @@ class PlayArea extends React.Component {
                                     moves={gameState.moves}
                                     boardState={gameState.boardState}
                                     reverseView = {reverseView}
+                                    showPrevPositions={true}
                                     pickedChecker={pickedChecker}
+                                    intetrHitBackOffset={0}
                                     onCellClicked={
                                         this.onCellClicked.bind(this, userId, this.state.replaying, gameInfo, gameState)
                                     }

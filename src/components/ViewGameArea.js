@@ -65,6 +65,8 @@ class ViewGameArea extends React.Component {
                            moves={moves}
                            boardState={boardState}
                            reverseView = {reverseView}
+                           intetrHitBackOffset={0}
+                           showPrevPositions={true}
                            pickedChecker={pickedChecker}
                            onCellClicked={this.onCellClicked}
                     />

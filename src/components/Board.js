@@ -52,7 +52,7 @@ class Board extends React.Component {
     }
 
 
-    createBoard(rows, cols, onCellClicked, moves, latestBoardState, reverseView, currentMove, pickedChecker){//TODO recreated after every state update. Improve?
+    createBoard(rows, cols, onCellClicked, moves, latestBoardState, reverseView, currentMove, pickedChecker, intetrHitBackOffset, showPrevPositions){//TODO recreated after every state update. Improve?
 
 
         let gridDimension = latestBoardState.length;
@@ -63,7 +63,7 @@ class Board extends React.Component {
         for (let i=moves.length-1; i>currentMove; i--){
 
             const moveInfo = moves[i].moveInfo;
-            for (let j=moveInfo.length-1; j>=0; j--){
+            for (let j=moveInfo.length-1; j>=intetrHitBackOffset; j--){
                 let type = moveInfo[j].prevType;
                 boardStateWithHistory[moveInfo[j].next.row][moveInfo[j].next.col] = 0;
                 boardStateWithHistory[moveInfo[j].prev.row][moveInfo[j].prev.col] = type;
@@ -91,7 +91,7 @@ class Board extends React.Component {
 
         // //previous positions
         let prevPositions = [];
-        if (moves.length>0){
+        if (showPrevPositions && moves.length>0){
             let lastMove = moves[currentMove];
             prevPositions = lastMove["moveInfo"].map(o => Object.assign({},o.prev));//bug to be remembered † map(o => o.prev);
             if (reverseView){//reverse killedPieces for 2nd player
@@ -205,7 +205,7 @@ class Board extends React.Component {
 
     render(){
 
-        let {currentMove, moves, boardState, reverseView, onCellClicked, pickedChecker} = this.props;
+        let {currentMove, moves, boardState, reverseView, onCellClicked, pickedChecker, intetrHitBackOffset, showPrevPositions} = this.props;
 
         let boardImgStyle = !reverseView ? Object.assign({}, inlineStyles.boardBorder, inlineStyles.rotatedBorder) : inlineStyles.boardBorder ;
 
@@ -216,7 +216,7 @@ class Board extends React.Component {
             <div style={inlineStyles.myDiv}>
                 <img style={inlineStyles.board} src={boardImg} />
                 <table>
-                    {this.createBoard(8,8,onCellClicked, moves, boardState, reverseView, currentMove, pickedChecker)}
+                    {this.createBoard(8,8,onCellClicked, moves, boardState, reverseView, currentMove, pickedChecker, intetrHitBackOffset, showPrevPositions)}
                 </table>
 
             </div>
@@ -237,7 +237,9 @@ Board.propTypes = {
     pickedChecker: PropTypes.array.isRequired,
     moves: PropTypes.array.isRequired,
     boardState: PropTypes.array.isRequired,
-    reverseView: PropTypes.bool.isRequired
+    reverseView: PropTypes.bool.isRequired,
+    showPrevPositions: PropTypes.bool.isRequired,
+    intetrHitBackOffset: PropTypes.number.isRequired
 
 
 };

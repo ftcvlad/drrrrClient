@@ -62,7 +62,7 @@ class EtudeArea extends React.Component {
             }
             else{
 
-                let correctMove = this.props.correctMoves[this.state.currentMove].moveInfo[0];
+                let correctMove = this.props.correctMoves[this.state.currentMove].moveInfo[this.innerMoves];
                 let {pickedChecker} = this.state;
 
                 if (correctMove.prev["row"] === pickedChecker[0] &&
@@ -71,14 +71,22 @@ class EtudeArea extends React.Component {
                         correctMove.next["col"] === c){
 
                     this.innerMoves++;
+                    if (this.props.correctMoves[this.state.currentMove].moveInfo.length ===  this.innerMoves){
+                        let solved = this.state.currentMove+1 === this.props.correctMoves.length;
+
+                        this.setState({pickedChecker:[],
+                            selectChecker:true,
+                            solved: solved,
+                            currentMove: this.state.currentMove+1});
+
+                        this.innerMoves = 0;
+                    }
+                    else{
+                        this.setState({pickedChecker: [r,c]});
+                    }
 
 
-                    let solved = this.state.currentMove+1 === this.props.correctMoves.length;
 
-                    this.setState({pickedChecker:[],
-                                selectChecker:true,
-                                solved: solved,
-                                currentMove: this.state.currentMove+1});
                 }
                 else{
                     this.setState({pickedChecker:[], selectChecker:true, currentMove:0, error:true});
@@ -90,6 +98,7 @@ class EtudeArea extends React.Component {
 
 
     resetEtude(){
+        this.innerMoves=0;
         this.setState({pickedChecker:[], selectChecker:true, currentMove:0, solved: false, error:false});
     }
 
@@ -145,6 +154,8 @@ class EtudeArea extends React.Component {
                            boardState={boardState}
                            reverseView = {reverseView}
                            pickedChecker={this.state.pickedChecker}
+                           showPrevPositions={false}
+                           intetrHitBackOffset={this.innerMoves}
                            onCellClicked={this.onCellClicked.bind(this)}
                     />
                 </div>
