@@ -26,6 +26,10 @@ const muiTheme = getMuiTheme({
 
 
     },
+    tooltip: {
+        color: '#42454c',
+        rippleBackgroundColor: '#d0ab44'
+    },
     flatButton:{
         color:"white",
         textColor: "red",

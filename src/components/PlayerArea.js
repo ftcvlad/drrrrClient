@@ -16,6 +16,7 @@ import StatusReady from 'material-ui/svg-icons/action/done';
 import RatingStar from 'material-ui/svg-icons/toggle/star';
 
 import IconButton from 'material-ui/IconButton';
+import HelpPopover from "./HelpPopover";
 
 const wm = require('./images/wm.png');
 
@@ -47,7 +48,8 @@ const styles = {
         marginLeft: 206,//width of moves
         padding: 10,
         backgroundColor: "#42454c",
-        flexShrink: 0
+        flexShrink: 0,
+        position:"relative"
 
     },
     statusDescription: {
@@ -97,7 +99,8 @@ const styles = {
         flexGrow:1,
         backgroundColor: "grey",
         display:"flex",
-        flexDirection:"column"
+        flexDirection:"column",
+        position:"relative"
     },
     smallIcon:{
         color: "#d0ab44",
@@ -182,6 +185,20 @@ class PlayerArea extends React.Component {
         this.props.dispatch(wsSendTimeIsUp(this.props.gameId));
     }
 
+
+    getTooltipContent(){
+        return (<div>
+            <span style={{fontWeight:"bold"}}>Player statuses</span>
+            <p>1. Waiting: waiting for an opponent to join </p>
+            <p>2. Confirming: confirming desire to play</p>
+            <p>3. Dropper: can drop opponent because he is disconnected </p>
+            <p>4. Playing: playing the game</p>
+            <p>4. Offering draw</p>
+            <p>4. Resolving draw offer</p>
+
+        </div>);
+    }
+
     render() {
 
         let {player, movingPlayerId, gameId, userId} = this.props;
@@ -226,13 +243,15 @@ class PlayerArea extends React.Component {
 
             <div style={styles.mainContainer}>
 
-
+                <HelpPopover content={this.getTooltipContent()}/>
 
                 <div style={{display:"flex"}}>
 
 
                     <div style={styles.otherContentDiv}>
+
                         <div style={styles.statusLine}>
+
                             <div style={styles.statusDescription}>
                                 <IconButton iconStyle={styles.smallIcon}
                                             style={styles.smallButton}>

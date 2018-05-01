@@ -203,8 +203,6 @@ class Board extends React.Component {
     }
 
 
-//sdfsdfdfsdfdfdfdggdf
-
     render(){
 
         let {currentMove, moves, boardState, reverseView, onCellClicked, pickedChecker} = this.props;
@@ -213,6 +211,7 @@ class Board extends React.Component {
 
         return (
         <div className={styles.board}>
+
             <img style={boardImgStyle} src={boardBorderImg} />
             <div style={inlineStyles.myDiv}>
                 <img style={inlineStyles.board} src={boardImg} />

@@ -10,7 +10,7 @@ import Divider from 'material-ui/Divider';
 
 
 const initialPosition = require('./images/description/initialPosition.png');
-
+const possibleMoves = require('./images/description/possibleMoves.png');
 
 const styles = {
     containerDiv: {
@@ -80,7 +80,7 @@ class RulesDashboard extends React.Component {
                         <p>
                             The game is played on an eight by eight cells wide board. Initial position is shown below.
                         </p>
-                        <img style={{width: 100}} src={initialPosition}/>
+                        <img style={{width: 200}} src={initialPosition}/>
 
                         <h3>Piece types</h3>
                         <p>
@@ -108,7 +108,18 @@ class RulesDashboard extends React.Component {
                             the
                             taking piece jumps over opponent’s piece to the position that would let beating more
                             checkers
-                            and continues the move. </p>
+                            and continues the move.  </p>
+
+                        <img style={{width: 200}} src={possibleMoves}/>
+                        <p>The picture above illustrates rules from above:</p>
+                        <ol>
+                            <li>Piece at F8 cannot move because white has beat options</li>
+                            <li>White can use any of his beat options. These are A5:C7 and E5:C3. Ordinary pawn can beat back </li>
+                            <li>After player beats A5:C7 he must continue his move by doing either C7:E1 or C7:A1</li>
+                            <li>After a piece lands on the last (from player's perspective) row it turns into a king.
+                                It can continue move as a king </li>
+                            <li>After doing E5:C7:E1:H4:F6 player cannot beat checker on B2 because he cannot jump over the same checker twice</li>
+                        </ol>
 
                         <h3>Finishing the game</h3>
                         <p>A player wins if his opponents doesn’t have pieces left, is unable to do a move or his time

@@ -102,6 +102,7 @@ class ParticipantPanel extends React.Component {
             userList.push(<ListItem key={i}
                                       style={styles.listItemStyle}
                                       innerDivStyle={styles.listItemInnerDiv}
+                                      onClick={this.openPersonProfile.bind(this, users[i].id)}
                                       children={
                                           <div style={styles.userListItemContainer} key={i}>
 

@@ -11,6 +11,7 @@ import AvPause from 'material-ui/svg-icons/av/pause';
 import AvPlay from 'material-ui/svg-icons/av/play-arrow';
 
 import IconButton from 'material-ui/IconButton';
+import HelpPopover from "./HelpPopover";
 
 
 
@@ -141,8 +142,21 @@ class MovesPanel extends React.Component {
     }
 
 
-//sdfsdfdsf
+    getTooltipContent(){
+        return (<div>
+                <p>1. Moves panel lets you replay current and saved games. </p>
+                <p>2. Click a move from the list to go to the state of the game after the move </p>
+                <p>3. Alternatively you can use step back and step forward buttons </p>
+                <p>4. Pressing play button in the middle will execute moves starting with the selected one by one</p>
+
+            </div>);
+    }
+
+
+
     render(){
+
+
 
         let {moves, currentMove} = this.props;
         let listItems = [];
@@ -178,6 +192,8 @@ class MovesPanel extends React.Component {
         return  <List style={styles.listStyle}>
 
             <div style={styles.movesHeader}>Moves</div>
+            <HelpPopover content={this.getTooltipContent()}/>
+
             <Scrollbars style={styles.scrollbarsStyle}
                         hideTracksWhenNotNeeded={false}
                         ref="scrollbars"
@@ -195,6 +211,7 @@ class MovesPanel extends React.Component {
                             hoveredStyle={styles.iconHovered}
                             style={styles.smallButton}
                             disabled={prevDisabled}
+                            tooltip={"Step back"}
                             onClick={this.playbackPrevClicked.bind(this)}>
 
                     <AvStepPrevious />
@@ -204,6 +221,7 @@ class MovesPanel extends React.Component {
                             hoveredStyle={styles.iconHovered}
                             style={styles.smallButton}
                             disabled={playPauseDisabled}
+                            tooltip={"Play"}
                             onClick={this.playbackPlayPauseClicked.bind(this)}>
                     {playPauseButton}
                 </IconButton>
@@ -211,6 +229,7 @@ class MovesPanel extends React.Component {
                             hoveredStyle={styles.iconHovered}
                             style={styles.smallButton}
                             disabled={nextDisabled}
+                            tooltip={"Step forward"}
                             onClick={this.playbackNextClicked.bind(this)}>
                     <AvStepNext />
                 </IconButton>

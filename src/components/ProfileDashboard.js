@@ -369,7 +369,7 @@ class ProfileDashboard extends React.Component {
 
                                             <div style={styles.profileItemRow}>
                                                 <div style={styles.profileItemLabel}>Birthday:</div>
-                                                <div style={styles.profileItemText}>{sourceUserObject.birthday!==null ? this.convertUnixTimestampToDate(sourceUserObject.birthday) : ""}</div>
+                                                <div style={styles.profileItemText}>{sourceUserObject.birthday ? this.convertUnixTimestampToDate(sourceUserObject.birthday) : ""}</div>
                                             </div>
                                         </div>
 

@@ -131,6 +131,8 @@ class NavBar extends React.Component {
 
                         <IconButton iconStyle={styles.smallIcon}
                                     style={styles.smallButton}
+                                    tooltip={"Profile"}
+                                    tooltipStyles={{top:26}}
                                     onClick={this.profileClicked.bind(this)}>
                             <AccountBox hoverColor={"#9c1818"}/>
                         </IconButton>
@@ -138,6 +140,8 @@ class NavBar extends React.Component {
 
                         <IconButton iconStyle={styles.smallIcon}
                                     style={styles.smallButton}
+                                    tooltip={"Log out"}
+                                    tooltipStyles={{top:26}}
                                     onClick={this.logoutClicked.bind(this)}>
                             <Exit hoverColor={"#9c1818"}/>
                         </IconButton>
