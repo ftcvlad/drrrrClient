@@ -1,5 +1,5 @@
 import * as types from "./actionTypes";
-
+import {API_ROOT} from '../api-config';
 
 export function removeAllGames(){
     return {
@@ -7,7 +7,7 @@ export function removeAllGames(){
         successActionCreator: removeAllGamesSucceed,
         request: {
             method: 'delete',
-            url: 'http://localhost:8080/games',
+            url: API_ROOT+'games',
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

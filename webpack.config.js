@@ -33,7 +33,7 @@ module.exports = {
                     loader: 'url-loader',//Instructs webpack to emit the required object as file and to return its public URL
                     options: {
                         limit: 1, // limit => file.size =< 8192 bytes ? DataURI : File
-                        publicPath: '/'
+                        publicPath: '/Client'
                     }
                 }
 

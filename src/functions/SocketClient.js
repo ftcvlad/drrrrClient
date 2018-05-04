@@ -16,9 +16,7 @@ import {
     respondDrawOfferSuccess,
     cancelDrawOfferSuccess
 } from "../actions/WsReceiveActions";
-import * as types from "../actions/actionTypes";
-
-
+import {WS_ROOT} from '../api-config';
 
 
 
@@ -31,7 +29,7 @@ export default class SocketClient {
 
     connect(dispatch) {
 
-        this.wsp = new WebSocketAsPromised('ws://localhost:8090/', {
+        this.wsp = new WebSocketAsPromised(WS_ROOT, {
             packMessage: data => JSON.stringify(data),
             unpackMessage: message => JSON.parse(message),
             attachRequestId: (data, requestId) => Object.assign({id: requestId}, data), // attach requestId to message as `id` field

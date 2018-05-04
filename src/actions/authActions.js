@@ -1,6 +1,6 @@
 
 import {ATTEMPT_LOGIN_SUCCESS, ATTEMPT_LOGOUT_SUCCESS, ATTEMPT_REGISTER_SUCCESS} from "./actionTypes";
-
+import {API_ROOT} from '../api-config';
 
 function loginSucceed(data){
     return {type: ATTEMPT_LOGIN_SUCCESS, user:data };
@@ -20,7 +20,7 @@ export function logout(){
         type: "API_CALL",
         successActionCreator: logoutSucceed,
         request: {
-            url: 'http://localhost:8080/session',
+            url: API_ROOT+'session',
             method: 'delete',
             headers:{
                 'Accept': 'application/json',
@@ -38,7 +38,7 @@ export function register(data){
         successActionCreator: registerSucceed,
         request: {
             method: 'post',
-            url: 'http://localhost:8080/users',
+            url: API_ROOT+'users',
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export function login(data){
         successActionCreator: loginSucceed,
         request: {
             method: 'post',
-            url: 'http://localhost:8080/session',
+            url: API_ROOT+'session',
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
