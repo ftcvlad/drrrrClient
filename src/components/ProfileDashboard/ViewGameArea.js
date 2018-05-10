@@ -1,13 +1,13 @@
 import React from "react";
-import styles from './Css/PlayArea.css';
+import styles from '../Css/PlayArea.css';
 
 import PropTypes from 'prop-types';
 
-import MovesPanel from './MovesPanel';
-import Board from './Board';
+import MovesPanel from '../PlayDashboard/MovesPanel';
+import Board from '../PlayDashboard/Board';
 
 
-import { wsSendSaveGame} from '../actions/WsClientActions';
+import { wsSendSaveGame} from '../../actions/WsClientActions';
 
 
 

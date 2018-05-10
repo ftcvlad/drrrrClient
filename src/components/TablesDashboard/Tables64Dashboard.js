@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "../NavBar";
 import {
     Table,
     TableBody,
@@ -10,26 +10,26 @@ import {
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
-import {getAllGameInfo, getCurrentGameId} from "../selectors/gameSelector";
+import {getAllGameInfo, getCurrentGameId} from "../../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 
-import {roomCategories} from '../actions/roomCategories';
+import {roomCategories} from '../../actions/roomCategories';
 import PropTypes from 'prop-types';
 
 import {
     wsConnect, wsSendJoinRoomPlay, wsSendJoinRoomTables, wsSendPlayGame, wsSendUpdateTimeLeft,
     wsSendWatchGame
-} from '../actions/WsClientActions';
-import {removeAllGames} from '../actions/removeActions';
+} from '../../actions/WsClientActions';
+import {removeAllGames} from '../../actions/removeActions';
 
 import EmptyPlayerSlot from 'material-ui/svg-icons/social/person-outline';
 import FilledPlayerSlot from 'material-ui/svg-icons/social/person';
 import EmptyWatchersSlot from 'material-ui/svg-icons/social/people-outline';
 import FilledWatchersSlot from 'material-ui/svg-icons/social/people';
-import ParticipantList from "./ParticipantPanel";
+import ParticipantList from "../PlayDashboard/ParticipantPanel";
 import CreateGamePanel from "./CreateGamePanel";
-import {getUser} from "../selectors/userSelector";
-import GameReturnFrame from './GameReturnFrame';
+import {getUser} from "../../selectors/userSelector";
+import GameReturnFrame from '../GameReturnFrame';
 
 const styles = {
     sidePanelContainer:{

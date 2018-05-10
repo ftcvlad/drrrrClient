@@ -1,14 +1,14 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "../NavBar";
 
 import {connect} from "react-redux";
 
-import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
-import GameReturnFrame from './GameReturnFrame';
+import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../../actions/WsClientActions";
+import GameReturnFrame from '../GameReturnFrame';
 import EtudesTable from './EtudesTable';
-import {getCurrentGameId} from "../selectors/gameSelector";
+import {getCurrentGameId} from "../../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
-import {getUser} from "../selectors/userSelector";
+import {getUser} from "../../selectors/userSelector";
 
 const styles = {
     statsRatingContainer: {

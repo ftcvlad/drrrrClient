@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './Css/PlayArea.css';
+import styles from '../Css/PlayArea.css';
 
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';

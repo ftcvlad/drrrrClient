@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "../NavBar";
 
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
@@ -16,8 +16,8 @@ import {
 } from 'material-ui/Table';
 
 import RatingStar from 'material-ui/svg-icons/toggle/star';
-import {httpGetEtudeList} from '../actions/http/profileActions';
-import ViewGameArea from './ViewGameArea';
+import {httpGetEtudeList} from '../../actions/http/profileActions';
+import ViewGameArea from '../ProfileDashboard/ViewGameArea';
 
 import EtudeArea from './EtudeArea';
 const matchResultTypes = ["Lose", "Draw", "Win"];

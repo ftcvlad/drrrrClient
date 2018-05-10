@@ -1,15 +1,15 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "../NavBar";
 
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {removeAllGames} from "../actions/removeActions";
-import {getCurrentGameId, getCurrentGameInfo} from '../selectors/gameSelector';
+import {removeAllGames} from "../../actions/removeActions";
+import {getCurrentGameId, getCurrentGameInfo} from '../../selectors/gameSelector';
 
 
 
-import {getUser} from '../selectors/userSelector';
+import {getUser} from '../../selectors/userSelector';
 import PropTypes from 'prop-types';
 import PlayArea from './PlayArea';
 
@@ -17,7 +17,7 @@ import PlayArea from './PlayArea';
 
 import ChatPanel from "./ChatPanel";
 import ParticipantList from "./ParticipantPanel";
-import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender, wsSendSuggestDraw,wsSendLeaveRoomTables, wsSendUpdateTimeLeft } from "../actions/WsClientActions";
+import {wsConnect, wsSendJoinRoomPlay, wsSendExitGame, wsSendSurrender, wsSendSuggestDraw,wsSendLeaveRoomTables, wsSendUpdateTimeLeft } from "../../actions/WsClientActions";
 import Dialog from 'material-ui/Dialog';
 import PlayerArea from "./PlayerArea";
 

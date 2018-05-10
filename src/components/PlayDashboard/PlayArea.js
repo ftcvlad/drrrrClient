@@ -1,16 +1,16 @@
 import React from "react";
-import styles from './Css/PlayArea.css';
+import styles from '../Css/PlayArea.css';
 
 import PropTypes from 'prop-types';
 
 import MovesPanel from './MovesPanel';
 import Board from './Board';
 import {connect} from "react-redux";
-import {getCurrentGameInfo, getCurrentGameResult, getCurrentGameState} from "../selectors/gameSelector";
+import {getCurrentGameInfo, getCurrentGameResult, getCurrentGameState} from "../../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 
-import {wsSendUserPick, wsSendUserMove} from '../actions/WsClientActions';
-import {httpSaveGame} from '../actions/http/profileActions';
+import {wsSendUserPick, wsSendUserMove} from '../../actions/WsClientActions';
+import {httpSaveGame} from '../../actions/http/profileActions';
 import ResultsDialog from "./ResultsDialog";
 
 

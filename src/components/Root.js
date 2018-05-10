@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Router, Route, Switch } from 'react-router-dom'
-import MainDashboard from './MainDashboard'
-import Play64Dashboard from './Play64Dashboard'
-import Tables64Dashboard from './Tables64Dashboard'
-import RulesDashboard from './RulesDashboard';
+import MainDashboard from './MainDashboard/MainDashboard'
+import Play64Dashboard from './PlayDashboard/Play64Dashboard'
+import Tables64Dashboard from './TablesDashboard/Tables64Dashboard'
+import RulesDashboard from './RulesDashboard/RulesDashboard';
 import history from '../history';
-import ProfileDashboard from "./ProfileDashboard";
-import EtudesDashboard from "./EtudesDashboard";
+import ProfileDashboard from "./ProfileDashboard/ProfileDashboard";
+import EtudesDashboard from "./EtudesDashboard/EtudesDashboard";
 
 const Root = ({ store }) => (
     <Provider store={store}>

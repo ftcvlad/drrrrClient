@@ -8,7 +8,7 @@ import MessageUser from 'material-ui/svg-icons/communication/email';
 import Flag from 'react-world-flags'
 import IconButton from 'material-ui/IconButton';
 import {connect} from "react-redux";
-import {getCurrentGameInfo, getCurrentGameState} from "../selectors/gameSelector";
+import {getCurrentGameInfo, getCurrentGameState} from "../../selectors/gameSelector";
 import {withRouter} from "react-router-dom";
 
 

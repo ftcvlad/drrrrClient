@@ -1,24 +1,24 @@
 import {connect} from 'react-redux';
-import {login, register} from '../actions/authActions';
+import {login, register} from '../../actions/authActions';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {getUser} from "../selectors/userSelector";
-import NavBar from "./NavBar";
+import {getUser} from "../../selectors/userSelector";
+import NavBar from "../NavBar";
 import RegisterFormRedux from "./RegisterForm";
 import LoginFormRedux from "./LoginForm";
-import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
-import GameReturnFrame from './GameReturnFrame';
-import {getCurrentGameId} from "../selectors/gameSelector";
+import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../../actions/WsClientActions";
+import GameReturnFrame from '../GameReturnFrame';
+import {getCurrentGameId} from "../../selectors/gameSelector";
 import Divider from 'material-ui/Divider';
 
 
 
 
-const PlayPageImg = require('./images/description/PlayPage.jpg');
-const TablesPageImg = require('./images/description/TablesPage.png');
-const ProfileOverviewImg = require('./images/description/ProfileOverview.png');
-const ProfileSavedGamesImg = require('./images/description/ProfileSavedGames.png');
-const GameReturnFrameImg = require('./images/description/GameReturnFrame.png');
+const PlayPageImg = require('../images/description/PlayPage.jpg');
+const TablesPageImg = require('../images/description/TablesPage.png');
+const ProfileOverviewImg = require('../images/description/ProfileOverview.png');
+const ProfileSavedGamesImg = require('../images/description/ProfileSavedGames.png');
+const GameReturnFrameImg = require('../images/description/GameReturnFrame.png');
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 

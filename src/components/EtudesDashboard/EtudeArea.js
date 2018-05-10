@@ -1,9 +1,9 @@
 import React from "react";
-import styles from './Css/PlayArea.css';
+import styles from '../Css/PlayArea.css';
 
 import PropTypes from 'prop-types';
 
-import Board from './Board';
+import Board from '../PlayDashboard/Board';
 
 import RaisedButton from 'material-ui/RaisedButton';
 

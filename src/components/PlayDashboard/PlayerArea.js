@@ -7,10 +7,10 @@ import {connect} from "react-redux";
 import {
     getIsGameGoing, getMovingPlayerId, getOwnPlayerObject,
     getOwnStatus
-} from "../selectors/gameSelector";
+} from "../../selectors/gameSelector";
 import RaisedButton from 'material-ui/RaisedButton';
-import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp, wsSendDropOpponent} from "../actions/WsClientActions";
-import Timer from './Timer';
+import {wsSendConfirmPlaying, wsSendRespondDrawOffer, wsSendCancelDrawOffer, wsSendTimeIsUp, wsSendDropOpponent} from "../../actions/WsClientActions";
+import Timer from '../Timer';
 import StatusWaiting from 'material-ui/svg-icons/action/hourglass-full';
 import StatusReady from 'material-ui/svg-icons/action/done';
 import RatingStar from 'material-ui/svg-icons/toggle/star';
@@ -18,7 +18,7 @@ import RatingStar from 'material-ui/svg-icons/toggle/star';
 import IconButton from 'material-ui/IconButton';
 import HelpPopover from "./HelpPopover";
 
-const wm = require('./images/wm.png');
+const wm = require('../images/wm.png');
 
 const playerStatusTexts = ["waiting", "playing", "confirming", "ready", "suggesting draw", "resolving draw offer", "disconnected", "dropping"];
 const playerStatuses = {

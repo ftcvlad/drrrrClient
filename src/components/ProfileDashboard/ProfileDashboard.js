@@ -1,8 +1,8 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "../NavBar";
 
 
-import {httpGetUser} from '../actions/http/userActions';
+import {httpGetUser} from '../../actions/http/userActions';
 import SavedGamesTable from './SavedGamesTable';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {
@@ -19,13 +19,13 @@ import Settings from 'material-ui/svg-icons/action/settings';
 import RatingStar from 'material-ui/svg-icons/toggle/star';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {getUser} from "../selectors/userSelector";
-import {getCurrentGameId} from '../selectors/gameSelector';
+import {getUser} from "../../selectors/userSelector";
+import {getCurrentGameId} from '../../selectors/gameSelector';
 import PropTypes from 'prop-types';
 import { BeatLoader} from 'react-spinners';
-import LetterAvatar from './LetterAvatar';
-import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
-import GameReturnFrame from './GameReturnFrame';
+import LetterAvatar from '../LetterAvatar';
+import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../../actions/WsClientActions";
+import GameReturnFrame from '../GameReturnFrame';
 import UpdateProfileForm from './UpdateProfileForm';
 
 const styles = {

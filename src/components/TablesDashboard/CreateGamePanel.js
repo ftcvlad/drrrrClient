@@ -9,7 +9,7 @@ import {withRouter} from "react-router-dom";
 
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {wsSendCreateGame} from '../actions/WsClientActions';
+import {wsSendCreateGame} from '../../actions/WsClientActions';
 import PropTypes from 'prop-types';
 
 const styles={

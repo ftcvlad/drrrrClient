@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DatePicker from 'material-ui/DatePicker';
 import PropTypes from 'prop-types';
 import { BeatLoader} from 'react-spinners';
-import {httpUpdateUserProfile} from '../actions/http/profileActions';
+import {httpUpdateUserProfile} from '../../actions/http/profileActions';
 const styles = {
     outerContainer: {
 

@@ -1,16 +1,16 @@
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {getUser} from "../selectors/userSelector";
-import NavBar from "./NavBar";
-import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../actions/WsClientActions";
-import GameReturnFrame from './GameReturnFrame';
-import {getCurrentGameId} from "../selectors/gameSelector";
+import {getUser} from "../../selectors/userSelector";
+import NavBar from "../NavBar";
+import {wsConnect, wsSendJoinRoomPlay, wsSendLeaveRoomTables, wsSendUpdateTimeLeft} from "../../actions/WsClientActions";
+import GameReturnFrame from '../GameReturnFrame';
+import {getCurrentGameId} from "../../selectors/gameSelector";
 import Divider from 'material-ui/Divider';
 
 
-const initialPosition = require('./images/description/initialPosition.png');
-const possibleMoves = require('./images/description/possibleMoves.png');
+const initialPosition = require('../images/description/initialPosition.png');
+const possibleMoves = require('../images/description/possibleMoves.png');
 
 const styles = {
     containerDiv: {
