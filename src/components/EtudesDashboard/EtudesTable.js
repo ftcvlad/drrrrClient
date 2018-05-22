@@ -208,6 +208,7 @@ class EtudesTable extends React.Component {
                         open={this.state.dialogOpen}
                         contentStyle={{width:600}}
                         actionsContainerStyle = {styles.dialogActionsContainer}
+                        bodyStyle={{maxHeight:530, overflowY:"scroll"}}
                         actions={[
                             <RaisedButton
                                 label="Ok"

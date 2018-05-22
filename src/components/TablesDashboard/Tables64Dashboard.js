@@ -179,14 +179,6 @@ class Tables64Dashboard extends React.Component {
                 console.log(errMsg);
             });
     }
-    clearAllGamesCache() {///!!! for development
-
-        this.props.dispatch(removeAllGames())
-            .catch((errMsg)=>{
-                console.log(errMsg);
-            });
-
-    }
 
     returnClicked(){
         this.props.history.push('/play64');
@@ -319,11 +311,6 @@ console.log("table renedr");
                     </div>
                 </div>
 
-
-
-
-
-                < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
         );
     }

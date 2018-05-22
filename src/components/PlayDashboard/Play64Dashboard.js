@@ -98,14 +98,6 @@ class Play64Dashboard extends React.Component {
 
     }
 
-    clearAllGamesCache() {///!!! for development
-
-        this.props.dispatch(removeAllGames())
-            .catch((errMsg)=>{
-                console.log(errMsg);
-            });
-
-    }
 
     showConfirmationDialog(gameActionType){
         this.setState({"confirmDialogOpen":true, "selectedGameAction":gameActionType});
@@ -216,11 +208,7 @@ class Play64Dashboard extends React.Component {
                     Are you sure you want to {this.state.selectedGameAction} ?
                 </Dialog>
 
-
-
-
                 {!gameLoaded && <p>no game!</p>}
-                < RaisedButton label="Clear Cache" onClick={this.clearAllGamesCache.bind(this)} />
             </div>
         );
     }

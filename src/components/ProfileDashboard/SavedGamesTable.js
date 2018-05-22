@@ -272,6 +272,7 @@ class SavedGamesTable extends React.Component {
                         modal={true}
                         open={this.state.dialogOpen}
                         contentStyle={{width:800}}
+                        bodyStyle={{overflowY:"scroll"}}
                         actionsContainerStyle = {styles.dialogActionsContainer}
                         actions={[
                             <RaisedButton

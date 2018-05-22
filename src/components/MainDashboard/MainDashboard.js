@@ -60,12 +60,12 @@ class MainDashboard extends React.Component {
     componentWillMount() {
 
         if (!window.socketConnection) {
-            this.props.dispatch(wsConnect())
-                .then(() => {
-                    this.props.dispatch(wsSendJoinRoomPlay())
-                        .catch((error) => {
-                        });
-                });
+             this.props.dispatch(wsConnect())
+                 .then(() => {
+                     this.props.dispatch(wsSendJoinRoomPlay())
+                         .catch((error) => {
+                         });
+                 });
         }
         else {
             this.props.dispatch(wsSendLeaveRoomTables())
